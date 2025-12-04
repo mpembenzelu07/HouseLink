@@ -1,44 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HouseLink</title>
 
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
 
-  <!-- React & ReactDOM CDN -->
+  <!-- React + ReactDOM -->
   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-router-dom@6/umd/react-router-dom.development.js" crossorigin></script>
 
-  <!-- Babel Standalone CDN -->
+  <!-- Babel -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body class="bg-gray-100">
+
   <div id="root"></div>
 
-  <!-- Main App Script using Babel -->
   <script type="text/babel">
     const { useState, useEffect } = React;
     const { HashRouter, Routes, Route, Link, useParams } = ReactRouterDOM;
 
-    // --- NavBar ---
-    const NavBar = () => (
-      <nav className="bg-white shadow-md">
-        <div className="max-w-4xl mx-auto flex items-center justify-between p-3">
-          <Link to="/" className="text-xl font-bold">HouseLink</Link>
-          <div className="flex items-center gap-2">
-            <Link to="/" className="px-3 py-1 rounded hover:bg-gray-100">Home</Link>
-            <Link to="/listings" className="px-3 py-1 rounded hover:bg-gray-100">Listings</Link>
-            <Link to="/upload" className="px-3 py-1 rounded bg-indigo-600 text-white">Post</Link>
-          </div>
+    // Navbar
+    const Navbar = () => (
+      <nav className="bg-white shadow-md p-3 flex justify-between items-center max-w-4xl mx-auto">
+        <Link to="/" className="text-xl font-bold">HouseLink</Link>
+        <div className="flex gap-2">
+          <Link to="/" className="px-3 py-1 rounded hover:bg-gray-100">Home</Link>
+          <Link to="/listings" className="px-3 py-1 rounded hover:bg-gray-100">Listings</Link>
+          <Link to="/upload" className="px-3 py-1 rounded bg-indigo-600 text-white">Upload</Link>
         </div>
       </nav>
     );
 
-    // --- ListingCard ---
+    // Listing Card
     const ListingCard = ({ listing }) => (
       <Link to={`#/listing/${listing.id}`}>
         <div className="rounded-2xl shadow p-3 bg-white hover:shadow-lg transition">
@@ -50,7 +48,7 @@
       </Link>
     );
 
-    // --- ListingsPage ---
+    // Listings Page
     const ListingsPage = () => {
       const [listings, setListings] = useState([]);
 
@@ -65,10 +63,10 @@
       }, []);
 
       return (
-        <div className="p-4 space-y-6">
+        <div className="p-4 space-y-6 max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold">Latest Listings</h2>
 
-          {/* Quick Navigation Section */}
+          {/* Quick Navigation */}
           <div className="p-4 bg-indigo-50 rounded-lg mb-4">
             <h3 className="text-lg font-semibold mb-2">Quick Navigation:</h3>
             <div className="flex flex-wrap gap-2">
@@ -90,8 +88,8 @@
       );
     };
 
-    // --- UploadListingPage ---
-    const UploadListingPage = () => {
+    // Upload Page
+    const UploadPage = () => {
       const [form, setForm] = useState({ title:'', price:'', location:'', image:'' });
 
       const handleSubmit = e => {
@@ -113,39 +111,37 @@
       );
     };
 
-    // --- ListingDetailsPage ---
+    // Listing Details Page
     const ListingDetailsPage = () => {
       const { id } = useParams();
-      const listing = { id, title: 'Bedsitter in Sinza', location: 'Sinza', price: 120000, image: 'https://placehold.co/600x400', description: 'A cozy bedsitter in Sinza, near shops and transport. Fully furnished.' };
-
+      const listing = { id, title: `Listing ${id}`, location: 'Sinza', price: 120000 + id*10000, image: 'https://placehold.co/600x400', description: 'A beautiful listing in Tanzania.' };
       return (
         <div className="p-5 max-w-3xl mx-auto space-y-4">
           <img src={listing.image} alt={listing.title} className="rounded-xl w-full"/>
           <h2 className="text-3xl font-bold">{listing.title}</h2>
           <p className="text-gray-600">{listing.location}</p>
           <p className="text-xl font-bold">{listing.price} TZS</p>
-          <p className="mt-3">{listing.description}</p>
+          <p>{listing.description}</p>
           <button className="mt-5 w-full p-3 bg-green-600 text-white rounded-xl">Contact via WhatsApp</button>
         </div>
       );
     };
 
-    // --- App ---
+    // App
     const App = () => (
       <HashRouter>
-        <NavBar />
+        <Navbar />
         <div className="py-6">
           <Routes>
             <Route path="/" element={<ListingsPage />} />
             <Route path="/listings" element={<ListingsPage />} />
-            <Route path="/upload" element={<UploadListingPage />} />
+            <Route path="/upload" element={<UploadPage />} />
             <Route path="/listing/:id" element={<ListingDetailsPage />} />
           </Routes>
         </div>
       </HashRouter>
     );
 
-    // --- Render ---
     ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   </script>
 </body>
