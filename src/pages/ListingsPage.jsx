@@ -5,7 +5,7 @@ const ListingsPage = () => {
   const [listings, setListings] = useState([]);
 
   useEffect(() => {
-    // Mock data for MVP
+    // Expanded mock data
     setListings([
       {
         id: 1,
@@ -19,6 +19,27 @@ const ListingsPage = () => {
         title: 'Room in Mbezi',
         location: 'Mbezi',
         price: 80000,
+        image: 'https://placehold.co/600x400',
+      },
+      {
+        id: 3,
+        title: '2-Bedroom Apartment in Tegeta',
+        location: 'Tegeta',
+        price: 200000,
+        image: 'https://placehold.co/600x400',
+      },
+      {
+        id: 4,
+        title: 'Studio in Kariakoo',
+        location: 'Kariakoo',
+        price: 150000,
+        image: 'https://placehold.co/600x400',
+      },
+      {
+        id: 5,
+        title: '1-Bedroom Apartment in Sinza',
+        location: 'Sinza',
+        price: 130000,
         image: 'https://placehold.co/600x400',
       },
     ]);
