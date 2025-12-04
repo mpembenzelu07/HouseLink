@@ -67,6 +67,22 @@
       return (
         <div className="p-4 space-y-6">
           <h2 className="text-2xl font-bold">Latest Listings</h2>
+
+          {/* Quick Navigation Section */}
+          <div className="p-4 bg-indigo-50 rounded-lg mb-4">
+            <h3 className="text-lg font-semibold mb-2">Quick Navigation:</h3>
+            <div className="flex flex-wrap gap-2">
+              <a href="#/" className="px-3 py-1 bg-indigo-600 text-white rounded">Home</a>
+              <a href="#/listings" className="px-3 py-1 bg-indigo-600 text-white rounded">Listings</a>
+              <a href="#/upload" className="px-3 py-1 bg-green-600 text-white rounded">Upload</a>
+              <a href="#/listing/1" className="px-3 py-1 bg-gray-600 text-white rounded">Listing 1</a>
+              <a href="#/listing/2" className="px-3 py-1 bg-gray-600 text-white rounded">Listing 2</a>
+              <a href="#/listing/3" className="px-3 py-1 bg-gray-600 text-white rounded">Listing 3</a>
+              <a href="#/listing/4" className="px-3 py-1 bg-gray-600 text-white rounded">Listing 4</a>
+              <a href="#/listing/5" className="px-3 py-1 bg-gray-600 text-white rounded">Listing 5</a>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {listings.map(l => <ListingCard key={l.id} listing={l} />)}
           </div>
