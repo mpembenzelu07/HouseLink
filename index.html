@@ -18,9 +18,18 @@
   <div id="root"></div>
   <script type="text/babel">
     const { useState, useEffect } = React;
-    const { HashRouter, Route, Link, Switch, useParams } = ReactRouterDOM;
+    const { HashRouter, Route, Link, Switch, useParams, useHistory } = ReactRouterDOM;
 
-    // Navbar
+    // Shared listings data (demo purpose: exists only in memory)
+    const initialListings = [
+      { id: 1, title: 'Bedsitter in Sinza', location: 'Sinza', price: 120000, image: 'https://placehold.co/600x400', description: 'A cozy bedsitter available for immediate move-in.' },
+      { id: 2, title: 'Room in Mbezi', location: 'Mbezi', price: 80000, image: 'https://placehold.co/600x400', description: 'Affordable single room near main road.' },
+      { id: 3, title: '2-Bedroom Apartment in Tegeta', location: 'Tegeta', price: 200000, image: 'https://placehold.co/600x400', description: 'Spacious 2-bedroom apartment with parking.' },
+      { id: 4, title: 'Studio in Kariakoo', location: 'Kariakoo', price: 150000, image: 'https://placehold.co/600x400', description: 'Studio apartment close to shops.' },
+      { id: 5, title: '1-Bedroom Apartment in Sinza', location: 'Sinza', price: 130000, image: 'https://placehold.co/600x400', description: 'Comfortable 1-bedroom apartment in prime location.' },
+    ];
+
+    // Use context-like prop drilling for real data edit
     const Navbar = () => (
       <nav className="bg-white shadow-md p-3 flex justify-between items-center max-w-4xl mx-auto">
         <Link to="/" className="text-xl font-bold">HouseLink</Link>
@@ -45,43 +54,19 @@
     );
 
     // Listings Page
-    const ListingsPage = () => {
-      const [listings, setListings] = useState([]);
-      useEffect(() => {
-        setListings([
-          { id: 1, title: 'Bedsitter in Sinza', location: 'Sinza', price: 120000, image: 'https://placehold.co/600x400' },
-          { id: 2, title: 'Room in Mbezi', location: 'Mbezi', price: 80000, image: 'https://placehold.co/600x400' },
-          { id: 3, title: '2-Bedroom Apartment in Tegeta', location: 'Tegeta', price: 200000, image: 'https://placehold.co/600x400' },
-          { id: 4, title: 'Studio in Kariakoo', location: 'Kariakoo', price: 150000, image: 'https://placehold.co/600x400' },
-          { id: 5, title: '1-Bedroom Apartment in Sinza', location: 'Sinza', price: 130000, image: 'https://placehold.co/600x400' },
-        ]);
-      }, []);
-      return (
-        <div className="p-4 space-y-6 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold">Latest Listings</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {listings.map(l => <ListingCard key={l.id} listing={l} />)}
-          </div>
+    const ListingsPage = ({ listings }) => (
+      <div className="p-4 space-y-6 max-w-4xl mx-auto">
+        <h2 className="text-2xl font-bold">Latest Listings</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {listings.map(l => <ListingCard key={l.id} listing={l} />)}
         </div>
-      );
-    };
+      </div>
+    );
 
-    // Listing Details Page
-    const ListingDetails = () => {
+    // Listing Details Page (pulls from prop listings)
+    const ListingDetails = ({ listings }) => {
       const { id } = useParams();
-      const [listing, setListing] = useState(null);
-
-      useEffect(() => {
-        // Same listings as ListingsPage
-        const data = [
-          { id: 1, title: 'Bedsitter in Sinza', location: 'Sinza', price: 120000, image: 'https://placehold.co/600x400', description: 'A cozy bedsitter available for immediate move-in.' },
-          { id: 2, title: 'Room in Mbezi', location: 'Mbezi', price: 80000, image: 'https://placehold.co/600x400', description: 'Affordable single room near main road.' },
-          { id: 3, title: '2-Bedroom Apartment in Tegeta', location: 'Tegeta', price: 200000, image: 'https://placehold.co/600x400', description: 'Spacious 2-bedroom apartment with parking.' },
-          { id: 4, title: 'Studio in Kariakoo', location: 'Kariakoo', price: 150000, image: 'https://placehold.co/600x400', description: 'Studio apartment close to shops.' },
-          { id: 5, title: '1-Bedroom Apartment in Sinza', location: 'Sinza', price: 130000, image: 'https://placehold.co/600x400', description: 'Comfortable 1-bedroom apartment in prime location.' },
-        ];
-        setListing(data.find(l => String(l.id) === id));
-      }, [id]);
+      const listing = listings.find(l => String(l.id) === id);
 
       if (!listing) {
         return <div className="p-4 max-w-4xl mx-auto text-center">Listing not found.</div>;
@@ -94,33 +79,47 @@
           <p className="text-gray-700 mb-2">{listing.location}</p>
           <p className="font-bold text-xl mb-2">{listing.price} TZS</p>
           <p className="mb-4">{listing.description}</p>
-          <Link to="/listings" className="px-4 py-2 bg-indigo-600 text-white rounded">Back to Listings</Link>
+          <div className="flex gap-2">
+            <Link to="/listings" className="px-4 py-2 bg-indigo-600 text-white rounded">Back to Listings</Link>
+            <Link to={`/listing/${listing.id}/update`} className="px-4 py-2 bg-yellow-600 text-white rounded">Update Listing</Link>
+          </div>
         </div>
       );
     };
 
-    // Upload Page
-    const UploadPage = () => {
-      const [form, setForm] = useState({ title: '', location: '', price: '', image: '' });
+    // Update Listing Page (real update, in-memory)
+    const UpdateListingPage = ({ listings, setListings }) => {
+      const { id } = useParams();
+      const listingIdx = listings.findIndex(l => String(l.id) === id);
+      const history = useHistory();
+
+      if (listingIdx === -1) {
+        return <div className="p-4 max-w-4xl mx-auto text-center">Listing not found.</div>;
+      }
+
+      const [form, setForm] = useState({ ...listings[listingIdx] });
       const [success, setSuccess] = useState(false);
 
       const handleChange = e => {
         const { name, value } = e.target;
-        setForm(f => ({ ...f, [name]: value }));
+        setForm(f => ({ ...f, [name]: name === 'price' ? Number(value) : value }));
       };
 
       const handleSubmit = e => {
         e.preventDefault();
+        const updatedListings = [...listings];
+        updatedListings[listingIdx] = { ...form };
+        setListings(updatedListings);
         setSuccess(true);
-        setForm({ title: '', location: '', price: '', image: '' });
+        setTimeout(() => history.push(`/listing/${id}`), 800);
       };
 
       return (
         <div className="p-4 max-w-xl mx-auto">
-          <h2 className="text-2xl font-bold mb-4">Upload New Listing</h2>
+          <h2 className="text-2xl font-bold mb-4">Update Listing</h2>
           {success &&
             <div className="mb-4 p-3 bg-green-100 text-green-800 rounded">
-              Listing uploaded successfully! (demo only)
+              Listing updated successfully!
             </div>
           }
           <form className="space-y-4" onSubmit={handleSubmit}>
@@ -139,6 +138,63 @@
             <div>
               <label className="block font-semibold mb-1">Image URL:</label>
               <input required name="image" value={form.image} onChange={handleChange} className="w-full p-2 rounded border" />
+            </div>
+            <div>
+              <label className="block font-semibold mb-1">Description:</label>
+              <textarea required name="description" value={form.description} onChange={handleChange} className="w-full p-2 rounded border" />
+            </div>
+            <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded">Update Listing</button>
+          </form>
+        </div>
+      );
+    };
+
+    // Upload Page (adds new listing to shared data)
+    const UploadPage = ({ listings, setListings }) => {
+      const [form, setForm] = useState({ title: '', location: '', price: '', image: '', description: '' });
+      const [success, setSuccess] = useState(false);
+
+      const handleChange = e => {
+        const { name, value } = e.target;
+        setForm(f => ({ ...f, [name]: name === 'price' ? Number(value) : value }));
+      };
+
+      const handleSubmit = e => {
+        e.preventDefault();
+        const newListing = { ...form, id: listings.length ? Math.max(...listings.map(l => l.id)) + 1 : 1 };
+        setListings([...listings, newListing]);
+        setSuccess(true);
+        setForm({ title: '', location: '', price: '', image: '', description: '' });
+      };
+
+      return (
+        <div className="p-4 max-w-xl mx-auto">
+          <h2 className="text-2xl font-bold mb-4">Upload New Listing</h2>
+          {success &&
+            <div className="mb-4 p-3 bg-green-100 text-green-800 rounded">
+              Listing uploaded successfully!
+            </div>
+          }
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <div>
+              <label className="block font-semibold mb-1">Title:</label>
+              <input required name="title" value={form.title} onChange={handleChange} className="w-full p-2 rounded border" />
+            </div>
+            <div>
+              <label className="block font-semibold mb-1">Location:</label>
+              <input required name="location" value={form.location} onChange={handleChange} className="w-full p-2 rounded border" />
+            </div>
+            <div>
+              <label className="block font-semibold mb-1">Price (TZS):</label>
+              <input required name="price" type="number" value={form.price} onChange={handleChange} className="w-full p-2 rounded border" />
+            </div>
+            <div>
+              <label className="block font-semibold mb-1">Image URL:</label>
+              <input required name="image" value={form.image} onChange={handleChange} className="w-full p-2 rounded border" />
+            </div>
+            <div>
+              <label className="block font-semibold mb-1">Description:</label>
+              <textarea required name="description" value={form.description} onChange={handleChange} className="w-full p-2 rounded border" />
             </div>
             <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded">Upload Listing</button>
           </form>
@@ -159,19 +215,40 @@
       </div>
     );
 
-    // App
-    const App = () => (
-      <HashRouter>
-        <Navbar />
-        <Switch>
-          <Route exact path="/" component={HomePage} />
-          <Route exact path="/listings" component={ListingsPage} />
-          <Route exact path="/upload" component={UploadPage} />
-          <Route exact path="/listing/:id" component={ListingDetails} />
-          <Route render={() => <div className="p-4 text-center">Page not found.</div>} />
-        </Switch>
-      </HashRouter>
-    );
+    // App with shared listings state
+    const App = () => {
+      const [listings, setListings] = useState(initialListings);
+
+      return (
+        <HashRouter>
+          <Navbar />
+          <Switch>
+            <Route exact path="/" component={HomePage} />
+            <Route
+              exact
+              path="/listings"
+              render={() => <ListingsPage listings={listings} />}
+            />
+            <Route
+              exact
+              path="/upload"
+              render={() => <UploadPage listings={listings} setListings={setListings} />}
+            />
+            <Route
+              exact
+              path="/listing/:id"
+              render={() => <ListingDetails listings={listings} />}
+            />
+            <Route
+              exact
+              path="/listing/:id/update"
+              render={() => <UpdateListingPage listings={listings} setListings={setListings} />}
+            />
+            <Route render={() => <div className="p-4 text-center">Page not found.</div>} />
+          </Switch>
+        </HashRouter>
+      );
+    };
 
     ReactDOM.render(<App />, document.getElementById('root'));
   </script>
