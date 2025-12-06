@@ -1,294 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HouseLink - Modern</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HouseLink - Full MVP</title>
+
+  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-router-dom@5/umd/react-router-dom.min.js" crossorigin></script>
+
+  <!-- React / ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- React Router v5 UMD -->
+  <script src="https://unpkg.com/react-router-dom@5/umd/react-router-dom.min.js"></script>
+  <!-- Babel for in-browser JSX (MVP only) -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  
+
   <style>
-    /* Custom Scrollbar for a polished look */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #f1f1f1; }
-    ::-webkit-scrollbar-thumb { background: #0d9488; border-radius: 4px; }
-    body { font-family: 'Segoe UI', sans-serif; }
+    body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50 text-gray-900">
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useRef } = React;
     const { HashRouter, Route, Link, Switch, useParams, useHistory } = ReactRouterDOM;
 
-    // --- DATA ---
-    const initialListings = [
-      { id: 1, title: 'Sunny Bedsitter', location: 'Sinza', price: 120000, image: 'https://placehold.co/600x400/orange/white?text=Sinza+Vibes', description: 'A bright, cozy bedsitter perfect for students.' },
-      { id: 2, title: 'Modern Room', location: 'Mbezi', price: 80000, image: 'https://placehold.co/600x400/0d9488/white?text=Mbezi+Beach', description: 'Cool breeze, tile floors, near the bus stop.' },
-      { id: 3, title: 'Luxury 2-Bedroom', location: 'Tegeta', price: 200000, image: 'https://placehold.co/600x400/purple/white?text=Tegeta+Living', description: 'Master ensuite, paved parking, and security.' },
-      { id: 4, title: 'Studio Loft', location: 'Kariakoo', price: 150000, image: 'https://placehold.co/600x400/red/white?text=City+Center', description: 'Walking distance to the market. Very busy area.' },
+    // ---------- Helpers: localStorage persistence ----------
+    const LS_KEYS = {
+      LISTINGS: 'hl_listings_v1',
+      USER: 'hl_user_v1',
+      MESSAGES: 'hl_messages_v1'
+    };
+
+    const saveListings = (listings) => localStorage.setItem(LS_KEYS.LISTINGS, JSON.stringify(listings));
+    const loadListings = () => {
+      try {
+        const raw = localStorage.getItem(LS_KEYS.LISTINGS);
+        return raw ? JSON.parse(raw) : null;
+      } catch(e) { return null; }
+    };
+    const saveUser = (user) => localStorage.setItem(LS_KEYS.USER, JSON.stringify(user));
+    const loadUser = () => {
+      try { const raw = localStorage.getItem(LS_KEYS.USER); return raw ? JSON.parse(raw) : null; } catch { return null; }
+    };
+    const saveMessages = (messages) => localStorage.setItem(LS_KEYS.MESSAGES, JSON.stringify(messages));
+    const loadMessages = () => {
+      try { const raw = localStorage.getItem(LS_KEYS.MESSAGES); return raw ? JSON.parse(raw) : {}; } catch { return {}; }
+    };
+
+    // ---------- Initial sample data ----------
+    const SAMPLE = [
+      { id: 1, title: 'Sunny Bedsitter', location: 'Sinza', price: 120000, type: 'Bedsitter', image: 'https://placehold.co/800x500/0ea5a4/ffffff?text=Sinza+Bedsitter', description: 'A bright, cozy bedsitter perfect for students.' },
+      { id: 2, title: 'Modern Room', location: 'Mbezi', price: 80000, type: 'Single Room', image: 'https://placehold.co/800x500/06b6d4/ffffff?text=Mbezi+Room', description: 'Cool breeze, tiled floors, near transport.' },
+      { id: 3, title: 'Luxury 2-Bedroom', location: 'Tegeta', price: 200000, type: 'Apartment', image: 'https://placehold.co/800x500/7c3aed/ffffff?text=Tegeta+2BR', description: 'Master ensuite, parking, security.' },
+      { id: 4, title: 'Studio Loft', location: 'Kariakoo', price: 150000, type: 'Studio', image: 'https://placehold.co/800x500/f97316/ffffff?text=Kariakoo+Studio', description: 'Walking distance to market.' }
     ];
 
-    // --- SHARED COMPONENTS ---
+    // ---------- Load or initialize app state ----------
+    function usePersistentListings() {
+      const [listings, setListings] = useState(() => {
+        const saved = loadListings();
+        return saved && Array.isArray(saved) ? saved : SAMPLE;
+      });
+      useEffect(() => saveListings(listings), [listings]);
+      return [listings, setListings];
+    }
 
-    const Navbar = () => (
-      <nav className="bg-gradient-to-r from-teal-500 to-emerald-600 shadow-lg sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-          <Link to="/" className="text-2xl font-extrabold text-white tracking-wide flex items-center gap-2">
-            🏠 HouseLink
-          </Link>
-          <div className="flex gap-2 sm:gap-4">
-            <Link to="/" className="px-3 py-2 text-white/90 hover:text-white font-semibold transition">Home</Link>
-            <Link to="/listings" className="px-3 py-2 text-white/90 hover:text-white font-semibold transition">Listings</Link>
-            <Link to="/upload" className="px-5 py-2 rounded-full bg-white text-teal-600 font-bold hover:bg-orange-100 hover:text-orange-500 transition shadow-md transform hover:scale-105">
-              + Upload
-            </Link>
+    function usePersistentUser() {
+      const [user, setUser] = useState(() => loadUser());
+      useEffect(() => saveUser(user), [user]);
+      return [user, setUser];
+    }
+
+    function usePersistentMessages() {
+      const [messages, setMessages] = useState(() => loadMessages());
+      useEffect(() => saveMessages(messages), [messages]);
+      return [messages, setMessages];
+    }
+
+    // ---------- Navbar with login status ----------
+    const Navbar = ({ user, onLogout }) => {
+      return (
+        <nav className="bg-gradient-to-r from-teal-500 to-emerald-600 text-white shadow sticky top-0 z-40">
+          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Link to="/" className="text-2xl font-extrabold flex items-center gap-2">🏠 HouseLink</Link>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Link to="/listings" className="px-3 py-1 hover:bg-white/10 rounded">Listings</Link>
+              <Link to="/upload" className="px-3 py-1 bg-white text-teal-600 rounded font-bold">+ Upload</Link>
+
+              {user ? (
+                <div className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded">
+                  <span className="font-medium">{user.name}</span>
+                  <button onClick={onLogout} className="px-2 py-1 bg-white text-teal-600 rounded text-sm">Logout</button>
+                </div>
+              ) : (
+                <Link to="/login" className="px-3 py-1 bg-white/10 rounded">Login</Link>
+              )}
+            </div>
           </div>
-        </div>
-      </nav>
-    );
+        </nav>
+      );
+    };
 
-    // --- PAGES ---
-
+    // ---------- Home Page ----------
     const HomePage = () => (
-      <div className="min-h-[85vh] flex flex-col items-center justify-center text-center p-6 bg-gradient-to-br from-teal-50 via-white to-orange-50">
-        <div className="max-w-3xl space-y-6">
-          <h1 className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-blue-600 mb-4">
-            Find Your <br/> Happy Place.
-          </h1>
-          <p className="text-xl text-gray-600 font-light max-w-2xl mx-auto">
-            Discover colorful, affordable, and comfortable homes across Tanzania. 
-            From Sinza to Posta, we connect you to your next roof.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-            <Link to="/listings" className="px-8 py-4 bg-teal-600 text-white text-lg font-bold rounded-full hover:bg-teal-700 hover:shadow-xl transition transform hover:-translate-y-1">
-              Start Searching 🔍
-            </Link>
-          </div>
+      <div className="min-h-[70vh] flex items-center justify-center p-6">
+        <div className="max-w-3xl text-center">
+          <h1 className="text-4xl md:text-6xl font-extrabold mb-4">Find your next home in Tanzania</h1>
+          <p className="text-gray-600 mb-6">Search affordable and quality rentals across Dar es Salaam and beyond.</p>
+          <Link to="/listings" className="px-6 py-3 bg-teal-600 text-white rounded-full font-bold">Browse Listings</Link>
         </div>
       </div>
     );
 
-    // Listing Card Component
-    const ListingCard = ({ listing }) => (
-      <Link to={`/listing/${listing.id}`} className="group block h-full">
-        <div className="h-full bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-2 overflow-hidden border border-gray-100 flex flex-col">
-          <div className="relative h-56 overflow-hidden">
-            <img src={listing.image} alt={listing.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-            <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold text-teal-700 shadow-sm">
-              {listing.location}
-            </div>
+    // ---------- Listing Card ----------
+    const ListingCard = ({ l }) => (
+      <Link to={`/listing/${l.id}`} className="block">
+        <div className="bg-white rounded-2xl shadow p-3 hover:shadow-xl transition">
+          <div className="h-40 overflow-hidden rounded-lg mb-3">
+            <img src={l.image} alt={l.title} className="w-full h-full object-cover" />
           </div>
-          <div className="p-5 flex-grow flex flex-col justify-between">
-            <div>
-              <h3 className="text-xl font-bold text-gray-800 mb-1 group-hover:text-teal-600 transition">{listing.title}</h3>
-              <p className="text-gray-500 text-sm line-clamp-2">{listing.description}</p>
-            </div>
-            <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-              <span className="text-lg font-extrabold text-orange-500">{listing.price.toLocaleString()} TZS</span>
-              <span className="text-teal-500 text-sm font-semibold group-hover:underline">View Details &rarr;</span>
+          <div>
+            <h3 className="font-bold text-lg">{l.title}</h3>
+            <p className="text-sm text-gray-500">{l.location} — <span className="font-semibold">{l.type}</span></p>
+            <div className="mt-2 flex items-center justify-between">
+              <span className="text-orange-500 font-extrabold">{Number(l.price).toLocaleString()} TZS</span>
+              <span className="text-teal-600 text-sm">View</span>
             </div>
           </div>
         </div>
       </Link>
     );
 
-    // Listings Page with Search
+    // ---------- Listings Page (Search + Filters) ----------
     const ListingsPage = ({ listings }) => {
-      const [searchTerm, setSearchTerm] = useState("");
+      const [q, setQ] = useState('');
+      const [type, setType] = useState('All');
+      const [min, setMin] = useState('');
+      const [max, setMax] = useState('');
 
-      // Filter Logic
-      const filteredListings = listings.filter(l => 
-        l.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-        l.location.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      const types = ['All', ...Array.from(new Set(listings.map(l => l.type)))];
+
+      const filtered = listings.filter(l => {
+        if (type !== 'All' && l.type !== type) return false;
+        if (q && !(l.title.toLowerCase().includes(q.toLowerCase()) || l.location.toLowerCase().includes(q.toLowerCase()))) return false;
+        if (min && Number(l.price) < Number(min)) return false;
+        if (max && Number(l.price) > Number(max)) return false;
+        return true;
+      });
 
       return (
-        <div className="max-w-6xl mx-auto p-6 min-h-screen">
-          {/* Header & Search */}
-          <div className="bg-teal-900 rounded-3xl p-8 mb-10 text-center shadow-xl bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
-            <h2 className="text-3xl font-bold text-white mb-6">Discover Available Homes</h2>
-            <div className="max-w-lg mx-auto relative">
-              <input 
-                type="text" 
-                placeholder="Search by location (e.g. Sinza)..." 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-full border-none focus:ring-4 focus:ring-orange-300 shadow-lg text-gray-700 text-lg outline-none"
-              />
-              <span className="absolute left-4 top-4 text-2xl">🔎</span>
-            </div>
+        <div className="max-w-6xl mx-auto p-6">
+          <div className="bg-white rounded-xl p-4 mb-6 shadow flex flex-col md:flex-row gap-3 md:items-center">
+            <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search by title or location..." className="flex-1 px-4 py-3 rounded-lg border" />
+            <select value={type} onChange={e=>setType(e.target.value)} className="px-3 py-3 rounded-lg border">
+              {types.map(t => <option key={t} value={t}>{t}</option>)}
+            </select>
+            <input value={min} onChange={e=>setMin(e.target.value)} placeholder="Min price" className="px-3 py-3 rounded-lg border w-32" />
+            <input value={max} onChange={e=>setMax(e.target.value)} placeholder="Max price" className="px-3 py-3 rounded-lg border w-32" />
+            <button onClick={() => { setQ(''); setType('All'); setMin(''); setMax(''); }} className="px-4 py-3 bg-gray-100 rounded-lg">Reset</button>
           </div>
 
-          {/* Grid */}
-          {filteredListings.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredListings.map(l => <ListingCard key={l.id} listing={l} />)}
+          {filtered.length === 0 ? (
+            <div className="text-center text-gray-500 py-24">
+              <div className="text-4xl mb-3">🏠</div>
+              <div>No results — try changing filters.</div>
             </div>
           ) : (
-            <div className="text-center py-20">
-              <div className="text-6xl mb-4">🏠❓</div>
-              <h3 className="text-2xl text-gray-600">No homes found for "{searchTerm}"</h3>
-              <p className="text-gray-400">Try searching for a different location.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filtered.map(l => <ListingCard key={l.id} l={l} />)}
             </div>
           )}
         </div>
       );
     };
 
-    const ListingDetails = ({ listings, setListings }) => {
-      const { id } = useParams();
-      const history = useHistory();
-      const listing = listings.find(l => String(l.id) === id);
-
-      if (!listing) return <div className="p-10 text-center">Listing not found.</div>;
-
-      const handleDelete = () => {
-        if (confirm("Are you sure? This will permanently delete the listing.")) {
-          setListings(listings.filter(l => String(l.id) !== id));
-          history.push('/listings');
-        }
-      };
-
-      return (
-        <div className="p-6 max-w-4xl mx-auto">
-          <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row">
-            <div className="md:w-1/2 h-64 md:h-auto relative">
-              <img src={listing.image} className="w-full h-full object-cover" />
-              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black/50 to-transparent md:hidden"></div>
-            </div>
-            
-            <div className="p-8 md:w-1/2 flex flex-col justify-center">
-              <span className="inline-block px-3 py-1 rounded-full bg-teal-100 text-teal-800 text-sm font-bold w-fit mb-2">
-                📍 {listing.location}
-              </span>
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">{listing.title}</h1>
-              <p className="text-4xl font-extrabold text-orange-500 mb-6">{listing.price.toLocaleString()} <span className="text-base text-gray-400 font-normal">/ month</span></p>
-              
-              <div className="bg-gray-50 p-4 rounded-xl mb-6 border border-gray-100">
-                <h4 className="font-bold text-gray-700 mb-1">About this place</h4>
-                <p className="text-gray-600 leading-relaxed">{listing.description}</p>
-              </div>
-
-              <div className="flex flex-wrap gap-3 mt-auto">
-                <Link to="/listings" className="flex-1 py-3 text-center rounded-xl bg-gray-100 text-gray-600 font-bold hover:bg-gray-200 transition">Back</Link>
-                <Link to={`/listing/${listing.id}/update`} className="flex-1 py-3 text-center rounded-xl bg-teal-600 text-white font-bold hover:bg-teal-700 transition shadow-lg shadow-teal-200">Edit</Link>
-                <button onClick={handleDelete} className="px-4 py-3 rounded-xl bg-red-100 text-red-600 font-bold hover:bg-red-200 transition">🗑️</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    };
-
-    // Upload & Update components share similar styles
-    const FormContainer = ({ title, children, onSubmit, success }) => (
-      <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-teal-50 to-orange-50">
-        <div className="bg-white p-8 md:p-10 rounded-3xl shadow-xl w-full max-w-lg border border-white/50 backdrop-blur-xl">
-          <h2 className="text-3xl font-extrabold mb-6 text-gray-800 text-center">{title}</h2>
-          {success && <div className="mb-6 p-4 bg-green-100 text-green-700 rounded-xl flex items-center gap-2 border border-green-200">✅ Success! Redirecting...</div>}
-          <form onSubmit={onSubmit} className="space-y-5">
-            {children}
-          </form>
-        </div>
-      </div>
-    );
-
-    const InputGroup = ({ label, ...props }) => (
-      <div>
-        <label className="block text-sm font-bold text-gray-700 mb-1 ml-1">{label}</label>
-        <input {...props} className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:ring-4 focus:ring-teal-100 focus:border-teal-400 outline-none transition" />
-      </div>
-    );
-
-    const UploadPage = ({ listings, setListings }) => {
-      const history = useHistory();
-      const [form, setForm] = useState({ title: '', location: '', price: '', image: 'https://placehold.co/600x400/teal/white?text=New+Home', description: '' });
-      const [success, setSuccess] = useState(false);
-
-      const handleChange = e => setForm({ ...form, [e.target.name]: e.target.name === 'price' ? Number(e.target.value) : e.target.value });
-
-      const handleSubmit = e => {
-        e.preventDefault();
-        setSuccess(true);
-        const newListing = { ...form, id: Date.now() }; // Simple unique ID
-        setListings([...listings, newListing]);
-        setTimeout(() => history.push('/listings'), 1000);
-      };
-
-      return (
-        <FormContainer title="List a Property" onSubmit={handleSubmit} success={success}>
-          <InputGroup label="Property Title" name="title" value={form.title} onChange={handleChange} placeholder="e.g. Sea View Apartment" required />
-          <div className="grid grid-cols-2 gap-4">
-            <InputGroup label="Location" name="location" value={form.location} onChange={handleChange} placeholder="e.g. Masaki" required />
-            <InputGroup label="Price (TZS)" name="price" type="number" value={form.price} onChange={handleChange} placeholder="0" required />
-          </div>
-          <InputGroup label="Image URL" name="image" value={form.image} onChange={handleChange} placeholder="https://..." required />
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1 ml-1">Description</label>
-            <textarea name="description" value={form.description} onChange={handleChange} rows="3" className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:ring-4 focus:ring-teal-100 focus:border-teal-400 outline-none transition" required />
-          </div>
-          <button type="submit" className="w-full py-4 bg-gradient-to-r from-teal-500 to-emerald-600 text-white font-bold text-lg rounded-xl hover:shadow-lg hover:shadow-teal-200 transform hover:-translate-y-1 transition">
-            Publish Listing 🚀
-          </button>
-        </FormContainer>
-      );
-    };
-
-    const UpdateListingPage = ({ listings, setListings }) => {
-      const { id } = useParams();
-      const history = useHistory();
-      const listing = listings.find(l => String(l.id) === id);
-      
-      if (!listing) return <div className="text-center p-10">Not Found</div>;
-
-      const [form, setForm] = useState(listing);
-
-      const handleChange = e => setForm({ ...form, [e.target.name]: e.target.name === 'price' ? Number(e.target.value) : e.target.value });
-
-      const handleSubmit = e => {
-        e.preventDefault();
-        const updated = listings.map(l => String(l.id) === id ? form : l);
-        setListings(updated);
-        history.push(`/listing/${id}`);
-      };
-
-      return (
-        <FormContainer title="Edit Listing" onSubmit={handleSubmit}>
-          <InputGroup label="Title" name="title" value={form.title} onChange={handleChange} required />
-          <InputGroup label="Location" name="location" value={form.location} onChange={handleChange} required />
-          <InputGroup label="Price" name="price" type="number" value={form.price} onChange={handleChange} required />
-          <InputGroup label="Image URL" name="image" value={form.image} onChange={handleChange} required />
-          <textarea name="description" value={form.description} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border" required />
-          <button type="submit" className="w-full py-4 bg-orange-500 text-white font-bold rounded-xl hover:bg-orange-600 transition">Save Changes</button>
-        </FormContainer>
-      );
-    };
-
-    // --- APP ---
-    const App = () => {
-      const [listings, setListings] = useState(initialListings);
-      return (
-        <HashRouter>
-          <div className="flex flex-col min-h-screen font-sans">
-            <Navbar />
-            <Switch>
-              <Route exact path="/" component={HomePage} />
-              <Route exact path="/listings" render={() => <ListingsPage listings={listings} />} />
-              <Route exact path="/upload" render={() => <UploadPage listings={listings} setListings={setListings} />} />
-              <Route exact path="/listing/:id" render={() => <ListingDetails listings={listings} setListings={setListings} />} />
-              <Route exact path="/listing/:id/update" render={() => <UpdateListingPage listings={listings} setListings={setListings} />} />
-            </Switch>
-          </div>
-        </HashRouter>
-      );
-    };
-
-    ReactDOM.render(<App />, document.getElementById('root'));
-  </script>
-</body>
-</html>
+    // ---------- Listing Details (with messages & delete) ----------
+    const ListingDetails = ({ listings, setListings, messages, setMessages, currentUser }) => {
+      const { id } = useParams
