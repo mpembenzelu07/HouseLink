@@ -6,1784 +6,754 @@
   <meta name="description" content="Pata nyumba bora Tanzania - Bedsitter, Chumba, Apartment Dar es Salaam, Arusha, Mwanza" />
   <meta name="theme-color" content="#0d9488" />
   <title>HouseLink - Nyumba Bora Tanzania</title>
-  <link rel="manifest" href="data:application/manifest+json,{\"name\":\"HouseLink\",\"short_name\":\"HouseLink\",\"start_url\":\".\",\"display\":\"standalone\",\"background_color\":\"#0d9488\",\"theme_color\":\"#0d9488\",\"icons\":[{\"src\":\"https://via.placeholder.com/192/0d9488/ffffff?text=HL\",\"sizes\":\"192x192\",\"type\":\"image/png\"},{\"src\":\"https://via.placeholder.com/512/0d9488/ffffff?text=HL\",\"sizes\":\"512x512\",\"type\":\"image/png\"}]}">
   <link rel="icon" href="https://via.placeholder.com/64/0d9488/ffffff?text=HL" />
-  <link rel="apple-touch-icon" href="https://via.placeholder.com/180/0d9488/ffffff?text=HL" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&libraries=places&v=weekly" defer></script>
-  <script>
-    tailwind.config = { 
-      darkMode: 'class', 
-      theme: { 
-        extend: { 
-          fontFamily: { sans: ['Inter', 'system-ui'] },
-          animation: {
-            'fade-in': 'fadeIn 0.5s ease-in-out',
-            'slide-up': 'slideUp 0.3s ease-out',
-          },
-          keyframes: {
-            fadeIn: {
-              '0%': { opacity: '0' },
-              '100%': { opacity: '1' },
-            },
-            slideUp: {
-              '0%': { transform: 'translateY(20px)', opacity: '0' },
-              '100%': { transform: 'translateY(0)', opacity: '1' },
-            },
-          }
-        }
-      }
-    }
-  </script>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; }
     .gradient-bg { background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%); }
-    .card-hover { transition: all 0.3s; }
-    .card-hover:hover { transform: translateY(-10px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
-    .toast { animation: slideIn 0.4s ease-out; }
-    @keyframes slideIn { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; }}
-    .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
-    @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; }}
-    .image-gallery { scrollbar-width: thin; scrollbar-color: #0d9488 #f1f1f1; }
-    .image-gallery::-webkit-scrollbar { height: 8px; }
-    .image-gallery::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
-    .image-gallery::-webkit-scrollbar-thumb { background: #0d9488; border-radius: 4px; }
-    .map-container { height: 300px; border-radius: 12px; overflow: hidden; }
-    .virtual-tour { height: 400px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    .booking-modal { animation: fadeIn 0.3s ease-out; }
-    .amenity-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
-    .property-badge { position: absolute; top: 12px; left: 12px; z-index: 10; }
-    .verified-badge { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-    .featured-badge { background: linear-gradient(135deg, #f59e0b, #d97706); }
-    .urgent-badge { background: linear-gradient(135deg, #ef4444, #dc2626); }
-    .filter-panel { transition: all 0.3s ease; }
-    .agent-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-    .agent-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+    .card-hover { transition: transform 0.3s, box-shadow 0.3s; }
+    .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
   </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
-  <div id="root"></div>
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+  <div id="app"></div>
 
-  <script type="text/babel">
-    const { useState, useEffect, useContext, createContext, useRef } = React;
-    const { HashRouter, Route, Switch, Link, useParams, useHistory } = ReactRouterDOM;
-
-    // Enhanced Configuration
-    const CONFIG = {
-      CLOUDINARY: { CLOUD_NAME: '', UPLOAD_PRESET: '' },
-      LOCATIONS: [
-        {name: "Sinza", coords: {lat: -6.7924, lng: 39.2083}},
-        {name: "Ubungo", coords: {lat: -6.7833, lng: 39.2167}},
-        {name: "Mbezi", coords: {lat: -6.7500, lng: 39.2333}},
-        {name: "Tegeta", coords: {lat: -6.7667, lng: 39.2000}},
-        {name: "Masaki", coords: {lat: -6.7708, lng: 39.2692}},
-        {name: "Upanga", coords: {lat: -6.8167, lng: 39.2833}},
-        {name: "Kariakoo", coords: {lat: -6.8167, lng: 39.2833}},
-        {name: "Kinondoni", coords: {lat: -6.8000, lng: 39.2500}},
-        {name: "Mwenge", coords: {lat: -6.7833, lng: 39.2167}},
-        {name: "Posta", coords: {lat: -6.8167, lng: 39.2833}}
-      ],
-      FILTER_TYPES: ["Bedsitter", "Single Room", "Apartment", "Studio", "Duplex", "House", "Commercial Space"],
-      AMENITIES: [
-        {id: "water", name: "Maji 24/7", icon: "fa-tint"},
-        {id: "security", name: "Ulinzi", icon: "fa-shield-alt"},
-        {id: "parking", name: "Parking", icon: "fa-car"},
-        {id: "daladala", name: "Karibu na Usafiri", icon: "fa-bus"},
-        {id: "student", name: "Inafaa Wanafunzi", icon: "fa-graduation-cap"},
-        {id: "wifi", name: "Wi-Fi", icon: "fa-wifi"},
-        {id: "generator", name: "Jenereta", icon: "fa-bolt"},
-        {id: "furnished", name: "Samani", icon: "fa-couch"},
-        {id: "ac", name: "Air Condition", icon: "fa-snowflake"},
-        {id: "gym", name: "Gym", icon: "fa-dumbbell"},
-        {id: "pool", name: "Bwawa", icon: "fa-swimming-pool"},
-        {id: "garden", name: "Bustani", icon: "fa-tree"}
-      ],
-      BEDROOM_OPTIONS: ["Studio", "1", "2", "3", "4", "5+"],
-      BATHROOM_OPTIONS: ["1", "2", "3", "4", "5+"],
-      PROPERTY_STATUS: ["For Rent", "For Sale", "Rent to Own", "Short Term"],
-      AGENT_TIERS: ["Bronze", "Silver", "Gold", "Platinum"]
-    };
-
-    const LS = { 
-      LISTINGS: 'hl:listings:v12', 
-      FAVS: 'hl:favs:v12', 
-      THEME: 'hl:theme', 
-      LANG: 'hl:lang', 
-      RECENT: 'hl:recent',
-      AGENTS: 'hl:agents:v2',
-      REVIEWS: 'hl:reviews:v2',
-      BOOKINGS: 'hl:bookings:v2'
-    };
-
-    const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
-    const load = (k, def) => { try { return JSON.parse(localStorage.getItem(k)) || def; } catch { return def; }};
-
-    // Enhanced Translations
-    const translations = {
-      sw: { 
-        appName: "HouseLink", upload: "Weka Tangazo", listings: "Orodha Zote", favorites: "Vipendwa", 
-        search: "Tafuta nyumba...", priceRange: "Bei (TZS)", min: "Chini", max: "Juu", type: "Aina", 
-        location: "Eneo", featured: "Zilizoangaziwa", recent: "Hivi Karibuni", contact: "Wasiliana", 
-        whatsapp: "WhatsApp", phone: "Simu", send: "Tuma", message: "Ujumbe", report: "Ripoti", 
-        share: "Shiriki", copy: "Nakili", saved: "Imehifadhiwa", removed: "Imeondolewa", 
-        dark: "Giza", light: "Mwanga", emergency: "Dharura", about: "Kuhusu", verified: "Imethibitishwa", 
-        urgent: "Haraka", water: "Maji 24/7", security: "Ulinzi", parking: "Parking", 
-        daladala: "Daladala", student: "Wanafunzi", wifi: "Wi-Fi", generator: "Jenereta", 
-        furnished: "Samani", tips: "Vidokezo", scam: "Kujikinga", cities: "Miji", follow: "Tufuate",
-        description: "Maelezo", amenities: "Vifaa & Huduma", stats: "Takwimu", views: "Angalio",
-        posted: "Iliwekwa", month: "kwa mwezi", filter: "Chuja", clear: "Safisha", apply: "Tumia",
-        contactOwner: "Mwasiliana na Mmiliki", shareListing: "Shiriki Tangazo", emergencyContacts: "Nambari za Dharura",
-        police: "Polisi", fire: "Zima moto", housing: "Uhasibu wa nyumba", electricity: "TANESCO",
-        loading: "Inapakia...", noListings: "Hakuna tangazo lililopatikana", allCities: "Miji Yote",
-        mapView: "Angalia Ramani", listView: "Angalia Orodha", scheduleViewing: "Panga Utafiti",
-        virtualTour: "Tembelea Mtandaoni", contactAgent: "Wasiliana na Wakala", bookNow: "Weka Ada ya Uhifadhi",
-        bedrooms: "Vyumba vya kulala", bathrooms: "Bafu", propertyType: "Aina ya Mali", status: "Hali",
-        advancedFilters: "Vichujio Vya Juu", resetFilters: "Weka Upya", saveSearch: "Hifadhi Tafutio",
-        nearbySchools: "Shule Karibu", hospitals: "Hospitali", supermarkets: "Maduka Makubwa",
-        transportation: "Usafiri", neighborhood: "Mtaa", priceHistory: "Historia ya Bei",
-        similarProperties: "Mali Zinazofanana", agentProfile: "Wasifu wa Wakala", customerReviews: "Maoni ya Wateja",
-        rating: "Ukadiriaji", yearsExperience: "Miaka ya Uzoefu", propertiesListed: "Mali Zilizowekwa",
-        responseRate: "Kiwango cha Majibu", trustedAgent: "Wakala Anayetumika", viewAllProperties: "Angalia Mali Zote",
-        schedule: "Ratiba", selectDate: "Chagua Tarehe", selectTime: "Chagua Muda", confirmBooking: "Thibitisha Uhakiki",
-        bookingDetails: "Maelezo ya Uhakiki", name: "Jina", email: "Barua Pepe", notes: "Vidokezo",
-        confirm: "Thibitisha", cancel: "Futa", bookingSuccess: "Uhakiki Umewekwa Kikamilifu!",
-        contactSupport: "Wasiliana na Msaada", liveChat: "Maongezi ya Moja kwa Moja", featuredAgents: "Wakala Bora",
-        topRated: "Waliokadirika Juu", newListings: "Tangazo Mpya", priceDrop: "Bei Imeshuka",
-        recentlySold: "Imeuzwa Hivi Karibuni", marketTrends: "Mienendo ya Soko", rentVsBuy: "Kukodha vs Kununua",
-        mortgageCalculator: "Kikokotoo cha Mikopo", areaGuide: "Mwongozo wa Eneo", safetyTips: "Vidokezo vya Usalama",
-        legalAdvice: "Ushauri wa Kisheria", movingChecklist: "Orodha ya Kuhamia", petFriendly: "Inafaa Wanyama",
-        wheelchairAccess: "Inafaa Wenye Vitanda", balcony: "Rofa", fireplace: "Moto wa Makaa",
-        laundry: "Choo cha Kufulia", storage: "Hifadhi", concierge: "Mlinzi", doorman: "Mlango",
-        elevator: "Lifti", garage: "Karakana", view: "Mtazamo", furnished: "Samani",
-        partiallyFurnished: "Samani Nyingine", unfurnished: "Bila Samani"
+  <script>
+    // Simple Vanilla JavaScript App - No React dependencies
+    
+    const listings = [
+      {
+        id: 1,
+        title: "Bedsitter Sinza",
+        location: "Sinza",
+        price: 135000,
+        type: "Bedsitter",
+        image: "https://images.unsplash.com/photo-1560184897-ae75f418493e?auto=format&fit=crop&w=800&q=80",
+        phone: "+255712345678",
+        description: "Bedsitter nzuri Sinza, maji 24/7, karibu na chuo kikuu",
+        featured: true,
+        verified: true
       },
-      en: { 
-        appName: "HouseLink", upload: "Post Listing", listings: "All Listings", favorites: "Favorites",
-        search: "Search homes...", priceRange: "Price (TZS)", min: "Min", max: "Max", type: "Type",
-        location: "Location", featured: "Featured", recent: "Recently Viewed", contact: "Contact",
-        whatsapp: "WhatsApp", phone: "Phone", send: "Send", message: "Message", report: "Report",
-        share: "Share", copy: "Copy", saved: "Saved", removed: "Removed", dark: "Dark", light: "Light",
-        emergency: "Emergency", about: "About", verified: "Verified", urgent: "Urgent", water: "Water 24/7",
-        security: "Security", parking: "Parking", daladala: "Near Transport", student: "Student Friendly",
-        wifi: "Wi-Fi", generator: "Generator", furnished: "Furnished", tips: "Tips", scam: "Scam Prevention",
-        cities: "Cities", follow: "Follow Us", description: "Description", amenities: "Amenities & Services",
-        stats: "Statistics", views: "Views", posted: "Posted", month: "per month", filter: "Filter",
-        clear: "Clear", apply: "Apply", contactOwner: "Contact Owner", shareListing: "Share Listing",
-        emergencyContacts: "Emergency Contacts", police: "Police", fire: "Fire", housing: "Housing Department",
-        electricity: "Electricity", loading: "Loading...", noListings: "No listings found", allCities: "All Cities",
-        mapView: "Map View", listView: "List View", scheduleViewing: "Schedule Viewing",
-        virtualTour: "Virtual Tour", contactAgent: "Contact Agent", bookNow: "Book Now",
-        bedrooms: "Bedrooms", bathrooms: "Bathrooms", propertyType: "Property Type", status: "Status",
-        advancedFilters: "Advanced Filters", resetFilters: "Reset Filters", saveSearch: "Save Search",
-        nearbySchools: "Nearby Schools", hospitals: "Hospitals", supermarkets: "Supermarkets",
-        transportation: "Transportation", neighborhood: "Neighborhood", priceHistory: "Price History",
-        similarProperties: "Similar Properties", agentProfile: "Agent Profile", customerReviews: "Customer Reviews",
-        rating: "Rating", yearsExperience: "Years Experience", propertiesListed: "Properties Listed",
-        responseRate: "Response Rate", trustedAgent: "Trusted Agent", viewAllProperties: "View All Properties",
-        schedule: "Schedule", selectDate: "Select Date", selectTime: "Select Time", confirmBooking: "Confirm Booking",
-        bookingDetails: "Booking Details", name: "Name", email: "Email", notes: "Notes",
-        confirm: "Confirm", cancel: "Cancel", bookingSuccess: "Booking Confirmed Successfully!",
-        contactSupport: "Contact Support", liveChat: "Live Chat", featuredAgents: "Featured Agents",
-        topRated: "Top Rated", newListings: "New Listings", priceDrop: "Price Drop",
-        recentlySold: "Recently Sold", marketTrends: "Market Trends", rentVsBuy: "Rent vs Buy",
-        mortgageCalculator: "Mortgage Calculator", areaGuide: "Area Guide", safetyTips: "Safety Tips",
-        legalAdvice: "Legal Advice", movingChecklist: "Moving Checklist", petFriendly: "Pet Friendly",
-        wheelchairAccess: "Wheelchair Access", balcony: "Balcony", fireplace: "Fireplace",
-        laundry: "Laundry", storage: "Storage", concierge: "Concierge", doorman: "Doorman",
-        elevator: "Elevator", garage: "Garage", view: "View", furnished: "Furnished",
-        partiallyFurnished: "Partially Furnished", unfurnished: "Unfurnished"
+      {
+        id: 2,
+        title: "Chumba cha Kisasa Mbezi",
+        location: "Mbezi",
+        price: 98000,
+        type: "Single Room",
+        image: "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=800&q=80",
+        phone: "+255765432109",
+        description: "Chumba kizuri Mbezi Beach, tiles zote, dirisha zuri",
+        urgent: true
+      },
+      {
+        id: 3,
+        title: "Apartment Masaki",
+        location: "Masaki",
+        price: 950000,
+        type: "Apartment",
+        image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
+        phone: "+255788888888",
+        description: "Apartment ya kisasa Masaki, mtazamo wa bahari",
+        featured: true,
+        verified: true
+      }
+    ];
+
+    // Simple Router
+    const router = {
+      currentPath: window.location.hash || '#/',
+      
+      navigate(hash) {
+        window.location.hash = hash;
+        this.currentPath = hash;
+        this.render();
+      },
+      
+      render() {
+        const app = document.getElementById('app');
+        app.innerHTML = '';
+        
+        switch(this.currentPath) {
+          case '#/':
+            app.appendChild(renderHome());
+            break;
+          case '#/listings':
+            app.appendChild(renderListings());
+            break;
+          case '#/upload':
+            app.appendChild(renderUpload());
+            break;
+          default:
+            if (this.currentPath.startsWith('#/listing/')) {
+              const id = parseInt(this.currentPath.split('/')[2]);
+              app.appendChild(renderListingDetail(id));
+            } else {
+              app.appendChild(renderHome());
+            }
+        }
+        
+        // Update active nav link
+        document.querySelectorAll('nav a').forEach(link => {
+          link.classList.remove('bg-white/20');
+          if (link.getAttribute('href') === this.currentPath) {
+            link.classList.add('bg-white/20');
+          }
+        });
       }
     };
 
-    // Toast Context
-    const ToastContext = createContext();
-    const ToastProvider = ({ children }) => {
-      const [toasts, setToasts] = useState([]);
-      const push = (msg, opts = {}) => {
-        const id = Date.now();
-        setToasts(t => [...t, { id, msg, ...opts }]);
-        setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 4000);
-      };
-      return (
-        <ToastContext.Provider value={{ push }}>
-          {children}
-          <div className="fixed bottom-4 right-4 z-50 space-y-3 max-w-sm">
-            {toasts.map(t => (
-              <div key={t.id} className={`toast p-4 rounded-xl shadow-2xl text-white font-bold ${t.variant==='error'?'bg-red-600':t.variant==='success'?'bg-green-600':'bg-teal-600'}`}>
-                {t.msg}
-              </div>
-            ))}
-          </div>
-        </ToastContext.Provider>
-      );
-    };
-    const useToast = () => useContext(ToastContext).push;
-
-    // Dark Mode Hook
-    const useDarkMode = () => {
-      const [dark, setDark] = useState(load(LS.THEME, false));
-      useEffect(() => {
-        dark ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
-        save(LS.THEME, dark);
-      }, [dark]);
-      return [dark, () => setDark(d => !d)];
-    };
-
-    // Language Hook
-    const useLanguage = () => {
-      const [lang, setLang] = useState(load(LS.LANG, 'sw'));
-      const t = translations[lang];
-      useEffect(() => save(LS.LANG, lang), [lang]);
-      return [lang, () => setLang(l => l === 'sw' ? 'en' : 'sw'), t];
-    };
-
-    // Enhanced Map Component
-    const PropertyMap = ({ location, listings = [], height = "300px", zoom = 14, showMarkers = true }) => {
-      const mapRef = useRef(null);
-      const [map, setMap] = useState(null);
-      const [markers, setMarkers] = useState([]);
-
-      useEffect(() => {
-        if (!window.google) return;
-
-        const initMap = () => {
-          const locationData = CONFIG.LOCATIONS.find(loc => loc.name === location) || CONFIG.LOCATIONS[0];
-          const center = locationData ? locationData.coords : { lat: -6.7924, lng: 39.2083 };
-          
-          const mapInstance = new window.google.maps.Map(mapRef.current, {
-            center,
-            zoom,
-            styles: [
-              {
-                featureType: "poi",
-                elementType: "labels",
-                stylers: [{ visibility: "off" }]
-              }
-            ]
-          });
-
-          setMap(mapInstance);
-
-          // Add markers for listings
-          if (showMarkers && listings.length > 0) {
-            const newMarkers = listings.map(listing => {
-              const markerLocation = CONFIG.LOCATIONS.find(loc => loc.name === listing.location)?.coords || center;
-              
-              const marker = new window.google.maps.Marker({
-                position: markerLocation,
-                map: mapInstance,
-                title: listing.title,
-                icon: {
-                  url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="50" viewBox="0 0 40 50">
-                      <path fill="${listing.featured ? '#f59e0b' : '#0d9488'}" d="M20 0C9 0 0 9 0 20c0 15 20 30 20 30s20-15 20-30C40 9 31 0 20 0z"/>
-                      <circle fill="white" cx="20" cy="20" r="8"/>
-                      <text x="20" y="25" text-anchor="middle" fill="#0d9488" font-size="12" font-weight="bold">${listing.price.toString().charAt(0)}</text>
-                    </svg>
-                  `)}`,
-                  scaledSize: new window.google.maps.Size(40, 50)
-                }
-              });
-
-              const infoWindow = new window.google.maps.InfoWindow({
-                content: `
-                  <div style="padding: 10px; max-width: 200px;">
-                    <strong>${listing.title}</strong><br/>
-                    <small>${listing.location}</small><br/>
-                    <strong style="color: #f59e0b;">${listing.price.toLocaleString()} TZS</strong><br/>
-                    <a href="#/listing/${listing.id}" style="color: #0d9488; text-decoration: none;">View Details →</a>
-                  </div>
-                `
-              });
-
-              marker.addListener('click', () => {
-                infoWindow.open(mapInstance, marker);
-              });
-
-              return marker;
-            });
-
-            setMarkers(newMarkers);
-
-            // Fit bounds to show all markers
-            if (listings.length > 1) {
-              const bounds = new window.google.maps.LatLngBounds();
-              newMarkers.forEach(marker => bounds.extend(marker.getPosition()));
-              mapInstance.fitBounds(bounds);
-            }
-          }
-        };
-
-        initMap();
-
-        return () => {
-          markers.forEach(marker => marker.setMap(null));
-        };
-      }, [location, listings, showMarkers]);
-
-      if (!window.google) {
-        return (
-          <div className="map-container bg-gray-200 dark:bg-gray-800 rounded-xl flex items-center justify-center">
-            <div className="text-center">
-              <i className="fas fa-map text-4xl text-gray-400 mb-4"></i>
-              <p className="text-gray-600 dark:text-gray-400">Map loading...</p>
+    // Components
+    function renderNav() {
+      const nav = document.createElement('nav');
+      nav.className = 'gradient-bg text-white sticky top-0 z-50 shadow-lg';
+      nav.innerHTML = `
+        <div class="max-w-7xl mx-auto px-4 py-4">
+          <div class="flex justify-between items-center">
+            <a href="#/" class="text-2xl font-bold flex items-center gap-2">
+              <i class="fas fa-home"></i>
+              HouseLink
+            </a>
+            
+            <div class="flex items-center gap-4">
+              <a href="#/listings" class="hover:bg-white/10 px-4 py-2 rounded-lg transition">Orodha Zote</a>
+              <a href="#/upload" class="bg-white text-teal-600 hover:bg-gray-100 px-6 py-2 rounded-full font-bold">
+                <i class="fas fa-plus mr-2"></i> Weka Tangazo
+              </a>
+              <button onclick="toggleDarkMode()" class="p-2 hover:bg-white/10 rounded-full">
+                <i class="fas fa-moon"></i>
+              </button>
             </div>
           </div>
+        </div>
+      `;
+      
+      // Add click handlers
+      nav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          router.navigate(link.getAttribute('href'));
+        });
+      });
+      
+      return nav;
+    }
+
+    function renderFooter() {
+      const footer = document.createElement('footer');
+      footer.className = 'bg-gray-800 text-white mt-20';
+      footer.innerHTML = `
+        <div class="max-w-7xl mx-auto px-6 py-12">
+          <div class="text-center">
+            <h3 class="text-2xl font-bold mb-4">HouseLink Tanzania</h3>
+            <p class="text-gray-400">Pata nyumba bora Tanzania</p>
+            <div class="mt-8 pt-8 border-t border-gray-700">
+              <p class="text-gray-500">© 2024 HouseLink. Haki zote zimehifadhiwa.</p>
+            </div>
+          </div>
+        </div>
+      `;
+      return footer;
+    }
+
+    function renderHome() {
+      const container = document.createElement('div');
+      container.className = 'animate-fade-in';
+      
+      // Hero Section
+      const hero = document.createElement('div');
+      hero.className = 'gradient-bg text-white py-20 md:py-32 text-center';
+      hero.innerHTML = `
+        <div class="max-w-6xl mx-auto px-6">
+          <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+            Pata Nyumba Bora Tanzania
+          </h1>
+          <p class="text-xl md:text-2xl mb-10 opacity-90">
+            Dar es Salaam • Arusha • Mwanza • Dodoma • Mbeya
+          </p>
+          <a href="#/listings" class="inline-block bg-white text-teal-600 hover:bg-gray-100 px-10 py-4 rounded-full text-xl font-bold shadow-xl">
+            <i class="fas fa-search mr-3"></i> Anza Kutafuta
+          </a>
+        </div>
+      `;
+      
+      // Stats Section
+      const stats = document.createElement('div');
+      stats.className = 'max-w-6xl mx-auto px-6 py-16';
+      stats.innerHTML = `
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div class="text-center">
+            <div class="text-4xl font-bold text-teal-600 mb-2">5,000+</div>
+            <div class="text-gray-600">Nyumba Zilizopo</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-teal-600 mb-2">10,000+</div>
+            <div class="text-gray-600">Watumiaji</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-teal-600 mb-2">25+</div>
+            <div class="text-gray-600">Miji</div>
+          </div>
+          <div class="text-center">
+            <div class="text-4xl font-bold text-teal-600 mb-2">1,200+</div>
+            <div class="text-gray-600">Zilizothibitishwa</div>
+          </div>
+        </div>
+      `;
+      
+      // Featured Listings
+      const featured = document.createElement('div');
+      featured.className = 'max-w-7xl mx-auto px-6 py-12';
+      featured.innerHTML = `
+        <h2 class="text-3xl font-bold mb-8 text-center">Nyumba Zilizoangaziwa</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          ${listings.filter(l => l.featured).map(listing => `
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+              <div class="relative h-48">
+                <img src="${listing.image}" alt="${listing.title}" class="w-full h-full object-cover">
+                ${listing.verified ? `
+                  <div class="absolute top-3 left-3 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                    <i class="fas fa-check-circle mr-1"></i> Verified
+                  </div>
+                ` : ''}
+              </div>
+              <div class="p-6">
+                <h3 class="font-bold text-lg mb-2">${listing.title}</h3>
+                <p class="text-gray-600 mb-4">
+                  <i class="fas fa-map-marker-alt text-teal-600 mr-2"></i>
+                  ${listing.location}
+                </p>
+                <div class="flex justify-between items-center">
+                  <span class="text-2xl font-bold text-orange-500">${listing.price.toLocaleString()} TZS</span>
+                  <a href="#/listing/${listing.id}" class="text-teal-600 font-bold hover:underline">
+                    Angalia <i class="fas fa-arrow-right ml-1"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="text-center mt-10">
+          <a href="#/listings" class="inline-block bg-teal-600 text-white hover:bg-teal-700 px-8 py-3 rounded-full font-bold">
+            Angalia Zote <i class="fas fa-arrow-right ml-2"></i>
+          </a>
+        </div>
+      `;
+      
+      // How It Works
+      const howItWorks = document.createElement('div');
+      howItWorks.className = 'max-w-7xl mx-auto px-6 py-16';
+      howItWorks.innerHTML = `
+        <h2 class="text-3xl font-bold mb-10 text-center">Jinsi Inavyofanya Kazi</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-white p-8 rounded-2xl shadow text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-teal-100 rounded-full mb-6">
+              <i class="fas fa-search text-teal-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Tafuta</h3>
+            <p class="text-gray-600">Tafuta nyumba kwa eneo, bei, au aina</p>
+          </div>
+          <div class="bg-white p-8 rounded-2xl shadow text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-teal-100 rounded-full mb-6">
+              <i class="fas fa-phone-alt text-teal-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Wasiliana</h3>
+            <p class="text-gray-600">Piga simu au tuma ujumbe kupitia WhatsApp</p>
+          </div>
+          <div class="bg-white p-8 rounded-2xl shadow text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-teal-100 rounded-full mb-6">
+              <i class="fas fa-home text-teal-600 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Kaa</h3>
+            <p class="text-gray-600">Pata nyumba bora na ukae kwa raha</p>
+          </div>
+        </div>
+      `;
+      
+      container.appendChild(hero);
+      container.appendChild(stats);
+      container.appendChild(featured);
+      container.appendChild(howItWorks);
+      
+      // Add click handlers
+      container.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          router.navigate(link.getAttribute('href'));
+        });
+      });
+      
+      return container;
+    }
+
+    function renderListings() {
+      const container = document.createElement('div');
+      container.className = 'max-w-7xl mx-auto p-4 md:p-6 animate-fade-in';
+      
+      container.innerHTML = `
+        <h1 class="text-3xl md:text-4xl font-bold mb-2">Orodha Zote</h1>
+        <p class="text-gray-600 mb-8">Nyumba ${listings.length} zilizopatikana</p>
+        
+        <!-- Search Bar -->
+        <div class="mb-8">
+          <div class="relative">
+            <input 
+              type="text" 
+              placeholder="Tafuta nyumba..." 
+              class="w-full p-4 pl-12 border rounded-xl text-lg"
+              id="searchInput"
+            >
+            <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          </div>
+        </div>
+        
+        <!-- Filters -->
+        <div class="bg-white rounded-xl p-6 shadow-lg mb-8">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <select class="p-3 border rounded-lg" id="locationFilter">
+              <option value="">Chagua Eneo</option>
+              <option value="Sinza">Sinza</option>
+              <option value="Mbezi">Mbezi</option>
+              <option value="Masaki">Masaki</option>
+              <option value="Upanga">Upanga</option>
+            </select>
+            
+            <select class="p-3 border rounded-lg" id="typeFilter">
+              <option value="">Chagua Aina</option>
+              <option value="Bedsitter">Bedsitter</option>
+              <option value="Single Room">Chumba</option>
+              <option value="Apartment">Apartment</option>
+              <option value="Studio">Studio</option>
+            </select>
+            
+            <input 
+              type="number" 
+              placeholder="Bei ya chini" 
+              class="p-3 border rounded-lg"
+              id="minPrice"
+            >
+            
+            <button onclick="applyFilters()" class="bg-teal-600 hover:bg-teal-700 text-white p-3 rounded-lg font-bold">
+              <i class="fas fa-filter mr-2"></i> Chuja
+            </button>
+          </div>
+        </div>
+        
+        <!-- Listings Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="listingsContainer">
+          ${renderListingCards(listings)}
+        </div>
+        
+        ${listings.length === 0 ? `
+          <div class="text-center py-20">
+            <i class="fas fa-search text-gray-400 text-6xl mb-6"></i>
+            <h3 class="text-2xl font-bold mb-2">Hakuna tangazo lililopatikana</h3>
+            <p class="text-gray-600 mb-8">Jaribu kubadilisha vichujio vyako</p>
+            <a href="#/upload" class="bg-teal-600 text-white px-8 py-3 rounded-full font-bold">
+              <i class="fas fa-plus mr-2"></i> TANGAZA NYUMBA
+            </a>
+          </div>
+        ` : ''}
+      `;
+      
+      return container;
+    }
+
+    function renderListingCards(listingsArray) {
+      return listingsArray.map(listing => `
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover">
+          <div class="relative">
+            <img 
+              src="${listing.image}" 
+              alt="${listing.title}" 
+              class="w-full h-64 object-cover"
+            >
+            <div class="absolute top-3 left-3 flex gap-2">
+              ${listing.verified ? `
+                <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                  <i class="fas fa-check-circle mr-1"></i> Verified
+                </span>
+              ` : ''}
+              ${listing.urgent ? `
+                <span class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                  <i class="fas fa-clock mr-1"></i> Urgent
+                </span>
+              ` : ''}
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold">${listing.title}</h3>
+            <p class="text-gray-600 mt-1">
+              <i class="fas fa-map-marker-alt text-teal-600 mr-2"></i>
+              ${listing.location} • ${listing.type}
+            </p>
+            <div class="flex justify-between items-center mt-4">
+              <span class="text-2xl font-extrabold text-orange-500">${listing.price.toLocaleString()} TZS</span>
+              <a 
+                href="#/listing/${listing.id}"
+                class="text-teal-600 font-bold hover:underline flex items-center gap-2"
+              >
+                Angalia <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderListingDetail(id) {
+      const listing = listings.find(l => l.id === id);
+      if (!listing) {
+        const container = document.createElement('div');
+        container.className = 'text-center py-32';
+        container.innerHTML = `
+          <i class="fas fa-home text-gray-400 text-6xl mb-6"></i>
+          <h1 class="text-4xl font-bold mb-4">Tangazo halipatikani</h1>
+          <a href="#/listings" class="bg-teal-600 text-white px-8 py-3 rounded-full font-bold">
+            Rudi kwenye orodha
+          </a>
+        `;
+        return container;
+      }
+      
+      const container = document.createElement('div');
+      container.className = 'max-w-6xl mx-auto p-4 animate-fade-in';
+      container.innerHTML = `
+        <!-- Breadcrumb -->
+        <div class="mb-6">
+          <a href="#/" class="text-teal-600 hover:underline">Nyumbani</a>
+          <span class="mx-2">/</span>
+          <a href="#/listings" class="text-teal-600 hover:underline">Orodha</a>
+          <span class="mx-2">/</span>
+          <span class="text-gray-600">${listing.title}</span>
+        </div>
+        
+        <!-- Property Details -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div class="relative h-64 md:h-96">
+            <img 
+              src="${listing.image}" 
+              alt="${listing.title}" 
+              class="w-full h-full object-cover"
+            >
+            <div class="absolute top-4 left-4 flex gap-2">
+              ${listing.verified ? `
+                <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold">
+                  <i class="fas fa-check-circle"></i> Verified
+                </span>
+              ` : ''}
+              ${listing.urgent ? `
+                <span class="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">
+                  <i class="fas fa-clock"></i> Urgent
+                </span>
+              ` : ''}
+            </div>
+          </div>
+          
+          <div class="p-6 md:p-8">
+            <div class="flex flex-col md:flex-row justify-between items-start mb-6">
+              <div>
+                <h1 class="text-3xl md:text-4xl font-bold">${listing.title}</h1>
+                <p class="text-xl text-gray-600 mt-2">
+                  <i class="fas fa-map-marker-alt text-teal-600 mr-2"></i>
+                  ${listing.location}
+                </p>
+              </div>
+              <div class="mt-4 md:mt-0 text-right">
+                <div class="text-4xl md:text-5xl font-bold text-orange-500">${listing.price.toLocaleString()} TZS</div>
+                <div class="text-gray-600">kwa mwezi</div>
+              </div>
+            </div>
+            
+            <div class="mb-8">
+              <h3 class="text-2xl font-bold mb-4">Maelezo</h3>
+              <p class="text-lg text-gray-700 leading-relaxed">${listing.description}</p>
+            </div>
+            
+            <!-- Contact Buttons -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <a 
+                href="https://wa.me/${listing.whatsapp || listing.phone}?text=Habari! Naomba kujua kuhusu nyumba hii: ${encodeURIComponent(listing.title)}"
+                target="_blank"
+                class="bg-green-600 hover:bg-green-700 text-white p-4 rounded-xl flex items-center justify-center gap-3 font-bold text-lg"
+              >
+                <i class="fab fa-whatsapp text-2xl"></i>
+                <span>WhatsApp</span>
+              </a>
+              
+              <a 
+                href="tel:${listing.phone}"
+                class="bg-teal-600 hover:bg-teal-700 text-white p-4 rounded-xl flex items-center justify-center gap-3 font-bold text-lg"
+            >
+                <i class="fas fa-phone-alt text-2xl"></i>
+                <span>Piga Simu</span>
+              </a>
+            </div>
+            
+            <!-- Additional Info -->
+            <div class="mt-8 pt-8 border-t">
+              <h4 class="text-xl font-bold mb-4">Taarifa za Ziada</h4>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Aina ya Nyumba:</span>
+                  <span class="font-bold">${listing.type}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Eneo:</span>
+                  <span class="font-bold">${listing.location}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Nambari ya Simu:</span>
+                  <span class="font-bold">${listing.phone}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Hali:</span>
+                  <span class="font-bold">${listing.urgent ? 'Haraka' : 'Kawaida'}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Emergency Contacts -->
+        <div class="mt-8 bg-red-50 border border-red-200 rounded-2xl p-6">
+          <h4 class="text-xl font-bold text-red-700 mb-4">
+            <i class="fas fa-phone-alt mr-2"></i>
+            Nambari za Dharura
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex justify-between">
+              <span class="font-medium">Polisi:</span>
+              <a href="tel:112" class="text-red-600 font-bold">112 / 111</a>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-medium">Zima moto:</span>
+              <a href="tel:114" class="text-red-600 font-bold">114</a>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Add click handlers
+      container.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          router.navigate(link.getAttribute('href'));
+        });
+      });
+      
+      return container;
+    }
+
+    function renderUpload() {
+      const container = document.createElement('div');
+      container.className = 'max-w-4xl mx-auto p-4 animate-fade-in';
+      container.innerHTML = `
+        <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-10">
+          <h1 class="text-4xl font-bold mb-2">Weka Tangazo</h1>
+          <p class="text-gray-600 mb-8">Weka tangazo lako la nyumba kwa urahisi</p>
+          
+          <form id="uploadForm" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium mb-2">Kichwa cha Tangazo *</label>
+                <input 
+                  type="text"
+                  placeholder="Mf: Bedsitter nzuri Sinza"
+                  required
+                  class="w-full p-4 border rounded-xl"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-2">Bei (TZS) *</label>
+                <input 
+                  type="number"
+                  placeholder="Mf: 135000"
+                  required
+                  class="w-full p-4 border rounded-xl"
+                />
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium mb-2">Eneo *</label>
+                <select required class="w-full p-4 border rounded-xl">
+                  <option value="">Chagua Eneo</option>
+                  <option>Sinza</option>
+                  <option>Mbezi</option>
+                  <option>Masaki</option>
+                  <option>Upanga</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-2">Aina ya Nyumba *</label>
+                <select required class="w-full p-4 border rounded-xl">
+                  <option value="">Chagua Aina</option>
+                  <option>Bedsitter</option>
+                  <option>Single Room</option>
+                  <option>Apartment</option>
+                  <option>Studio</option>
+                </select>
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium mb-2">Namba ya Simu *</label>
+                <input 
+                  type="tel"
+                  placeholder="+255712345678"
+                  required
+                  class="w-full p-4 border rounded-xl"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-2">WhatsApp</label>
+                <input 
+                  type="tel"
+                  placeholder="+255712345678"
+                  class="w-full p-4 border rounded-xl"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium mb-2">Maelezo zaidi *</label>
+              <textarea 
+                rows="4"
+                placeholder="Eleza nyumba yako kwa kina..."
+                required
+                class="w-full p-4 border rounded-xl"
+              ></textarea>
+            </div>
+            
+            <button 
+              type="submit"
+              class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white py-4 rounded-xl font-bold text-xl shadow-lg"
+            >
+              Chapisha Tangazo
+            </button>
+          </form>
+        </div>
+      `;
+      
+      container.querySelector('#uploadForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Tangazo limewekwa kikamilifu!');
+        router.navigate('#/listings');
+      });
+      
+      return container;
+    }
+
+    // Global Functions
+    window.toggleDarkMode = function() {
+      document.body.classList.toggle('dark');
+      const icon = document.querySelector('button[onclick="toggleDarkMode()"] i');
+      if (document.body.classList.contains('dark')) {
+        document.body.classList.add('bg-gray-900', 'text-gray-100');
+        document.body.classList.remove('bg-gray-50', 'text-gray-900');
+        icon.className = 'fas fa-sun';
+      } else {
+        document.body.classList.add('bg-gray-50', 'text-gray-900');
+        document.body.classList.remove('bg-gray-900', 'text-gray-100');
+        icon.className = 'fas fa-moon';
+      }
+    };
+
+    window.applyFilters = function() {
+      const location = document.getElementById('locationFilter')?.value || '';
+      const type = document.getElementById('typeFilter')?.value || '';
+      const minPrice = document.getElementById('minPrice')?.value || '';
+      const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
+      
+      let filtered = [...listings];
+      
+      if (location) {
+        filtered = filtered.filter(l => l.location === location);
+      }
+      
+      if (type) {
+        filtered = filtered.filter(l => l.type === type);
+      }
+      
+      if (minPrice) {
+        filtered = filtered.filter(l => l.price >= parseInt(minPrice));
+      }
+      
+      if (search) {
+        filtered = filtered.filter(l => 
+          l.title.toLowerCase().includes(search) || 
+          l.location.toLowerCase().includes(search) ||
+          l.description.toLowerCase().includes(search)
         );
       }
-
-      return (
-        <div 
-          ref={mapRef} 
-          style={{ height }} 
-          className="map-container w-full rounded-xl shadow-lg"
-        />
-      );
-    };
-
-    // Virtual Tour Component
-    const VirtualTour = ({ images, title }) => {
-      const [currentImage, setCurrentImage] = useState(0);
-      const [isFullscreen, setIsFullscreen] = useState(false);
-
-      const nextImage = () => {
-        setCurrentImage((prev) => (prev + 1) % images.length);
-      };
-
-      const prevImage = () => {
-        setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
-      };
-
-      const toggleFullscreen = () => {
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen();
-  setIsFullscreen(true);
-        } else {
-          document.exitFullscreen();
-          setIsFullscreen(false);
-        }
-      };
-
-      return (
-        <div className={`virtual-tour rounded-2xl overflow-hidden relative ${isFullscreen ? 'fixed inset-0 z-50' : ''}`}>
-          <div className="absolute inset-0">
-            <img 
-              src={images[currentImage] || "https://images.unsplash.com/photo-1560184897-ae75f418493e?auto=format&fit=crop&w=1200&q=80"} 
-              alt={`${title} - View ${currentImage + 1}`}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          
-          {/* Navigation Controls */}
-          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-4">
-            <button 
-              onClick={prevImage}
-              className="bg-white/90 hover:bg-white text-gray-900 p-3 rounded-full shadow-lg"
-            >
-              <i className="fas fa-chevron-left"></i>
-            </button>
-            <div className="bg-white/90 text-gray-900 px-6 py-3 rounded-full shadow-lg font-bold">
-              View {currentImage + 1} of {images.length}
-            </div>
-            <button 
-              onClick={nextImage}
-              className="bg-white/90 hover:bg-white text-gray-900 p-3 rounded-full shadow-lg"
-            >
-              <i className="fas fa-chevron-right"></i>
-            </button>
-          </div>
-
-          {/* Thumbnail Strip */}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-            <div className="flex gap-2 overflow-x-auto pb-2">
-              {images.map((img, idx) => (
-                <img 
-                  key={idx}
-                  src={img}
-                  alt={`Thumbnail ${idx + 1}`}
-                  className={`w-20 h-12 object-cover rounded cursor-pointer ${currentImage === idx ? 'ring-2 ring-white' : 'opacity-70'}`}
-                  onClick={() => setCurrentImage(idx)}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Fullscreen Button */}
-          <button 
-            onClick={toggleFullscreen}
-            className="absolute top-4 right-4 bg-white/90 hover:bg-white text-gray-900 p-3 rounded-full shadow-lg"
-          >
-            <i className={`fas ${isFullscreen ? 'fa-compress' : 'fa-expand'}`}></i>
-          </button>
-
-          {/* Hotspot Info */}
-          <div className="absolute top-4 left-4 bg-white/90 text-gray-900 px-4 py-2 rounded-full shadow-lg">
-            <i className="fas fa-info-circle mr-2"></i>
-            Click and drag to look around
-          </div>
-        </div>
-      );
-    };
-
-    // Booking/Viewing Modal
-    const BookingModal = ({ listing, onClose, onSubmit, t }) => {
-      const [form, setForm] = useState({
-        name: '',
-        email: '',
-        phone: '',
-        date: '',
-        time: '',
-        message: '',
-        type: 'viewing'
-      });
-
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        onSubmit({
-          ...form,
-          listingId: listing.id,
-          listingTitle: listing.title,
-          timestamp: new Date().toISOString()
-        });
-        onClose();
-      };
-
-      const today = new Date().toISOString().split('T')[0];
-      const timeSlots = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'];
-
-      return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-2xl font-bold">{t.scheduleViewing}</h3>
-                <button onClick={onClose} className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                  <i className="fas fa-times text-2xl"></i>
-                </button>
-              </div>
-
-              <div className="mb-6 p-4 bg-teal-50 dark:bg-teal-900/20 rounded-xl">
-                <h4 className="font-bold mb-2">{listing.title}</h4>
-                <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                  <span><i className="fas fa-map-marker-alt mr-1"></i> {listing.location}</span>
-                  <span className="font-bold text-orange-500">{listing.price.toLocaleString()} TZS</span>
-                </div>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">{t.name} *</label>
-                    <input
-                      type="text"
-                      required
-                      value={form.name}
-                      onChange={(e) => setForm({...form, name: e.target.value})}
-                      className="w-full p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">{t.phone} *</label>
-                    <input
-                      type="tel"
-                      required
-                      value={form.phone}
-                      onChange={(e) => setForm({...form, phone: e.target.value})}
-                      className="w-full p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-1">{t.email}</label>
-                  <input
-                    type="email"
-                    value={form.email}
-                    onChange={(e) => setForm({...form, email: e.target.value})}
-                    className="w-full p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">{t.selectDate} *</label>
-                    <input
-                      type="date"
-                      required
-                      min={today}
-                      value={form.date}
-                      onChange={(e) => setForm({...form, date: e.target.value})}
-                      className="w-full p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">{t.selectTime} *</label>
-                    <select
-                      required
-                      value={form.time}
-                      onChange={(e) => setForm({...form, time: e.target.value})}
-                      className="w-full p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-                    >
-                      <option value="">Select Time</option>
-                      {timeSlots.map(time => (
-                        <option key={time} value={time}>{time}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-1">{t.message}</label>
-                  <textarea
-                    rows={3}
-                    value={form.message}
-                    onChange={(e) => setForm({...form, message: e.target.value})}
-                    className="w-full p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-                    placeholder="Any special requests or questions..."
-                  />
-                </div>
-
-                <div className="flex gap-4 pt-4">
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="flex-1 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 py-3 rounded-lg font-bold hover:bg-gray-50 dark:hover:bg-gray-700"
-                  >
-                    {t.cancel}
-                  </button>
-                  <button
-                    type="submit"
-                    className="flex-1 bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-lg font-bold"
-                  >
-                    {t.confirmBooking}
-                  </button>
-                </div>
-              </form>
-
-              <div className="mt-6 pt-6 border-t dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400">
-                <p><i className="fas fa-info-circle mr-2"></i> The agent will confirm your appointment within 24 hours.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    };
-
-    // Agent Profile Component
-    const AgentProfile = ({ agent, t }) => {
-      const [showContact, setShowContact] = useState(false);
-
-      return (
-        <div className="agent-card bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
-          <div className="flex items-start gap-4">
-            <div className="relative">
-              <img 
-                src={agent.photo || `https://ui-avatars.com/api/?name=${agent.name}&background=0d9488&color=fff`} 
-                alt={agent.name}
-                className="w-20 h-20 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow"
-              />
-              {agent.verified && (
-                <div className="absolute bottom-0 right-0 bg-green-500 text-white p-1 rounded-full">
-                  <i className="fas fa-check text-xs"></i>
-                </div>
-              )}
-            </div>
-            
-            <div className="flex-1">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h4 className="font-bold text-lg">{agent.name}</h4>
-                  <p className="text-teal-600 dark:text-teal-400">{agent.company}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <div className="flex text-yellow-400">
-                      {[...Array(5)].map((_, i) => (
-                        <i key={i} className={`fas fa-star ${i < Math.floor(agent.rating) ? 'text-yellow-400' : 'text-gray-300'}`}></i>
-                      ))}
-                    </div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      ({agent.reviews} {t.reviews})
-                    </span>
-                  </div>
-                </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                  agent.tier === 'Platinum' ? 'bg-gradient-to-r from-amber-400 to-amber-600 text-white' :
-                  agent.tier === 'Gold' ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-white' :
-                  agent.tier === 'Silver' ? 'bg-gray-400 text-white' : 'bg-amber-800 text-white'
-                }`}>
-                  {agent.tier}
-                </span>
-              </div>
-
-              <div className="grid grid-cols-3 gap-4 mt-4 text-center">
-                <div>
-                  <div className="text-2xl font-bold text-teal-600">{agent.experience}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">{t.yearsExperience}</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-teal-600">{agent.properties}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">{t.propertiesListed}</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-teal-600">{agent.responseRate}%</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">{t.responseRate}</div>
-                </div>
-              </div>
-
-              <div className="flex gap-3 mt-6">
-                <button 
-                  onClick={() => setShowContact(true)}
-                  className="flex-1 bg-teal-600 hover:bg-teal-700 text-white py-2 rounded-lg font-bold"
-                >
-                  {t.contactAgent}
-                </button>
-                <button className="px-4 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
-                  <i className="fas fa-phone-alt"></i>
-                </button>
-                <button className="px-4 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
-                  <i className="fab fa-whatsapp"></i>
-                </button>
-              </div>
-
-              {showContact && (
-                <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-bold">Contact Details:</span>
-                    <button onClick={() => setShowContact(false)} className="text-gray-500 hover:text-gray-700">
-                      <i className="fas fa-times"></i>
-                    </button>
-                  </div>
-                  <div className="space-y-2 text-sm">
-                    <div><i className="fas fa-phone mr-2 text-teal-600"></i> {agent.phone}</div>
-                    <div><i className="fas fa-envelope mr-2 text-teal-600"></i> {agent.email}</div>
-                    <div><i className="fas fa-clock mr-2 text-teal-600"></i> Available: {agent.availability}</div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      );
-    };
-
-    // Enhanced Search Filters
-    const AdvancedSearchFilters = ({ t, onFilter }) => {
-      const [filters, setFilters] = useState({
-        search: '',
-        location: '',
-        type: '',
-        minPrice: '',
-        maxPrice: '',
-        bedrooms: '',
-        bathrooms: '',
-        status: '',
-        amenities: [],
-        sortBy: 'newest',
-        radius: '5'
-      });
-
-      const [showAdvanced, setShowAdvanced] = useState(false);
-
-      const handleApply = () => {
-        onFilter(filters);
-      };
-
-      const handleReset = () => {
-        const resetFilters = {
-          search: '',
-          location: '',
-          type: '',
-          minPrice: '',
-          maxPrice: '',
-          bedrooms: '',
-          bathrooms: '',
-          status: '',
-          amenities: [],
-          sortBy: 'newest',
-          radius: '5'
-        };
-        setFilters(resetFilters);
-        onFilter({});
-      };
-
-      const toggleAmenity = (amenityId) => {
-        setFilters(prev => ({
-          ...prev,
-          amenities: prev.amenities.includes(amenityId)
-            ? prev.amenities.filter(id => id !== amenityId)
-            : [...prev.amenities, amenityId]
-        }));
-      };
-
-      return (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8">
-          {/* Quick Search Bar */}
-          <div className="relative mb-6">
-            <input
-              type="text"
-              placeholder={t.search}
-              value={filters.search}
-              onChange={(e) => setFilters({...filters, search: e.target.value})}
-              className="w-full p-4 pl-12 border dark:border-gray-700 rounded-xl dark:bg-gray-900 text-lg"
-            />
-            <i className="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <button className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-teal-600 text-white p-2 rounded-lg">
-              <i className="fas fa-search"></i>
-            </button>
-          </div>
-
-          {/* Basic Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <select
-              value={filters.location}
-              onChange={(e) => setFilters({...filters, location: e.target.value})}
-              className="p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-            >
-              <option value="">{t.location} (All)</option>
-              {CONFIG.LOCATIONS.map(loc => (
-                <option key={loc.name} value={loc.name}>{loc.name}</option>
-              ))}
-            </select>
-
-            <select
-              value={filters.type}
-              onChange={(e) => setFilters({...filters, type: e.target.value})}
-              className="p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-            >
-              <option value="">{t.propertyType} (All)</option>
-              {CONFIG.FILTER_TYPES.map(type => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
-
-            <select
-              value={filters.bedrooms}
-              onChange={(e) => setFilters({...filters, bedrooms: e.target.value})}
-              className="p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-            >
-              <option value="">{t.bedrooms} (Any)</option>
-              {CONFIG.BEDROOM_OPTIONS.map(num => (
-                <option key={num} value={num}>{num} {num === '1' ? 'Bedroom' : num === 'Studio' ? '' : 'Bedrooms'}</option>
-              ))}
-            </select>
-
-            <select
-              value={filters.status}
-              onChange={(e) => setFilters({...filters, status: e.target.value})}
-              className="p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-            >
-              <option value="">{t.status} (All)</option>
-              {CONFIG.PROPERTY_STATUS.map(status => (
-                <option key={status} value={status}>{status}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Price Range */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium mb-2">{t.priceRange}</label>
-            <div className="flex gap-4">
-              <input
-                type="number"
-                placeholder={`${t.min} 50,000`}
-                value={filters.minPrice}
-                onChange={(e) => setFilters({...filters, minPrice: e.target.value})}
-                className="flex-1 p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-              />
-              <span className="self-center">-</span>
-              <input
-                type="number"
-                placeholder={`${t.max} 5,000,000`}
-                value={filters.maxPrice}
-                onChange={(e) => setFilters({...filters, maxPrice: e.target.value})}
-                className="flex-1 p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-              />
-            </div>
-          </div>
-
-          {/* Advanced Filters Toggle */}
-          <button
-            onClick={() => setShowAdvanced(!showAdvanced)}
-            className="w-full mb-4 p-3 border dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-between"
-          >
-            <span className="font-bold">{t.advancedFilters}</span>
-            <i className={`fas fa-chevron-${showAdvanced ? 'up' : 'down'}`}></i>
-          </button>
-
-          {/* Advanced Filters */}
-          {showAdvanced && (
-            <div className="filter-panel animate-fade-in">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                  <label className="block text-sm font-medium mb-2">{t.bathrooms}</label>
-                  <select
-                    value={filters.bathrooms}
-                    onChange={(e) => setFilters({...filters, bathrooms: e.target.value})}
-                    className="w-full p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-                  >
-                    <option value="">Any</option>
-                    {CONFIG.BATHROOM_OPTIONS.map(num => (
-                      <option key={num} value={num}>{num} {num === '1' ? 'Bathroom' : 'Bathrooms'}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Sort By</label>
-                  <select
-                    value={filters.sortBy}
-                    onChange={(e) => setFilters({...filters, sortBy: e.target.value})}
-                    className="w-full p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-                  >
-                    <option value="newest">Newest First</option>
-                    <option value="price_low">Price: Low to High</option>
-                    <option value="price_high">Price: High to Low</option>
-                    <option value="featured">Featured First</option>
-                    <option value="verified">Verified Only</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">{t.amenities}</label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {CONFIG.AMENITIES.map(amenity => (
-                    <button
-                      key={amenity.id}
-                      onClick={() => toggleAmenity(amenity.id)}
-                      className={`p-3 rounded-lg flex items-center gap-2 ${
-                        filters.amenities.includes(amenity.id)
-                          ? 'bg-teal-600 text-white'
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                      }`}
-                    >
-                      <i className={`fas ${amenity.icon}`}></i>
-                      <span className="text-sm">{amenity.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">Search Radius (km)</label>
-                <div className="flex items-center gap-4">
-                  <input
-                    type="range"
-                    min="1"
-                    max="20"
-                    value={filters.radius}
-                    onChange={(e) => setFilters({...filters, radius: e.target.value})}
-                    className="flex-1"
-                  />
-                  <span className="font-bold">{filters.radius} km</span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Action Buttons */}
-          <div className="flex gap-4">
-            <button
-              onClick={handleApply}
-              className="flex-1 bg-teal-600 hover:bg-teal-700 text-white p-4 rounded-lg font-bold text-lg"
-            >
-              {t.apply} Filters
-            </button>
-            <button
-              onClick={handleReset}
-              className="px-6 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-4 rounded-lg font-bold"
-            >
-              {t.resetFilters}
-            </button>
-            <button className="px-6 border border-teal-600 text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/20 p-4 rounded-lg font-bold">
-              <i className="fas fa-save mr-2"></i>
-              {t.saveSearch}
-            </button>
-          </div>
-        </div>
-      );
-    };
-
-    // Enhanced Listing Details with all new features
-    const EnhancedListingDetails = ({ listing, t }) => {
-      const [activeTab, setActiveTab] = useState('overview');
-      const [showBookingModal, setShowBookingModal] = useState(false);
-      const [showVirtualTour, setShowVirtualTour] = useState(false);
-      const [selectedAgent, setSelectedAgent] = useState(null);
-      const [similarListings, setSimilarListings] = useState([]);
-      const [neighborhoodInfo, setNeighborhoodInfo] = useState(null);
-
-      useEffect(() => {
-        // In a real app, fetch similar listings and neighborhood info
-        setSimilarListings([
-          {...listing, id: 100, price: listing.price * 0.9, title: "Similar Property 1"},
-          {...listing, id: 101, price: listing.price * 1.1, title: "Similar Property 2"},
-          {...listing, id: 102, price: listing.price * 0.95, title: "Similar Property 3"}
-        ]);
-
-        setNeighborhoodInfo({
-          schools: ["Sinza Secondary School", "International School"],
-          hospitals: ["Muhimbili Hospital", "Aga Khan Hospital"],
-          supermarkets: ["Shoprite", "Nakumatt"],
-          transport: ["Daladala stop 200m", "Taxi stand 100m"],
-          safety: "Low crime rate, good lighting"
-        });
-      }, [listing]);
-
-      const handleBookingSubmit = (bookingData) => {
-        // Save booking to localStorage
-        const bookings = load(LS.BOOKINGS, []);
-        bookings.push(bookingData);
-        save(LS.BOOKINGS, bookings);
+      
+      const container = document.getElementById('listingsContainer');
+      if (container) {
+        container.innerHTML = renderListingCards(filtered);
         
-        // Show success toast
-        const toast = useToast();
-        toast(t.bookingSuccess, { variant: 'success' });
-      };
-
-      const tabs = [
-        { id: 'overview', label: 'Overview', icon: 'fa-home' },
-        { id: 'details', label: 'Details', icon: 'fa-info-circle' },
-        { id: 'neighborhood', label: 'Neighborhood', icon: 'fa-map-marker-alt' },
-        { id: 'agents', label: 'Agents', icon: 'fa-user-tie' },
-        { id: 'reviews', label: 'Reviews', icon: 'fa-star' }
-      ];
-
-      return (
-        <div className="max-w-7xl mx-auto p-4">
-          {/* Action Bar */}
-          <div className="flex flex-wrap gap-4 mb-6">
-            <button 
-              onClick={() => setShowBookingModal(true)}
-              className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-full font-bold flex items-center gap-2"
-            >
-              <i className="fas fa-calendar-alt"></i>
-              {t.scheduleViewing}
-            </button>
-            
-            {listing.images.length > 3 && (
-              <button 
-                onClick={() => setShowVirtualTour(true)}
-                className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full font-bold flex items-center gap-2"
-              >
-                <i className="fas fa-vr-cardboard"></i>
-                {t.virtualTour}
-              </button>
-            )}
-            
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-bold flex items-center gap-2">
-              <i className="fas fa-file-contract"></i>
-              Request Contract
-            </button>
-            
-            <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-bold flex items-center gap-2">
-              <i className="fas fa-calculator"></i>
-              Mortgage Calculator
-            </button>
-          </div>
-
-          {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left Column - Property Info */}
-            <div className="lg:col-span-2 space-y-8">
-              {/* Tabs */}
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-                <div className="border-b dark:border-gray-700">
-                  <div className="flex overflow-x-auto">
-                    {tabs.map(tab => (
-                      <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`flex items-center gap-2 px-6 py-4 font-medium whitespace-nowrap ${
-                          activeTab === tab.id
-                            ? 'border-b-2 border-teal-600 text-teal-600 dark:text-teal-400'
-                            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300'
-                        }`}
-                      >
-                        <i className={`fas ${tab.icon}`}></i>
-                        {tab.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="p-6">
-                  {activeTab === 'overview' && (
-                    <div className="space-y-6">
-                      <div>
-                        <h3 className="text-2xl font-bold mb-4">Property Overview</h3>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg text-center">
-                            <div className="text-3xl font-bold text-teal-600">{listing.bedrooms || 1}</div>
-                            <div className="text-gray-600 dark:text-gray-400">{t.bedrooms}</div>
-                          </div>
-                          <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg text-center">
-                            <div className="text-3xl font-bold text-teal-600">{listing.bathrooms || 1}</div>
-                            <div className="text-gray-600 dark:text-gray-400">{t.bathrooms}</div>
-                          </div>
-                          <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg text-center">
-                            <div className="text-3xl font-bold text-teal-600">{listing.size || '750'}</div>
-                            <div className="text-gray-600 dark:text-gray-400">Sq Ft</div>
-                          </div>
-                          <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg text-center">
-                            <div className="text-3xl font-bold text-teal-600">{listing.year || '2015'}</div>
-                            <div className="text-gray-600 dark:text-gray-400">Year Built</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <h4 className="text-xl font-bold mb-3">Description</h4>
-                        <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{listing.description}</p>
-                      </div>
-
-                      <div>
-                        <h4 className="text-xl font-bold mb-3">Key Features</h4>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                          {CONFIG.AMENITIES.filter(amenity => listing[amenity.id]).map(amenity => (
-                            <div key={amenity.id} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                              <div className="amenity-icon bg-teal-100 dark:bg-teal-900/30">
-                                <i className={`fas ${amenity.icon} text-teal-600`}></i>
-                              </div>
-                              <span className="font-medium">{amenity.name}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeTab === 'neighborhood' && neighborhoodInfo && (
-                    <div className="space-y-6">
-                      <div>
-                        <h4 className="text-xl font-bold mb-4">Location Map</h4>
-                        <PropertyMap location={listing.location} height="300px" />
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <h4 className="text-xl font-bold mb-3">Nearby Amenities</h4>
-                          <div className="space-y-4">
-                            <div>
-                              <h5 className="font-bold mb-2 flex items-center gap-2">
-                                <i className="fas fa-school text-blue-600"></i>
-                                {t.nearbySchools}
-                              </h5>
-                              <ul className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                                {neighborhoodInfo.schools.map((school, idx) => (
-                                  <li key={idx}>• {school}</li>
-                                ))}
-                              </ul>
-                            </div>
-                            <div>
-                              <h5 className="font-bold mb-2 flex items-center gap-2">
-                                <i className="fas fa-hospital text-red-600"></i>
-                                {t.hospitals}
-                              </h5>
-                              <ul className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                                {neighborhoodInfo.hospitals.map((hospital, idx) => (
-                                  <li key={idx}>• {hospital}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div>
-                          <h4 className="text-xl font-bold mb-3">Transport & Safety</h4>
-                          <div className="space-y-4">
-                            <div>
-                              <h5 className="font-bold mb-2 flex items-center gap-2">
-                                <i className="fas fa-bus text-green-600"></i>
-                                {t.transportation}
-                              </h5>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                {neighborhoodInfo.transport.join(', ')}
-                              </p>
-                            </div>
-                            <div>
-                              <h5 className="font-bold mb-2 flex items-center gap-2">
-                                <i className="fas fa-shield-alt text-purple-600"></i>
-                                Neighborhood Safety
-                              </h5>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                {neighborhoodInfo.safety}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeTab === 'agents' && (
-                    <div className="space-y-6">
-                      <h4 className="text-xl font-bold mb-4">Listing Agents</h4>
-                      <AgentProfile 
-                        agent={{
-                          name: "John Mwamba",
-                          company: "Prime Properties Tanzania",
-                          rating: 4.8,
-                          reviews: 127,
-                          tier: "Gold",
-                          experience: "8",
-                          properties: "42",
-                          responseRate: "95",
-                          phone: "+255 712 345 678",
-                          email: "john@primeproperties.co.tz",
-                          availability: "Mon-Fri, 9AM-6PM",
-                          verified: true
-                        }}
-                        t={t}
-                      />
-                    </div>
-                  )}
-
-                  {activeTab === 'reviews' && (
-                    <div className="space-y-6">
-                      <h4 className="text-xl font-bold mb-4">Customer Reviews</h4>
-                      <div className="space-y-4">
-                        {[1, 2, 3].map(i => (
-                          <div key={i} className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
-                            <div className="flex justify-between items-start mb-2">
-                              <div>
-                                <div className="font-bold">Sarah Johnson</div>
-                                <div className="flex text-yellow-400 text-sm">
-                                  {[...Array(5)].map((_, i) => (
-                                    <i key={i} className="fas fa-star"></i>
-                                  ))}
-                                </div>
-                              </div>
-                              <span className="text-sm text-gray-500">2 weeks ago</span>
-                            </div>
-                            <p className="text-gray-700 dark:text-gray-300">
-                              "Great experience working with the agent. Property was exactly as described."
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Similar Properties */}
-              <div>
-                <h3 className="text-2xl font-bold mb-6">{t.similarProperties}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {similarListings.map(similar => (
-                    <div key={similar.id} className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow">
-                      <div className="h-40 bg-gray-300 dark:bg-gray-700 rounded-lg mb-3"></div>
-                      <h5 className="font-bold mb-1">{similar.title}</h5>
-                      <div className="flex justify-between items-center">
-                        <span className="text-teal-600 font-bold">{similar.price.toLocaleString()} TZS</span>
-                        <Link to={`/listing/${similar.id}`} className="text-sm text-teal-600 hover:underline">
-                          View <i className="fas fa-arrow-right ml-1"></i>
-                        </Link>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column - Sidebar */}
-            <div className="space-y-6">
-              {/* Price & Actions Card */}
-              <div className="bg-gradient-to-br from-teal-500 to-cyan-500 text-white p-6 rounded-2xl shadow-xl">
-                <div className="text-4xl font-bold mb-2">{listing.price.toLocaleString()} TZS</div>
-                <div className="text-lg opacity-90 mb-6">{t.month}</div>
-                
-                <div className="space-y-3">
-                  <button 
-                    onClick={() => setShowBookingModal(true)}
-                    className="w-full bg-white text-teal-600 hover:bg-gray-100 py-3 rounded-xl font-bold text-lg"
-                  >
-                    {t.scheduleViewing}
-                  </button>
-                  
-                  <button className="w-full bg-teal-700 hover:bg-teal-800 text-white py-3 rounded-xl font-bold text-lg">
-                    {t.contactAgent}
-                  </button>
-                  
-                  <button className="w-full bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-xl font-bold text-lg">
-                    {t.bookNow}
-                  </button>
-                </div>
-              </div>
-
-              {/* Property Facts */}
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
-                <h4 className="text-xl font-bold mb-4">Property Facts</h4>
-                <div className="space-y-3">
-                  {[
-                    { label: 'Property ID', value: `HL${listing.id.toString().slice(-6)}` },
-                    { label: 'Property Type', value: listing.type },
-                    { label: 'Year Built', value: listing.year || '2015' },
-                    { label: 'Lot Size', value: `${listing.size || '750'} sq ft` },
-                    { label: 'Property Status', value: listing.status || 'Available' },
-                    { label: 'Last Updated', value: new Date(listing.createdAt).toLocaleDateString() }
-                  ].map((fact, idx) => (
-                    <div key={idx} className="flex justify-between items-center border-b dark:border-gray-700 pb-2">
-                      <span className="text-gray-600 dark:text-gray-400">{fact.label}</span>
-                      <span className="font-bold">{fact.value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Mortgage Calculator */}
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
-                <h4 className="text-xl font-bold mb-4">{t.mortgageCalculator}</h4>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm mb-1">Loan Amount (TZS)</label>
-                    <input 
-                      type="number" 
-                      defaultValue={listing.price * 0.8} 
-                      className="w-full p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm mb-1">Interest Rate (%)</label>
-                    <input 
-                      type="number" 
-                      defaultValue="12" 
-                      step="0.1"
-                      className="w-full p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm mb-1">Loan Term (Years)</label>
-                    <select className="w-full p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900">
-                      <option>10</option>
-                      <option>15</option>
-                      <option selected>20</option>
-                      <option>25</option>
-                      <option>30</option>
-                    </select>
-                  </div>
-                  <button className="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-lg font-bold">
-                    Calculate Monthly Payment
-                  </button>
-                </div>
-              </div>
-
-              {/* Live Chat */}
-              <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-2xl shadow-lg">
-                <h4 className="text-xl font-bold mb-2">{t.liveChat}</h4>
-                <p className="opacity-90 mb-4">Chat with our agents in real-time</p>
-                <button className="w-full bg-white text-blue-600 hover:bg-gray-100 py-3 rounded-xl font-bold">
-                  <i className="fas fa-comment-alt mr-2"></i>
-                  Start Chat
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Modals */}
-          {showBookingModal && (
-            <BookingModal
-              listing={listing}
-              onClose={() => setShowBookingModal(false)}
-              onSubmit={handleBookingSubmit}
-              t={t}
-            />
-          )}
-
-          {showVirtualTour && (
-            <div className="fixed inset-0 bg-black z-50">
-              <VirtualTour 
-                images={listing.images} 
-                title={listing.title}
-              />
-              <button
-                onClick={() => setShowVirtualTour(false)}
-                className="absolute top-4 right-4 bg-white text-gray-900 p-3 rounded-full"
-              >
-                <i className="fas fa-times"></i>
-              </button>
-            </div>
-          )}
-        </div>
-      );
-    };
-
-    // Enhanced Home Page
-    const EnhancedHomePage = ({ listings, t, recent }) => {
-      const [viewMode, setViewMode] = useState('grid');
-      const [showMap, setShowMap] = useState(false);
-      const [featuredAgents, setFeaturedAgents] = useState([]);
-      const [marketTrends, setMarketTrends] = useState(null);
-
-      useEffect(() => {
-        // Load featured agents
-        const agents = load(LS.AGENTS, [
-          {
-            id: 1,
-            name: "Sarah Johnson",
-            company: "Elite Properties",
-            rating: 4.9,
-            reviews: 234,
-            tier: "Platinum",
-            photo: "https://randomuser.me/api/portraits/women/32.jpg",
-            properties: 56
-          },
-          {
-            id: 2,
-            name: "David Mwamba",
-            company: "Prime Realty",
-            rating: 4.7,
-            reviews: 189,
-            tier: "Gold",
-            photo: "https://randomuser.me/api/portraits/men/54.jpg",
-            properties: 42
-          },
-          {
-            id: 3,
-            name: "Grace Moshi",
-            company: "Urban Homes",
-            rating: 4.8,
-            reviews: 156,
-            tier: "Gold",
-            photo: "https://randomuser.me/api/portraits/women/44.jpg",
-            properties: 38
-          }
-        ]);
-        setFeaturedAgents(agents);
-
-        // Market trends data
-        setMarketTrends({
-          averageRent: 450000,
-          yoyChange: 8.5,
-          hotAreas: ["Sinza", "Mbezi", "Masaki"],
-          priceDrops: 12
+        // Reattach click handlers
+        container.querySelectorAll('a[href^="#"]').forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            router.navigate(link.getAttribute('href'));
+          });
         });
-      }, []);
-
-      return (
-        <div className="space-y-20 pb-20">
-          {/* Enhanced Hero Section */}
-          <div className="gradient-bg text-white py-20 md:py-32 relative overflow-hidden">
-            <div className="max-w-6xl mx-auto px-6 relative z-10">
-              <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
-                Find Your Dream Home in Tanzania
-              </h1>
-              <p className="text-xl md:text-2xl mt-6 opacity-90">
-                Verified Properties • Trusted Agents • Best Prices
-              </p>
-              
-              {/* Quick Search in Hero */}
-              <div className="mt-10 max-w-3xl mx-auto">
-                <div className="bg-white rounded-full p-2 shadow-2xl">
-                  <div className="flex flex-col md:flex-row gap-2">
-                    <input 
-                      type="text" 
-                      placeholder="Search by location, property type, or keyword..."
-                      className="flex-1 p-4 text-gray-900 rounded-full"
-                    />
-                    <button className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 rounded-full font-bold">
-                      <i className="fas fa-search mr-2"></i> Search Now
-                    </button>
-                  </div>
-                </div>
-                
-                <div className="flex flex-wrap gap-4 justify-center mt-6">
-                  {["Dar es Salaam", "Arusha", "Mwanza", "Dodoma", "Zanzibar"].map(city => (
-                    <span key={city} className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-full cursor-pointer">
-                      {city}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-            
-            {/* Background Pattern */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full -translate-x-48 translate-y-48"></div>
-          </div>
-
-          {/* Market Stats */}
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {[
-                { icon: 'fa-home', value: '5,000+', label: 'Active Listings', change: '+12%' },
-                { icon: 'fa-chart-line', value: '92%', label: 'Verified Properties', change: 'Trust Score' },
-                { icon: 'fa-users', value: '250+', label: 'Trusted Agents', change: 'Active' },
-                { icon: 'fa-clock', value: '< 24h', label: 'Avg Response Time', change: 'Fast Response' }
-              ].map((stat, idx) => (
-                <div key={idx} className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow hover:shadow-xl transition-shadow">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`p-3 rounded-lg ${idx === 0 ? 'bg-teal-100 dark:bg-teal-900/30' : idx === 1 ? 'bg-blue-100 dark:bg-blue-900/30' : idx === 2 ? 'bg-purple-100 dark:bg-purple-900/30' : 'bg-amber-100 dark:bg-amber-900/30'}`}>
-                      <i className={`fas ${stat.icon} ${idx === 0 ? 'text-teal-600' : idx === 1 ? 'text-blue-600' : idx === 2 ? 'text-purple-600' : 'text-amber-600'} text-2xl`}></i>
-                    </div>
-                    <span className="text-sm font-bold text-green-600">{stat.change}</span>
-                  </div>
-                  <div className="text-3xl font-bold">{stat.value}</div>
-                  <div className="text-gray-600 dark:text-gray-400">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* View Toggle */}
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex justify-between items-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold">{t.featured}</h2>
-              <div className="flex items-center gap-4">
-                <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-                  <button 
-                    onClick={() => setViewMode('grid')}
-                    className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white dark:bg-gray-700 shadow' : ''}`}
-                  >
-                    <i className="fas fa-th-large"></i>
-                  </button>
-                  <button 
-                    onClick={() => setViewMode('list')}
-                    className={`p-2 rounded ${viewMode === 'list' ? 'bg-white dark:bg-gray-700 shadow' : ''}`}
-                  >
-                    <i className="fas fa-list"></i>
-                  </button>
-                </div>
-                <button 
-                  onClick={() => setShowMap(!showMap)}
-                  className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg"
-                >
-                  <i className="fas fa-map"></i>
-                  {showMap ? t.listView : t.mapView}
-                </button>
-              </div>
-            </div>
-
-            {showMap ? (
-              <div className="mb-8">
-                <PropertyMap 
-                  location="Sinza" 
-                  listings={listings.filter(l => l.featured).slice(0, 10)}
-                  height="500px"
-                  showMarkers={true}
-                />
-              </div>
-            ) : (
-              <div className={`grid ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1'} gap-8`}>
-                {listings.filter(l => l.featured).slice(0, 6).map(l => (
-                  <div key={l.id} className={viewMode === 'list' ? 'flex gap-6 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg' : ''}>
-                    <ListingCard key={l.id} item={l} t={t} />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Featured Agents */}
-          <div className="max-w-7xl mx-auto px-6">
-            <h2 className="text-3xl md:text-4xl font-bold mb-8">{t.featuredAgents}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {featuredAgents.map(agent => (
-                <AgentProfile key={agent.id} agent={agent} t={t} />
-              ))}
-            </div>
-          </div>
-
-          {/* Market Insights */}
-          {marketTrends && (
-            <div className="max-w-7xl mx-auto px-6">
-              <div className="bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-2xl p-8">
-                <h2 className="text-3xl font-bold mb-6">Market Insights</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <div className="bg-white/20 p-6 rounded-xl backdrop-blur-sm">
-                    <div className="text-4xl font-bold mb-2">{marketTrends.averageRent.toLocaleString()} TZS</div>
-                    <div className="text-lg">Average Monthly Rent</div>
-                    <div className="text-green-300 mt-2">
-                      <i className="fas fa-arrow-up mr-2"></i>
-                      {marketTrends.yoyChange}% YoY
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white/20 p-6 rounded-xl backdrop-blur-sm">
-                    <div className="text-4xl font-bold mb-2">{marketTrends.hotAreas.length}</div>
-                    <div className="text-lg">Hot Areas</div>
-                    <div className="mt-2 space-y-1">
-                      {marketTrends.hotAreas.map(area => (
-                        <div key={area} className="text-sm">{area}</div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white/20 p-6 rounded-xl backdrop-blur-sm">
-                    <div className="text-4xl font-bold mb-2">{marketTrends.priceDrops}</div>
-                    <div className="text-lg">Price Drops This Week</div>
-                    <div className="mt-2 text-sm">Great deals available now!</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* How It Works - Enhanced */}
-          <div className="max-w-7xl mx-auto px-6">
-            <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center">How HouseLink Works</h2>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              {[
-                { 
-                  icon: 'fa-search', 
-                  title: 'Search & Filter', 
-                  desc: 'Use advanced filters, maps, and virtual tours to find perfect properties',
-                  color: 'teal'
-                },
-                { 
-                  icon: 'fa-user-check', 
-                  title: 'Verify & Trust', 
-                  desc: 'All properties and agents are verified for your safety and peace of mind',
-                  color: 'blue'
-                },
-                { 
-                  icon: 'fa-calendar-check', 
-                  title: 'Schedule Viewing', 
-                  desc: 'Book property viewings online with our trusted agents',
-                  color: 'purple'
-                },
-                { 
-                  icon: 'fa-file-contract', 
-                  title: 'Secure Deal', 
-                  desc: 'Complete transactions safely with our secure payment and contract system',
-                  color: 'green'
-                }
-              ].map((step, idx) => (
-                <div key={idx} className="relative">
-                  <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg text-center h-full">
-                    <div className={`inline-flex items-center justify-center w-16 h-16 bg-${step.color}-100 dark:bg-${step.color}-900/30 rounded-full mb-6`}>
-                      <i className={`fas ${step.icon} text-${step.color}-600 text-2xl`}></i>
-                    </div>
-                    <div className={`text-2xl font-bold mb-2 text-${step.color}-600`}>0{idx + 1}</div>
-                    <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-400">{step.desc}</p>
-                  </div>
-                  {idx < 3 && (
-                    <div className="hidden md:block absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/2">
-                      <i className="fas fa-arrow-right text-2xl text-gray-300 dark:text-gray-700"></i>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Trust Indicators */}
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-8 text-center">
-              <h3 className="text-2xl font-bold mb-6">Why Trust HouseLink?</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {[
-                  { icon: 'fa-shield-alt', text: 'Verified Properties' },
-                  { icon: 'fa-user-check', text: 'Background Checked Agents' },
-                  { icon: 'fa-lock', text: 'Secure Transactions' },
-                  { icon: 'fa-headset', text: '24/7 Customer Support' }
-                ].map((item, idx) => (
-                  <div key={idx} className="flex flex-col items-center">
-                    <div className="w-12 h-12 bg-teal-100 dark:bg-teal-900/30 rounded-full flex items-center justify-center mb-3">
-                      <i className={`fas ${item.icon} text-teal-600 text-xl`}></i>
-                    </div>
-                    <span className="font-medium">{item.text}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      );
+      }
     };
 
-    // Updated main App component with enhanced features
-    const App = () => {
-      const [dark, toggleDark] = useDarkMode();
-      const [lang, toggleLang, t] = useLanguage();
-      const { 
-        listings, 
-        filteredListings, 
-        loading, 
-        createListing, 
-        removeListing, 
-        incrementView,
-        filterListings 
-      } = useListings();
-      const [favs, toggleFav] = useFavorites();
-      const [recent, addRecent] = useRecent();
-      const [viewMode, setViewMode] = useState('grid');
-      const [showMap, setShowMap] = useState(false);
+    // Initialize App
+    function initApp() {
+      const app = document.getElementById('app');
+      
+      // Create main container
+      const mainContainer = document.createElement('div');
+      mainContainer.className = 'min-h-screen flex flex-col';
+      
+      // Add navbar
+      mainContainer.appendChild(renderNav());
+      
+      // Add content container
+      const content = document.createElement('main');
+      content.className = 'flex-1';
+      content.id = 'content';
+      mainContainer.appendChild(content);
+      
+      // Add footer
+      mainContainer.appendChild(renderFooter());
+      
+      // Add floating buttons
+      const floatingButtons = document.createElement('div');
+      floatingButtons.innerHTML = `
+        <button 
+          onclick="window.scrollTo({top:0, behavior:'smooth'})" 
+          class="fixed bottom-8 right-8 bg-teal-600 hover:bg-teal-700 text-white p-4 rounded-full shadow-2xl z-40"
+        >
+          <i class="fas fa-chevron-up"></i>
+        </button>
+        <a 
+          href="#emergency" 
+          class="fixed bottom-8 left-8 bg-red-600 hover:bg-red-700 text-white p-4 rounded-full shadow-2xl z-40"
+        >
+          <i class="fas fa-phone-alt"></i>
+        </a>
+      `;
+      mainContainer.appendChild(floatingButtons);
+      
+      app.appendChild(mainContainer);
+      
+      // Initialize router
+      window.addEventListener('hashchange', () => {
+        router.currentPath = window.location.hash;
+        router.render();
+      });
+      
+      // Initial render
+      router.render();
+    }
 
-      return (
-        <div className="min-h-screen flex flex-col">
-          <Navbar t={t} dark={dark} toggleDark={toggleDark} lang={lang} toggleLang={toggleLang} favs={favs} />
-          
-          <Switch>
-            <Route exact path="/" render={() => (
-              <EnhancedHomePage listings={listings} t={t} recent={recent} />
-            )} />
-            
-            <Route exact path="/listings" render={() => (
-              <div className="max-w-7xl mx-auto p-4 md:p-6 flex-1">
-                <div className="flex justify-between items-center mb-6">
-                  <div>
-                    <h1 className="text-3xl md:text-4xl font-bold">{t.listings}</h1>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      {filteredListings.length} properties found
-                    </p>
-                  </div>
-                  
-                  <div className="flex items-center gap-4">
-                    <div className="hidden md:flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-                      <button 
-                        onClick={() => setViewMode('grid')}
-                        className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white dark:bg-gray-700 shadow' : ''}`}
-                      >
-                        <i className="fas fa-th-large"></i>
-                      </button>
-                      <button 
-                        onClick={() => setViewMode('list')}
-                        className={`p-2 rounded ${viewMode === 'list' ? 'bg-white dark:bg-gray-700 shadow' : ''}`}
-                      >
-                        <i className="fas fa-list"></i>
-                      </button>
-                    </div>
-                    <button 
-                      onClick={() => setShowMap(!showMap)}
-                      className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg"
-                    >
-                      <i className="fas fa-map"></i>
-                      {showMap ? t.listView : t.mapView}
-                    </button>
-                  </div>
-                </div>
-                
-                <AdvancedSearchFilters t={t} onFilter={filterListings} />
-                
-                {showMap ? (
-                  <div className="mb-8">
-                    <PropertyMap 
-                      location="Dar es Salaam" 
-                      listings={filteredListings}
-                      height="600px"
-                      showMarkers={true}
-                    />
-                  </div>
-                ) : loading ? (
-                  <div className={`grid ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1'} gap-8`}>
-                    {[1,2,3,4,5,6].map(n => <ListingSkeleton key={n} />)}
-                  </div>
-                ) : filteredListings.length === 0 ? (
-                  <div className="text-center py-20">
-                    <i className="fas fa-search text-gray-400 text-6xl mb-6"></i>
-                    <h3 className="text-2xl font-bold mb-2">{t.noListings}</h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-8">
-                      Try adjusting your filters or search criteria
-                    </p>
-                    <div className="flex gap-4 justify-center">
-                      <button 
-                        onClick={() => filterListings({})}
-                        className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 px-6 py-3 rounded-full font-bold"
-                      >
-                        Clear All Filters
-                      </button>
-                      <Link to="/upload" className="bg-teal-600 text-white px-6 py-3 rounded-full font-bold">
-                        <i className="fas fa-plus mr-2"></i> List Your Property
-                      </Link>
-                    </div>
-                  </div>
-                ) : (
-                  <div className={`grid ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1'} gap-8`}>
-                    {filteredListings.map(l => (
-                      <div key={l.id} className={viewMode === 'list' ? 'flex gap-6 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg' : ''}>
-                        <ListingCard item={l} t={t} />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )} />
-            
-            {/* Updated route for listing details */}
-            <Route exact path="/listing/:id" render={() => {
-              const { id } = useParams();
-              const listing = listings.find(l => l.id === Number(id));
-              
-              if (!listing) {
-                return (
-                  <div className="text-center py-32">
-                    <i className="fas fa-home text-gray-400 text-6xl mb-6"></i>
-                    <h1 className="text-4xl font-bold mb-4">Property Not Found</h1>
-                    <p className="text-gray-600 mb-8">The property you're looking for may have been removed or is no longer available</p>
-                    <Link to="/listings" className="bg-teal-600 text-white px-8 py-3 rounded-full font-bold">
-                      Back to Listings
-                    </Link>
-                  </div>
-                );
-              }
-              
-              incrementView(listing.id);
-              addRecent(listing);
-              
-              return <EnhancedListingDetails listing={listing} t={t} />;
-            }} />
-            
-            {/* Keep other routes similar but with enhanced components */}
-          </Switch>
-          
-          {/* Enhanced Footer */}
-          <Footer t={t} />
-          
-          {/* Floating Action Buttons */}
-          <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-40">
-            <button 
-              onClick={() => window.scrollTo({top:0, behavior:'smooth'})} 
-              className="bg-teal-600 hover:bg-teal-700 text-white p-4 rounded-full shadow-2xl text-xl transition-all duration-300"
-            >
-              <i className="fas fa-chevron-up"></i>
-            </button>
-            
-            <Link 
-              to="/upload"
-              className="bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-full shadow-2xl text-xl"
-            >
-              <i className="fas fa-plus"></i>
-            </Link>
-          </div>
-          
-          {/* Live Chat Widget */}
-          <div className="fixed bottom-8 left-8 z-40">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
-              <div className="bg-teal-600 text-white p-4 flex justify-between items-center">
-                <span className="font-bold">Live Chat</span>
-                <button className="text-white hover:text-gray-200">
-                  <i className="fas fa-times"></i>
-                </button>
-              </div>
-              <div className="p-4 max-w-xs">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">Chat with our agents for instant help</p>
-                <button className="w-full bg-teal-600 hover:bg-teal-700 text-white py-2 rounded-lg font-bold">
-                  <i className="fas fa-comment-alt mr-2"></i>
-                  Start Chat
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    };
-
-    // Rest of the code remains similar but uses enhanced components
-    // ... (Previous components like Navbar, ListingCard, etc. remain similar)
-
-    const Root = () => (
-      <ToastProvider>
-        <HashRouter>
-          <App />
-        </HashRouter>
-      </ToastProvider>
-    );
-
-    // Render the app
-    ReactDOM.render(<Root />, document.getElementById('root'));
+    // Start the app when page loads
+    document.addEventListener('DOMContentLoaded', initApp);
   </script>
 </body>
 </html>
