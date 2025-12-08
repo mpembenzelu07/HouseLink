@@ -6,754 +6,1434 @@
   <meta name="description" content="Pata nyumba bora Tanzania - Bedsitter, Chumba, Apartment Dar es Salaam, Arusha, Mwanza" />
   <meta name="theme-color" content="#0d9488" />
   <title>HouseLink - Nyumba Bora Tanzania</title>
+  <link rel="manifest" href="data:application/manifest+json,{\"name\":\"HouseLink\",\"short_name\":\"HouseLink\",\"start_url\":\".\",\"display\":\"standalone\",\"background_color\":\"#0d9488\",\"theme_color\":\"#0d9488\",\"icons\":[{\"src\":\"https://via.placeholder.com/192/0d9488/ffffff?text=HL\",\"sizes\":\"192x192\",\"type\":\"image/png\"},{\"src\":\"https://via.placeholder.com/512/0d9488/ffffff?text=HL\",\"sizes\":\"512x512\",\"type\":\"image/png\"}]}">
   <link rel="icon" href="https://via.placeholder.com/64/0d9488/ffffff?text=HL" />
+  <link rel="apple-touch-icon" href="https://via.placeholder.com/180/0d9488/ffffff?text=HL" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui'] }}}}
+  </script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/react-router-dom@5/umd/react-router-dom.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; }
     .gradient-bg { background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%); }
-    .card-hover { transition: transform 0.3s, box-shadow 0.3s; }
-    .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+    .card-hover { transition: all 0.3s; }
+    .card-hover:hover { transform: translateY(-10px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+    .toast { animation: slideIn 0.4s ease-out; }
+    @keyframes slideIn { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; }}
+    .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
+    @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; }}
+    .image-gallery { scrollbar-width: thin; scrollbar-color: #0d9488 #f1f1f1; }
+    .image-gallery::-webkit-scrollbar { height: 8px; }
+    .image-gallery::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+    .image-gallery::-webkit-scrollbar-thumb { background: #0d9488; border-radius: 4px; }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen">
-  <div id="app"></div>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
+  <div id="root"></div>
 
-  <script>
-    // Simple Vanilla JavaScript App - No React dependencies
-    
-    const listings = [
-      {
-        id: 1,
-        title: "Bedsitter Sinza",
-        location: "Sinza",
-        price: 135000,
-        type: "Bedsitter",
-        image: "https://images.unsplash.com/photo-1560184897-ae75f418493e?auto=format&fit=crop&w=800&q=80",
-        phone: "+255712345678",
-        description: "Bedsitter nzuri Sinza, maji 24/7, karibu na chuo kikuu",
-        featured: true,
-        verified: true
+  <script type="text/babel">
+    const { useState, useEffect, useContext, createContext, useRef } = React;
+    const { HashRouter, Route, Switch, Link, useParams, useHistory } = ReactRouterDOM;
+
+    const CONFIG = {
+      CLOUDINARY: { CLOUD_NAME: '', UPLOAD_PRESET: '' },
+      LOCATIONS: ["Sinza","Ubungo","Mbezi","Tegeta","Masaki","Upanga","Kariakoo","Kinondoni","Mwenge","Posta","Oysterbay","Kawe","Mikocheni","Regent Estate","Ada Estate","Namanga","Ilala","Buguruni","Gongo la Mboto","Kimara","Mbagala","Ukonga","Vingunguti","Tabata","Manzele","Kigamboni","Bunju","Bagamoyo Road","Morogoro Road","Nyerere Road","Mlimani City","Magomeni","Temeke","Chang'ombe"],
+      FILTER_TYPES: ["Bedsitter", "Single Room", "Apartment", "Studio", "Duplex", "House"],
+      AMENITIES: ["water", "security", "parking", "daladala", "student", "wifi", "generator", "furnished"]
+    };
+
+    const LS = { LISTINGS: 'hl:listings:v10', FAVS: 'hl:favs:v10', THEME: 'hl:theme', LANG: 'hl:lang', RECENT: 'hl:recent' };
+    const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+    const load = (k, def) => { try { return JSON.parse(localStorage.getItem(k)) || def; } catch { return def; }};
+
+    const translations = {
+      sw: { 
+        appName: "HouseLink", upload: "Weka Tangazo", listings: "Orodha Zote", favorites: "Vipendwa", 
+        search: "Tafuta nyumba...", priceRange: "Bei (TZS)", min: "Chini", max: "Juu", type: "Aina", 
+        location: "Eneo", featured: "Zilizoangaziwa", recent: "Hivi Karibuni", contact: "Wasiliana", 
+        whatsapp: "WhatsApp", phone: "Simu", send: "Tuma", message: "Ujumbe", report: "Ripoti", 
+        share: "Shiriki", copy: "Nakili", saved: "Imehifadhiwa", removed: "Imeondolewa", 
+        dark: "Giza", light: "Mwanga", emergency: "Dharura", about: "Kuhusu", verified: "Imethibitishwa", 
+        urgent: "Haraka", water: "Maji 24/7", security: "Ulinzi", parking: "Parking", 
+        daladala: "Daladala", student: "Wanafunzi", wifi: "Wi-Fi", generator: "Jenereta", 
+        furnished: "Samani", tips: "Vidokezo", scam: "Kujikinga", cities: "Miji", follow: "Tufuate",
+        description: "Maelezo", amenities: "Vifaa & Huduma", stats: "Takwimu", views: "Angalio",
+        posted: "Iliwekwa", month: "kwa mwezi", filter: "Chuja", clear: "Safisha", apply: "Tumia",
+        contactOwner: "Mwasiliana na Mmiliki", shareListing: "Shiriki Tangazo", emergencyContacts: "Nambari za Dharura",
+        police: "Polisi", fire: "Zima moto", housing: "Uhasibu wa nyumba", electricity: "TANESCO",
+        loading: "Inapakia...", noListings: "Hakuna tangazo lililopatikana", allCities: "Miji Yote"
       },
-      {
-        id: 2,
-        title: "Chumba cha Kisasa Mbezi",
-        location: "Mbezi",
-        price: 98000,
-        type: "Single Room",
-        image: "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=800&q=80",
-        phone: "+255765432109",
-        description: "Chumba kizuri Mbezi Beach, tiles zote, dirisha zuri",
-        urgent: true
-      },
-      {
-        id: 3,
-        title: "Apartment Masaki",
-        location: "Masaki",
-        price: 950000,
-        type: "Apartment",
-        image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
-        phone: "+255788888888",
-        description: "Apartment ya kisasa Masaki, mtazamo wa bahari",
-        featured: true,
-        verified: true
+      en: { 
+        appName: "HouseLink", upload: "Post Listing", listings: "All Listings", favorites: "Favorites",
+        search: "Search homes...", priceRange: "Price (TZS)", min: "Min", max: "Max", type: "Type",
+        location: "Location", featured: "Featured", recent: "Recently Viewed", contact: "Contact",
+        whatsapp: "WhatsApp", phone: "Phone", send: "Send", message: "Message", report: "Report",
+        share: "Share", copy: "Copy", saved: "Saved", removed: "Removed", dark: "Dark", light: "Light",
+        emergency: "Emergency", about: "About", verified: "Verified", urgent: "Urgent", water: "Water 24/7",
+        security: "Security", parking: "Parking", daladala: "Near Transport", student: "Student Friendly",
+        wifi: "Wi-Fi", generator: "Generator", furnished: "Furnished", tips: "Tips", scam: "Scam Prevention",
+        cities: "Cities", follow: "Follow Us", description: "Description", amenities: "Amenities & Services",
+        stats: "Statistics", views: "Views", posted: "Posted", month: "per month", filter: "Filter",
+        clear: "Clear", apply: "Apply", contactOwner: "Contact Owner", shareListing: "Share Listing",
+        emergencyContacts: "Emergency Contacts", police: "Police", fire: "Fire", housing: "Housing Department",
+        electricity: "Electricity", loading: "Loading...", noListings: "No listings found", allCities: "All Cities"
       }
-    ];
+    };
 
-    // Simple Router
-    const router = {
-      currentPath: window.location.hash || '#/',
-      
-      navigate(hash) {
-        window.location.hash = hash;
-        this.currentPath = hash;
-        this.render();
-      },
-      
-      render() {
-        const app = document.getElementById('app');
-        app.innerHTML = '';
+    // Toast Context
+    const ToastContext = createContext();
+    const ToastProvider = ({ children }) => {
+      const [toasts, setToasts] = useState([]);
+      const push = (msg, opts = {}) => {
+        const id = Date.now();
+        setToasts(t => [...t, { id, msg, ...opts }]);
+        setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 4000);
+      };
+      return (
+        <ToastContext.Provider value={{ push }}>
+          {children}
+          <div className="fixed bottom-4 right-4 z-50 space-y-3 max-w-sm">
+            {toasts.map(t => (
+              <div key={t.id} className={`toast p-4 rounded-xl shadow-2xl text-white font-bold ${t.variant==='error'?'bg-red-600':'bg-teal-600'}`}>
+                {t.msg}
+              </div>
+            ))}
+          </div>
+        </ToastContext.Provider>
+      );
+    };
+    const useToast = () => useContext(ToastContext).push;
+
+    // Dark Mode Hook
+    const useDarkMode = () => {
+      const [dark, setDark] = useState(load(LS.THEME, false));
+      useEffect(() => {
+        dark ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark');
+        save(LS.THEME, dark);
+      }, [dark]);
+      return [dark, () => setDark(d => !d)];
+    };
+
+    // Language Hook
+    const useLanguage = () => {
+      const [lang, setLang] = useState(load(LS.LANG, 'sw'));
+      const t = translations[lang];
+      useEffect(() => save(LS.LANG, lang), [lang]);
+      return [lang, () => setLang(l => l === 'sw' ? 'en' : 'sw'), t];
+    };
+
+    // Listings Hook
+    const useListings = () => {
+      const [listings, setListings] = useState(() => load(LS.LISTINGS, []));
+      const [filteredListings, setFilteredListings] = useState([]);
+      const [loading, setLoading] = useState(true);
+      const toast = useToast();
+
+      useEffect(() => {
+        if (listings.length === 0) {
+          const sample = [
+            {id:1,title:"Bedsitter Sinza",location:"Sinza",price:135000,type:"Bedsitter",images:["https://images.unsplash.com/photo-1560184897-ae75f418493e?auto=format&fit=crop&w=800&q=80","https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80"],phone:"+255712345678",whatsapp:"+255712345678",description:"Bedsitter nzuri Sinza, maji 24/7, karibu na chuo kikuu, umeme wa kudumu, usalama mzuri. Inafaa kwa mwanafunzi au mtu binafsi.",views:312,featured:true,verified:true,water:true,security:true,parking:true,daladala:true,student:true,wifi:true,createdAt:"2024-01-15T10:30:00Z"},
+            {id:2,title:"Chumba cha Kisasa Mbezi",location:"Mbezi Beach",price:98000,type:"Single Room",images:["https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=800&q=80","https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w-800&q=80"],phone:"+255765432109",whatsapp:"+255765432109",description:"Chumba kizuri Mbezi Beach, tiles zote, dirisha zuri, jiko la kisasa, bafu binafsi. Eneo tulia na usalama mzuri.",views:267,featured:true,urgent:true,water:true,security:true,daladala:true,createdAt:"2024-01-10T14:20:00Z"},
+            {id:3,title:"Apartment Masaki",location:"Masaki",price:950000,type:"Apartment",images:["https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80","https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80"],phone:"+255788888888",whatsapp:"+255788888888",description:"Apartment ya kisasa Masaki, mtazamo wa bahari, gym, bwawa, ukumbi wa mikutano. Inafaa kwa familia au wafanyabiashara.",views:189,featured:true,verified:true,water:true,security:true,parking:true,wifi:true,generator:true,furnished:true,createdAt:"2024-01-05T09:15:00Z"},
+            {id:4,title:"Studio Upanga",location:"Upanga",price:450000,type:"Studio",images:["https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80"],phone:"+255713579246",whatsapp:"+255713579246",description:"Studio apartment Upanga, jikoni kipana, bafu binafsi, karibu na Posta na hospitali. Eneo la kibiashara.",views:145,water:true,security:true,parking:true,daladala:true,wifi:true,createdAt:"2024-01-03T16:45:00Z"},
+            {id:5,title:"Duplex Mikocheni",location:"Mikocheni",price:1200000,type:"Duplex",images:["https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=80"],phone:"+255755123456",whatsapp:"+255755123456",description:"Duplex Mikocheni, vyumba 3, bafu 2, ukumbi mkubwa, bustani. Eneo bora la familia, karibu na shule na dukani.",views:98,featured:true,verified:true,water:true,security:true,parking:true,generator:true,furnished:true,createdAt:"2024-01-01T11:10:00Z"}
+          ];
+          setListings(sample);
+          setFilteredListings(sample);
+          save(LS.LISTINGS, sample);
+        } else {
+          setFilteredListings(listings);
+        }
+        setLoading(false);
+      }, []);
+
+      const create = async (item) => {
+        const newItem = { 
+          ...item, 
+          id: Date.now(), 
+          createdAt: new Date().toISOString(), 
+          views: 0,
+          images: item.images || ["https://images.unsplash.com/photo-1560184897-ae75f418493e?auto=format&fit=crop&w=800&q=80"]
+        };
+        const updated = [newItem, ...listings];
+        setListings(updated);
+        setFilteredListings(updated);
+        save(LS.LISTINGS, updated);
+        toast("Tangazo limewekwa kikamilifu!");
+        return newItem;
+      };
+
+      const remove = (id) => {
+        const updated = listings.filter(x => x.id !== id);
+        setListings(updated);
+        setFilteredListings(updated);
+        save(LS.LISTINGS, updated);
+        toast("Tangazo limefutwa");
+      };
+
+      const incrementView = (id) => {
+        const updated = listings.map(l => l.id === id ? {...l, views: (l.views||0)+1} : l);
+        setListings(updated);
+        save(LS.LISTINGS, updated);
+      };
+
+      const filterListings = (filters) => {
+        let filtered = [...listings];
         
-        switch(this.currentPath) {
-          case '#/':
-            app.appendChild(renderHome());
-            break;
-          case '#/listings':
-            app.appendChild(renderListings());
-            break;
-          case '#/upload':
-            app.appendChild(renderUpload());
-            break;
-          default:
-            if (this.currentPath.startsWith('#/listing/')) {
-              const id = parseInt(this.currentPath.split('/')[2]);
-              app.appendChild(renderListingDetail(id));
-            } else {
-              app.appendChild(renderHome());
-            }
+        if (filters.search) {
+          const search = filters.search.toLowerCase();
+          filtered = filtered.filter(l => 
+            l.title.toLowerCase().includes(search) || 
+            l.description.toLowerCase().includes(search) ||
+            l.location.toLowerCase().includes(search)
+          );
         }
         
-        // Update active nav link
-        document.querySelectorAll('nav a').forEach(link => {
-          link.classList.remove('bg-white/20');
-          if (link.getAttribute('href') === this.currentPath) {
-            link.classList.add('bg-white/20');
-          }
-        });
-      }
+        if (filters.location) {
+          filtered = filtered.filter(l => l.location === filters.location);
+        }
+        
+        if (filters.type) {
+          filtered = filtered.filter(l => l.type === filters.type);
+        }
+        
+        if (filters.minPrice) {
+          filtered = filtered.filter(l => l.price >= filters.minPrice);
+        }
+        
+        if (filters.maxPrice) {
+          filtered = filtered.filter(l => l.price <= filters.maxPrice);
+        }
+        
+        if (filters.amenities && filters.amenities.length > 0) {
+          filtered = filtered.filter(l => 
+            filters.amenities.every(amenity => l[amenity])
+          );
+        }
+        
+        setFilteredListings(filtered);
+      };
+
+      return { 
+        listings, 
+        filteredListings, 
+        loading, 
+        createListing: create, 
+        removeListing: remove, 
+        incrementView,
+        filterListings 
+      };
+    };
+
+    // Favorites Hook
+    const useFavorites = () => {
+      const [favs, setFavs] = useState(() => new Set(load(LS.FAVS, [])));
+      const toast = useToast();
+      const toggle = (id) => {
+        const newFavs = new Set(favs);
+        if (newFavs.has(id)) {
+          newFavs.delete(id);
+          toast("Imeondolewa kwenye vipendwa");
+        } else {
+          newFavs.add(id);
+          toast("Imeongezwa kwenye vipendwa");
+        }
+        setFavs(newFavs);
+        save(LS.FAVS, [...newFavs]);
+      };
+      return [favs, toggle];
+    };
+
+    // Recent Hook
+    const useRecent = () => {
+      const [recent, setRecent] = useState(() => load(LS.RECENT, []));
+      const add = (item) => {
+        const filtered = recent.filter(r => r.id !== item.id);
+        const updated = [item, ...filtered].slice(0, 6);
+        setRecent(updated);
+        save(LS.RECENT, updated);
+      };
+      return [recent, add];
     };
 
     // Components
-    function renderNav() {
-      const nav = document.createElement('nav');
-      nav.className = 'gradient-bg text-white sticky top-0 z-50 shadow-lg';
-      nav.innerHTML = `
-        <div class="max-w-7xl mx-auto px-4 py-4">
-          <div class="flex justify-between items-center">
-            <a href="#/" class="text-2xl font-bold flex items-center gap-2">
-              <i class="fas fa-home"></i>
-              HouseLink
-            </a>
-            
-            <div class="flex items-center gap-4">
-              <a href="#/listings" class="hover:bg-white/10 px-4 py-2 rounded-lg transition">Orodha Zote</a>
-              <a href="#/upload" class="bg-white text-teal-600 hover:bg-gray-100 px-6 py-2 rounded-full font-bold">
-                <i class="fas fa-plus mr-2"></i> Weka Tangazo
-              </a>
-              <button onclick="toggleDarkMode()" class="p-2 hover:bg-white/10 rounded-full">
-                <i class="fas fa-moon"></i>
+    const ListingSkeleton = () => (
+      <div className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden animate-pulse">
+        <div className="h-64 bg-gray-300 dark:bg-gray-700"></div>
+        <div className="p-6">
+          <div className="h-6 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
+          <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/2 mb-6"></div>
+          <div className="flex justify-between">
+            <div className="h-8 bg-gray-300 dark:bg-gray-700 rounded w-24"></div>
+            <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-20"></div>
+          </div>
+        </div>
+      </div>
+    );
+
+    const SearchFilters = ({ t, onFilter }) => {
+      const [filters, setFilters] = useState({
+        search: '',
+        location: '',
+        type: '',
+        minPrice: '',
+        maxPrice: '',
+        amenities: []
+      });
+
+      const handleAmenityToggle = (amenity) => {
+        setFilters(prev => ({
+          ...prev,
+          amenities: prev.amenities.includes(amenity)
+            ? prev.amenities.filter(a => a !== amenity)
+            : [...prev.amenities, amenity]
+        }));
+      };
+
+      const handleApply = () => {
+        onFilter(filters);
+      };
+
+      const handleClear = () => {
+        setFilters({
+          search: '',
+          location: '',
+          type: '',
+          minPrice: '',
+          maxPrice: '',
+          amenities: []
+        });
+        onFilter({});
+      };
+
+      return (
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <input 
+              type="text" 
+              placeholder={t.search}
+              value={filters.search}
+              onChange={(e) => setFilters({...filters, search: e.target.value})}
+              className="p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
+            />
+            <select 
+              value={filters.location}
+              onChange={(e) => setFilters({...filters, location: e.target.value})}
+              className="p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
+            >
+              <option value="">{t.location}</option>
+              {CONFIG.LOCATIONS.map(loc => 
+                <option key={loc} value={loc}>{loc}</option>
+              )}
+            </select>
+            <select 
+              value={filters.type}
+              onChange={(e) => setFilters({...filters, type: e.target.value})}
+              className="p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
+            >
+              <option value="">{t.type}</option>
+              {CONFIG.FILTER_TYPES.map(type => 
+                <option key={type} value={type}>{type}</option>
+              )}
+            </select>
+            <div className="flex gap-2">
+              <button 
+                onClick={handleApply}
+                className="flex-1 bg-teal-600 hover:bg-teal-700 text-white p-3 rounded-lg font-bold"
+              >
+                {t.apply}
+              </button>
+              <button 
+                onClick={handleClear}
+                className="px-4 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 p-3 rounded-lg font-bold"
+              >
+                {t.clear}
               </button>
             </div>
           </div>
-        </div>
-      `;
-      
-      // Add click handlers
-      nav.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          router.navigate(link.getAttribute('href'));
-        });
-      });
-      
-      return nav;
-    }
-
-    function renderFooter() {
-      const footer = document.createElement('footer');
-      footer.className = 'bg-gray-800 text-white mt-20';
-      footer.innerHTML = `
-        <div class="max-w-7xl mx-auto px-6 py-12">
-          <div class="text-center">
-            <h3 class="text-2xl font-bold mb-4">HouseLink Tanzania</h3>
-            <p class="text-gray-400">Pata nyumba bora Tanzania</p>
-            <div class="mt-8 pt-8 border-t border-gray-700">
-              <p class="text-gray-500">© 2024 HouseLink. Haki zote zimehifadhiwa.</p>
-            </div>
-          </div>
-        </div>
-      `;
-      return footer;
-    }
-
-    function renderHome() {
-      const container = document.createElement('div');
-      container.className = 'animate-fade-in';
-      
-      // Hero Section
-      const hero = document.createElement('div');
-      hero.className = 'gradient-bg text-white py-20 md:py-32 text-center';
-      hero.innerHTML = `
-        <div class="max-w-6xl mx-auto px-6">
-          <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
-            Pata Nyumba Bora Tanzania
-          </h1>
-          <p class="text-xl md:text-2xl mb-10 opacity-90">
-            Dar es Salaam • Arusha • Mwanza • Dodoma • Mbeya
-          </p>
-          <a href="#/listings" class="inline-block bg-white text-teal-600 hover:bg-gray-100 px-10 py-4 rounded-full text-xl font-bold shadow-xl">
-            <i class="fas fa-search mr-3"></i> Anza Kutafuta
-          </a>
-        </div>
-      `;
-      
-      // Stats Section
-      const stats = document.createElement('div');
-      stats.className = 'max-w-6xl mx-auto px-6 py-16';
-      stats.innerHTML = `
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div class="text-center">
-            <div class="text-4xl font-bold text-teal-600 mb-2">5,000+</div>
-            <div class="text-gray-600">Nyumba Zilizopo</div>
-          </div>
-          <div class="text-center">
-            <div class="text-4xl font-bold text-teal-600 mb-2">10,000+</div>
-            <div class="text-gray-600">Watumiaji</div>
-          </div>
-          <div class="text-center">
-            <div class="text-4xl font-bold text-teal-600 mb-2">25+</div>
-            <div class="text-gray-600">Miji</div>
-          </div>
-          <div class="text-center">
-            <div class="text-4xl font-bold text-teal-600 mb-2">1,200+</div>
-            <div class="text-gray-600">Zilizothibitishwa</div>
-          </div>
-        </div>
-      `;
-      
-      // Featured Listings
-      const featured = document.createElement('div');
-      featured.className = 'max-w-7xl mx-auto px-6 py-12';
-      featured.innerHTML = `
-        <h2 class="text-3xl font-bold mb-8 text-center">Nyumba Zilizoangaziwa</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          ${listings.filter(l => l.featured).map(listing => `
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
-              <div class="relative h-48">
-                <img src="${listing.image}" alt="${listing.title}" class="w-full h-full object-cover">
-                ${listing.verified ? `
-                  <div class="absolute top-3 left-3 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                    <i class="fas fa-check-circle mr-1"></i> Verified
-                  </div>
-                ` : ''}
-              </div>
-              <div class="p-6">
-                <h3 class="font-bold text-lg mb-2">${listing.title}</h3>
-                <p class="text-gray-600 mb-4">
-                  <i class="fas fa-map-marker-alt text-teal-600 mr-2"></i>
-                  ${listing.location}
-                </p>
-                <div class="flex justify-between items-center">
-                  <span class="text-2xl font-bold text-orange-500">${listing.price.toLocaleString()} TZS</span>
-                  <a href="#/listing/${listing.id}" class="text-teal-600 font-bold hover:underline">
-                    Angalia <i class="fas fa-arrow-right ml-1"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-        <div class="text-center mt-10">
-          <a href="#/listings" class="inline-block bg-teal-600 text-white hover:bg-teal-700 px-8 py-3 rounded-full font-bold">
-            Angalia Zote <i class="fas fa-arrow-right ml-2"></i>
-          </a>
-        </div>
-      `;
-      
-      // How It Works
-      const howItWorks = document.createElement('div');
-      howItWorks.className = 'max-w-7xl mx-auto px-6 py-16';
-      howItWorks.innerHTML = `
-        <h2 class="text-3xl font-bold mb-10 text-center">Jinsi Inavyofanya Kazi</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="bg-white p-8 rounded-2xl shadow text-center">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-teal-100 rounded-full mb-6">
-              <i class="fas fa-search text-teal-600 text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold mb-3">Tafuta</h3>
-            <p class="text-gray-600">Tafuta nyumba kwa eneo, bei, au aina</p>
-          </div>
-          <div class="bg-white p-8 rounded-2xl shadow text-center">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-teal-100 rounded-full mb-6">
-              <i class="fas fa-phone-alt text-teal-600 text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold mb-3">Wasiliana</h3>
-            <p class="text-gray-600">Piga simu au tuma ujumbe kupitia WhatsApp</p>
-          </div>
-          <div class="bg-white p-8 rounded-2xl shadow text-center">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-teal-100 rounded-full mb-6">
-              <i class="fas fa-home text-teal-600 text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold mb-3">Kaa</h3>
-            <p class="text-gray-600">Pata nyumba bora na ukae kwa raha</p>
-          </div>
-        </div>
-      `;
-      
-      container.appendChild(hero);
-      container.appendChild(stats);
-      container.appendChild(featured);
-      container.appendChild(howItWorks);
-      
-      // Add click handlers
-      container.querySelectorAll('a[href^="#"]').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          router.navigate(link.getAttribute('href'));
-        });
-      });
-      
-      return container;
-    }
-
-    function renderListings() {
-      const container = document.createElement('div');
-      container.className = 'max-w-7xl mx-auto p-4 md:p-6 animate-fade-in';
-      
-      container.innerHTML = `
-        <h1 class="text-3xl md:text-4xl font-bold mb-2">Orodha Zote</h1>
-        <p class="text-gray-600 mb-8">Nyumba ${listings.length} zilizopatikana</p>
-        
-        <!-- Search Bar -->
-        <div class="mb-8">
-          <div class="relative">
-            <input 
-              type="text" 
-              placeholder="Tafuta nyumba..." 
-              class="w-full p-4 pl-12 border rounded-xl text-lg"
-              id="searchInput"
-            >
-            <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-          </div>
-        </div>
-        
-        <!-- Filters -->
-        <div class="bg-white rounded-xl p-6 shadow-lg mb-8">
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <select class="p-3 border rounded-lg" id="locationFilter">
-              <option value="">Chagua Eneo</option>
-              <option value="Sinza">Sinza</option>
-              <option value="Mbezi">Mbezi</option>
-              <option value="Masaki">Masaki</option>
-              <option value="Upanga">Upanga</option>
-            </select>
-            
-            <select class="p-3 border rounded-lg" id="typeFilter">
-              <option value="">Chagua Aina</option>
-              <option value="Bedsitter">Bedsitter</option>
-              <option value="Single Room">Chumba</option>
-              <option value="Apartment">Apartment</option>
-              <option value="Studio">Studio</option>
-            </select>
-            
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <input 
               type="number" 
-              placeholder="Bei ya chini" 
-              class="p-3 border rounded-lg"
-              id="minPrice"
-            >
+              placeholder={`${t.min} 50,000`}
+              value={filters.minPrice}
+              onChange={(e) => setFilters({...filters, minPrice: e.target.value})}
+              className="p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
+            />
+            <input 
+              type="number" 
+              placeholder={`${t.max} 1,000,000`}
+              value={filters.maxPrice}
+              onChange={(e) => setFilters({...filters, maxPrice: e.target.value})}
+              className="p-3 border dark:border-gray-700 rounded-lg dark:bg-gray-900"
+            />
+            <div className="md:col-span-2">
+              <div className="text-sm font-medium mb-2">{t.amenities}:</div>
+              <div className="flex flex-wrap gap-2">
+                {CONFIG.AMENITIES.slice(0, 4).map(amenity => (
+                  <button
+                    key={amenity}
+                    onClick={() => handleAmenityToggle(amenity)}
+                    className={`px-3 py-1 rounded-full text-sm ${
+                      filters.amenities.includes(amenity)
+                        ? 'bg-teal-600 text-white'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
+                    }`}
+                  >
+                    {t[amenity]}
+        </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const UploadForm = ({ onSubmit, t }) => {
+      const [form, setForm] = useState({
+        title: '',
+        description: '',
+        price: '',
+        type: '',
+        location: '',
+        phone: '',
+        whatsapp: '',
+        water: false,
+        security: false,
+        parking: false,
+        daladala: false,
+        student: false,
+        wifi: false,
+        generator: false,
+        furnished: false,
+        urgent: false,
+        verified: false
+      });
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        const amenities = {};
+        CONFIG.AMENITIES.forEach(a => {
+          amenities[a] = form[a];
+        });
+        
+        const listing = {
+          ...form,
+          price: parseInt(form.price),
+          ...amenities,
+          featured: false,
+          images: []
+        };
+        
+        onSubmit(listing);
+        setForm({
+          title: '',
+          description: '',
+          price: '',
+          type: '',
+          location: '',
+          phone: '',
+          whatsapp: '',
+          water: false,
+          security: false,
+          parking: false,
+          daladala: false,
+          student: false,
+          wifi: false,
+          generator: false,
+          furnished: false,
+          urgent: false,
+          verified: false
+        });
+      };
+
+      return (
+        <div className="max-w-4xl mx-auto p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-6 md:p-10">
+            <h1 className="text-4xl font-bold mb-2">{t.upload}</h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-8">Weka tangazo lako la nyumba kwa urahisi</p>
             
-            <button onclick="applyFilters()" class="bg-teal-600 hover:bg-teal-700 text-white p-3 rounded-lg font-bold">
-              <i class="fas fa-filter mr-2"></i> Chuja
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Kichwa cha Tangazo *</label>
+                  <input 
+                    placeholder="Mf: Bedsitter nzuri Sinza"
+                    value={form.title}
+                    onChange={(e) => setForm({...form, title: e.target.value})}
+                    className="w-full p-4 border dark:border-gray-700 rounded-xl dark:bg-gray-900"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Bei (TZS) *</label>
+                  <input 
+                    placeholder="Mf: 135000"
+                    type="number"
+                    value={form.price}
+                    onChange={(e) => setForm({...form, price: e.target.value})}
+                    className="w-full p-4 border dark:border-gray-700 rounded-xl dark:bg-gray-900"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Eneo *</label>
+                  <select 
+                    value={form.location}
+                    onChange={(e) => setForm({...form, location: e.target.value})}
+                    className="w-full p-4 border dark:border-gray-700 rounded-xl dark:bg-gray-900"
+                    required
+                  >
+                    <option value="">Chagua Eneo</option>
+                    {CONFIG.LOCATIONS.map(loc => 
+                      <option key={loc} value={loc}>{loc}</option>
+                    )}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Aina ya Nyumba *</label>
+                  <select 
+                    value={form.type}
+                    onChange={(e) => setForm({...form, type: e.target.value})}
+                    className="w-full p-4 border dark:border-gray-700 rounded-xl dark:bg-gray-900"
+                    required
+                  >
+                    <option value="">Chagua Aina</option>
+                    {CONFIG.FILTER_TYPES.map(type => 
+                      <option key={type} value={type}>{type}</option>
+                    )}
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Namba ya Simu *</label>
+                  <input 
+                    placeholder="+255712345678"
+                    value={form.phone}
+                    onChange={(e) => setForm({...form, phone: e.target.value})}
+                    className="w-full p-4 border dark:border-gray-700 rounded-xl dark:bg-gray-900"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">WhatsApp</label>
+                  <input 
+                    placeholder="+255712345678"
+                    value={form.whatsapp}
+                    onChange={(e) => setForm({...form, whatsapp: e.target.value})}
+                    className="w-full p-4 border dark:border-gray-700 rounded-xl dark:bg-gray-900"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Maelezo zaidi *</label>
+                <textarea 
+                  placeholder="Eleza nyumba yako kwa kina..."
+                  rows={4}
+                  value={form.description}
+                  onChange={(e) => setForm({...form, description: e.target.value})}
+                  className="w-full p-4 border dark:border-gray-700 rounded-xl dark:bg-gray-900"
+                  required
+                />
+              </div>
+              
+              <div>
+                <h3 className="text-xl font-bold mb-4">Vifaa na Huduma</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {CONFIG.AMENITIES.map(amenity => (
+                    <label key={amenity} className="flex items-center space-x-3 p-3 border dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                      <input 
+                        type="checkbox" 
+                        checked={form[amenity]}
+                        onChange={(e) => setForm({...form, [amenity]: e.target.checked})}
+                        className="w-5 h-5 text-teal-600 rounded"
+                      />
+                      <span>{t[amenity]}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <label className="flex items-center space-x-3 p-4 border dark:border-gray-700 rounded-xl">
+                  <input 
+                    type="checkbox" 
+                    checked={form.urgent}
+                    onChange={(e) => setForm({...form, urgent: e.target.checked})}
+                    className="w-5 h-5 text-red-600 rounded"
+                  />
+                  <div>
+                    <div className="font-medium">{t.urgent}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Onyesha kama unahitaji kukodisha upesi</div>
+                  </div>
+                </label>
+                
+                <label className="flex items-center space-x-3 p-4 border dark:border-gray-700 rounded-xl">
+                  <input 
+                    type="checkbox" 
+                    checked={form.verified}
+                    onChange={(e) => setForm({...form, verified: e.target.checked})}
+                    className="w-5 h-5 text-blue-600 rounded"
+                  />
+                  <div>
+                    <div className="font-medium">{t.verified}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Nimekagua na kuhakikisha taarifa</div>
+                  </div>
+                </label>
+              </div>
+              
+              <button 
+                type="submit" 
+                className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white py-4 rounded-xl font-bold text-xl shadow-lg"
+              >
+                Chapisha Tangazo
+              </button>
+            </form>
+          </div>
+        </div>
+      );
+    };
+
+    const ListingDetails = ({ listing, t }) => {
+      const [activeImage, setActiveImage] = useState(0);
+      const [favs, toggleFav] = useFavorites();
+      const toast = useToast();
+      const history = useHistory();
+
+      const isFav = favs.has(listing.id);
+
+      const shareListing = () => {
+        if (navigator.share) {
+          navigator.share({
+            title: listing.title,
+            text: `Nyumba ${listing.location} - ${listing.price.toLocaleString()} TZS`,
+            url: window.location.href
+          }).then(() => toast("Tangazo limeshirikiwa!"));
+        } else {
+          navigator.clipboard.writeText(window.location.href);
+          toast("Link imenakiliwa kwenye clipboard!");
+        }
+      };
+
+      const contactOwner = (method) => {
+        if (method === 'whatsapp') {
+          const message = `Habari! Naomba kujua kuhusu nyumba hii: ${listing.title}\nBei: ${listing.price.toLocaleString()} TZS\nEneo: ${listing.location}`;
+          window.open(`https://wa.me/${listing.whatsapp || listing.phone}?text=${encodeURIComponent(message)}`, '_blank');
+        } else {
+          window.location.href = `tel:${listing.phone}`;
+        }
+      };
+
+      const handleReport = () => {
+        if (window.confirm("Je, una uhakika unataka kuripoti tangazo hili?")) {
+          toast("Asante kwa kuripoti. Tutaichunguza taarifa yako.");
+        }
+      };
+
+      const handleDelete = () => {
+        if (window.confirm("Je, una uhakika unataka kufuta tangazo hili?")) {
+          // In real app, this would call an API
+          history.push('/listings');
+          toast("Tangazo limefutwa");
+        }
+      };
+
+      return (
+        <div className="max-w-6xl mx-auto p-4">
+          {/* Breadcrumb */}
+          <div className="mb-6 text-sm">
+            <Link to="/" className="text-teal-600 hover:underline">Nyumbani</Link>
+            <span className="mx-2">/</span>
+            <Link to="/listings" className="text-teal-600 hover:underline">Orodha</Link>
+            <span className="mx-2">/</span>
+            <span className="text-gray-600 dark:text-gray-400">{listing.title}</span>
+          </div>
+          
+          {/* Image Gallery */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+                <img 
+                  src={listing.images[activeImage] || "https://images.unsplash.com/photo-1560184897-ae75f418493e?auto=format&fit=crop&w=1200&q=80"} 
+                  alt={listing.title}
+                  className="w-full h-96 object-cover"
+                />
+                <div className="absolute top-4 left-4 flex gap-2">
+                  {listing.verified && (
+                    <span className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2">
+                      <i className="fas fa-check-circle"></i> {t.verified}
+                    </span>
+                  )}
+                  {listing.urgent && (
+                    <span className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2">
+                      <i className="fas fa-clock"></i> {t.urgent}
+                    </span>
+                  )}
+                </div>
+                <button 
+                  onClick={() => toggleFav(listing.id)}
+                  className="absolute top-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-full shadow-xl"
+                >
+                  <i className={`fas fa-heart text-2xl ${isFav ? 'text-red-500' : 'text-gray-400'}`}></i>
+                </button>
+              </div>
+              
+              {listing.images.length > 1 && (
+                <div className="flex gap-4 mt-4 overflow-x-auto image-gallery py-2">
+                  {listing.images.map((img, idx) => (
+                    <img 
+                      key={idx} 
+                      src={img} 
+                      alt={`${listing.title} ${idx + 1}`}
+                      className={`w-24 h-24 object-cover rounded-lg cursor-pointer flex-shrink-0 ${
+                        activeImage === idx ? 'ring-4 ring-teal-500' : 'opacity-70 hover:opacity-100'
+                      }`}
+                      onClick={() => setActiveImage(idx)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            {/* Contact Card */}
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl h-fit sticky top-24">
+              <h3 className="text-2xl font-bold mb-6">{t.contactOwner}</h3>
+              <div className="space-y-4">
+                <button 
+                  onClick={() => contactOwner('whatsapp')}
+                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white p-4 rounded-xl flex items-center justify-center gap-3 font-bold text-lg"
+                >
+                  <i className="fab fa-whatsapp text-2xl"></i>
+                  <span>{t.whatsapp}</span>
+                </button>
+                <button 
+                  onClick={() => contactOwner('phone')}
+                  className="w-full bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white p-4 rounded-xl flex items-center justify-center gap-3 font-bold text-lg"
+                >
+                  <i className="fas fa-phone-alt text-2xl"></i>
+                  <span>{t.phone}</span>
+                </button>
+              </div>
+              
+              <div className="mt-8 space-y-3">
+                <button 
+                  onClick={shareListing}
+                  className="w-full border dark:border-gray-700 p-4 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  <i className="fas fa-share-alt"></i>
+                  <span>{t.shareListing}</span>
+                </button>
+                <button 
+                  onClick={() => navigator.clipboard.writeText(window.location.href)}
+                  className="w-full border dark:border-gray-700 p-4 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  <i className="far fa-copy"></i>
+                  <span>{t.copy} Link</span>
+                </button>
+                <button 
+                  onClick={handleReport}
+                  className="w-full border dark:border-gray-700 p-4 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700 text-red-600"
+                >
+                  <i className="fas fa-flag"></i>
+                  <span>{t.report}</span>
+                </button>
+              </div>
+              
+              {/* Admin actions (for demo) */}
+              <div className="mt-8 pt-6 border-t dark:border-gray-700">
+                <button 
+                  onClick={handleDelete}
+                  className="w-full bg-red-50 dark:bg-red-900/20 text-red-600 p-3 rounded-lg text-sm"
+                >
+                  <i className="fas fa-trash mr-2"></i>
+                  Futa Tangazo
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          {/* Details Section */}
+          <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h1 className="text-4xl font-bold">{listing.title}</h1>
+                  <p className="text-xl text-gray-600 dark:text-gray-400 mt-2">
+                    <i className="fas fa-map-marker-alt text-teal-600 mr-2"></i>
+                    {listing.location}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="text-5xl font-bold text-orange-500">{listing.price.toLocaleString()} TZS</div>
+                  <div className="text-gray-600 dark:text-gray-400">{t.month}</div>
+                </div>
+              </div>
+              
+              <div className="mt-8">
+                <h3 className="text-2xl font-bold mb-4">{t.description}</h3>
+                <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">{listing.description}</p>
+              </div>
+              
+              {/* Amenities */}
+              <div className="mt-12">
+                <h3 className="text-2xl font-bold mb-6">{t.amenities}</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  {listing.water && (
+                    <div className="bg-teal-50 dark:bg-teal-900/20 p-4 rounded-xl flex items-center gap-3">
+                      <i className="fas fa-tint text-teal-600 text-2xl"></i>
+                      <div>
+                        <div className="font-bold">{t.water}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">Maji ya kudumu</div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {listing.security && (
+                    <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl flex items-center gap-3">
+                      <i className="fas fa-shield-alt text-blue-600 text-2xl"></i>
+                      <div>
+                        <div className="font-bold">{t.security}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">Ulinzi 24/7</div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {listing.parking && (
+                    <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-xl flex items-center gap-3">
+                      <i className="fas fa-car text-purple-600 text-2xl"></i>
+                      <div>
+                        <div className="font-bold">{t.parking}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">Maegesho ya gari</div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {listing.daladala && (
+                    <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl flex items-center gap-3">
+                      <i className="fas fa-bus text-green-600 text-2xl"></i>
+                      <div>
+                        <div className="font-bold">{t.daladala}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">Karibu na usafiri</div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {listing.wifi && (
+                    <div className="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl flex items-center gap-3">
+                      <i className="fas fa-wifi text-indigo-600 text-2xl"></i>
+                      <div>
+                        <div className="font-bold">{t.wifi}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">Internet ya kasi</div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {listing.generator && (
+                    <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-xl flex items-center gap-3">
+                      <i className="fas fa-bolt text-yellow-600 text-2xl"></i>
+                      <div>
+                        <div className="font-bold">{t.generator}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">Umeme wa dharura</div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {listing.furnished && (
+                    <div className="bg-pink-50 dark:bg-pink-900/20 p-4 rounded-xl flex items-center gap-3">
+                      <i className="fas fa-couch text-pink-600 text-2xl"></i>
+                      <div>
+                        <div className="font-bold">{t.furnished}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">Samani tayari</div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {listing.student && (
+                    <div className="bg-cyan-50 dark:bg-cyan-900/20 p-4 rounded-xl flex items-center gap-3">
+                      <i className="fas fa-graduation-cap text-cyan-600 text-2xl"></i>
+                      <div>
+                        <div className="font-bold">{t.student}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">Inafaa wanafunzi</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            {/* Stats & Info */}
+            <div className="space-y-6">
+              <div className="bg-gradient-to-br from-teal-500 to-cyan-500 text-white p-8 rounded-2xl shadow-xl">
+                <div className="text-5xl font-bold mb-2">{listing.price.toLocaleString()} TZS</div>
+                <div className="text-xl opacity-90">{t.month}</div>
+                <div className="mt-6 pt-6 border-t border-white/30">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="opacity-90">{t.type}:</span>
+                    <span className="font-bold">{listing.type}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="opacity-90">{t.location}:</span>
+                    <span className="font-bold">{listing.location}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-2xl">
+                <h4 className="text-xl font-bold mb-4">{t.stats}</h4>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      <i className="fas fa-eye mr-2"></i>
+                      {t.views}
+                    </span>
+                    <span className="font-bold">{listing.views}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      <i className="far fa-calendar-alt mr-2"></i>
+                      {t.posted}
+                    </span>
+                    <span className="font-bold">
+                      {new Date(listing.createdAt).toLocaleDateString('sw-TZ', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                      })}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      <i className="fas fa-hashtag mr-2"></i>
+                      Nambari ya Tangazo
+                    </span>
+                    <span className="font-bold">HL{listing.id.toString().slice(-6)}</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Emergency Contacts */}
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-6">
+                <h4 className="text-xl font-bold text-red-700 dark:text-red-400 mb-4 flex items-center gap-2">
+                  <i className="fas fa-phone-alt"></i>
+                  {t.emergencyContacts}
+                </h4>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">{t.police}</span>
+                    <a href="tel:112" className="text-red-600 font-bold">112 / 111</a>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">{t.fire}</span>
+                    <a href="tel:114" className="text-red-600 font-bold">114</a>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">{t.housing}</span>
+                    <a href="tel:+255222122316" className="text-red-600 font-bold">+255 22 212 2316</a>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">{t.electricity}</span>
+                    <a href="tel:+255222113791" className="text-red-600 font-bold">+255 22 211 3791</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Similar Listings */}
+          <div className="mt-16">
+            <h3 className="text-2xl font-bold mb-6">Nyumba Zinazofanana</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {Array(3).fill().map((_, idx) => (
+                <div key={idx} className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow">
+                  <div className="h-40 bg-gray-300 dark:bg-gray-700 rounded-lg mb-4"></div>
+                  <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-3"></div>
+                  <div className="h-3 bg-gray-300 dark:bg-gray-700 rounded w-1/2 mb-4"></div>
+                  <div className="flex justify-between">
+                    <div className="h-6 bg-gray-300 dark:bg-gray-700 rounded w-20"></div>
+                    <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-16"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const ListingCard = ({ item, t }) => {
+      const [favs, toggleFav] = useFavorites();
+      const isFav = favs.has(item.id);
+      const history = useHistory();
+
+      const handleClick = () => {
+        history.push(`/listing/${item.id}`);
+      };
+
+      return (
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden card-hover">
+          <div className="relative">
+            <img 
+              src={item.images[0] || "https://images.unsplash.com/photo-1560184897-ae75f418493e?auto=format&fit=crop&w=800&q=80"} 
+              alt={item.title} 
+              className="w-full h-64 object-cover"
+            />
+            <div className="absolute top-3 left-3 flex gap-2">
+              {item.verified && (
+                <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                  <i className="fas fa-check-circle mr-1"></i> Verified
+                </span>
+              )}
+              {item.urgent && (
+                <span className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                  <i className="fas fa-clock mr-1"></i> Urgent
+                </span>
+              )}
+            </div>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleFav(item.id);
+              }}
+              className="absolute bottom-3 right-3 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg"
+            >
+              <i className={`fas fa-heart ${isFav ? 'text-red-500' : 'text-gray-400'}`}></i>
             </button>
           </div>
-        </div>
-        
-        <!-- Listings Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="listingsContainer">
-          ${renderListingCards(listings)}
-        </div>
-        
-        ${listings.length === 0 ? `
-          <div class="text-center py-20">
-            <i class="fas fa-search text-gray-400 text-6xl mb-6"></i>
-            <h3 class="text-2xl font-bold mb-2">Hakuna tangazo lililopatikana</h3>
-            <p class="text-gray-600 mb-8">Jaribu kubadilisha vichujio vyako</p>
-            <a href="#/upload" class="bg-teal-600 text-white px-8 py-3 rounded-full font-bold">
-              <i class="fas fa-plus mr-2"></i> TANGAZA NYUMBA
-            </a>
-          </div>
-        ` : ''}
-      `;
-      
-      return container;
-    }
-
-    function renderListingCards(listingsArray) {
-      return listingsArray.map(listing => `
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover">
-          <div class="relative">
-            <img 
-              src="${listing.image}" 
-              alt="${listing.title}" 
-              class="w-full h-64 object-cover"
-            >
-            <div class="absolute top-3 left-3 flex gap-2">
-              ${listing.verified ? `
-                <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                  <i class="fas fa-check-circle mr-1"></i> Verified
-                </span>
-              ` : ''}
-              ${listing.urgent ? `
-                <span class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                  <i class="fas fa-clock mr-1"></i> Urgent
-                </span>
-              ` : ''}
-            </div>
-          </div>
-          <div class="p-6">
-            <h3 class="text-xl font-bold">${listing.title}</h3>
-            <p class="text-gray-600 mt-1">
-              <i class="fas fa-map-marker-alt text-teal-600 mr-2"></i>
-              ${listing.location} • ${listing.type}
+          <div className="p-6">
+            <h3 className="text-xl font-bold line-clamp-1">{item.title}</h3>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">
+              <i className="fas fa-map-marker-alt text-teal-600 mr-2"></i>
+              {item.location} • {item.type}
             </p>
-            <div class="flex justify-between items-center mt-4">
-              <span class="text-2xl font-extrabold text-orange-500">${listing.price.toLocaleString()} TZS</span>
-              <a 
-                href="#/listing/${listing.id}"
-                class="text-teal-600 font-bold hover:underline flex items-center gap-2"
+            <div className="flex justify-between items-center mt-4">
+              <span className="text-2xl font-extrabold text-orange-500">{item.price.toLocaleString()} TZS</span>
+              <button 
+                onClick={handleClick}
+                className="text-teal-600 dark:text-teal-400 font-bold hover:underline flex items-center gap-2"
               >
-                Angalia <i class="fas fa-arrow-right"></i>
-              </a>
+                Angalia <i className="fas fa-arrow-right"></i>
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-4">
+              {item.water && <span className="bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-300 px-3 py-1 rounded-full text-xs"><i className="fas fa-tint mr-1"></i> Maji</span>}
+              {item.security && <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-xs"><i className="fas fa-shield-alt mr-1"></i> Ulinzi</span>}
+              {item.parking && <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-3 py-1 rounded-full text-xs"><i className="fas fa-car mr-1"></i> Parking</span>}
+              {item.wifi && <span className="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-3 py-1 rounded-full text-xs"><i className="fas fa-wifi mr-1"></i> Wi-Fi</span>}
+            </div>
+            <div className="flex justify-between items-center mt-4 pt-4 border-t dark:border-gray-700">
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                <i className="far fa-eye mr-1"></i>
+                {item.views} angalio
+              </span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                {new Date(item.createdAt).toLocaleDateString('sw-TZ', { month: 'short', day: 'numeric' })}
+              </span>
             </div>
           </div>
         </div>
-      `).join('');
-    }
-
-    function renderListingDetail(id) {
-      const listing = listings.find(l => l.id === id);
-      if (!listing) {
-        const container = document.createElement('div');
-        container.className = 'text-center py-32';
-        container.innerHTML = `
-          <i class="fas fa-home text-gray-400 text-6xl mb-6"></i>
-          <h1 class="text-4xl font-bold mb-4">Tangazo halipatikani</h1>
-          <a href="#/listings" class="bg-teal-600 text-white px-8 py-3 rounded-full font-bold">
-            Rudi kwenye orodha
-          </a>
-        `;
-        return container;
-      }
-      
-      const container = document.createElement('div');
-      container.className = 'max-w-6xl mx-auto p-4 animate-fade-in';
-      container.innerHTML = `
-        <!-- Breadcrumb -->
-        <div class="mb-6">
-          <a href="#/" class="text-teal-600 hover:underline">Nyumbani</a>
-          <span class="mx-2">/</span>
-          <a href="#/listings" class="text-teal-600 hover:underline">Orodha</a>
-          <span class="mx-2">/</span>
-          <span class="text-gray-600">${listing.title}</span>
-        </div>
-        
-        <!-- Property Details -->
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-          <div class="relative h-64 md:h-96">
-            <img 
-              src="${listing.image}" 
-              alt="${listing.title}" 
-              class="w-full h-full object-cover"
-            >
-            <div class="absolute top-4 left-4 flex gap-2">
-              ${listing.verified ? `
-                <span class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold">
-                  <i class="fas fa-check-circle"></i> Verified
-                </span>
-              ` : ''}
-              ${listing.urgent ? `
-                <span class="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">
-                  <i class="fas fa-clock"></i> Urgent
-                </span>
-              ` : ''}
+      );
+    };
+    const Footer = ({ t }) => (
+      <footer className="bg-gray-800 text-white mt-20">
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h4 className="text-2xl font-bold mb-4">HouseLink</h4>
+              <p className="text-gray-300">Nyumba bora Tanzania. Tupate nyumba unayotaka kwa urahisi na uhakika.</p>
+              <div className="flex gap-4 mt-6">
+                <a href="#" className="bg-gray-700 hover:bg-gray-600 p-3 rounded-full">
+                  <i className="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" className="bg-gray-700 hover:bg-gray-600 p-3 rounded-full">
+                  <i className="fab fa-twitter"></i>
+                </a>
+                <a href="#" className="bg-gray-700 hover:bg-gray-600 p-3 rounded-full">
+                  <i className="fab fa-instagram"></i>
+                </a>
+                <a href="#" className="bg-gray-700 hover:bg-gray-600 p-3 rounded-full">
+                  <i className="fab fa-whatsapp"></i>
+                </a>
+              </div>
             </div>
-          </div>
-          
-          <div class="p-6 md:p-8">
-            <div class="flex flex-col md:flex-row justify-between items-start mb-6">
-              <div>
-                <h1 class="text-3xl md:text-4xl font-bold">${listing.title}</h1>
-                <p class="text-xl text-gray-600 mt-2">
-                  <i class="fas fa-map-marker-alt text-teal-600 mr-2"></i>
-                  ${listing.location}
+            <div>
+              <h5 className="text-xl font-bold mb-4">{t.cities}</h5>
+              <ul className="space-y-2">
+                {["Dar es Salaam", "Arusha", "Mwanza", "Dodoma", "Mbeya", "Morogoro", "Tanga", "Zanzibar"].map(city => 
+                  <li key={city}>
+                    <Link to={`/city/${city.toLowerCase()}`} className="text-gray-300 hover:text-white hover:underline">
+                      <i className="fas fa-city mr-2"></i> {city}
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            </div>
+            <div>
+              <h5 className="text-xl font-bold mb-4">Sehemu</h5>
+              <ul className="space-y-2">
+                <li><Link to="/about" className="text-gray-300 hover:text-white hover:underline"><i className="fas fa-info-circle mr-2"></i> {t.about}</Link></li>
+                <li><Link to="/tips" className="text-gray-300 hover:text-white hover:underline"><i className="fas fa-lightbulb mr-2"></i> {t.tips} vya kulipa</Link></li>
+                <li><Link to="/scam" className="text-gray-300 hover:text-white hover:underline"><i className="fas fa-shield-alt mr-2"></i> {t.scam}</Link></li>
+                <li><Link to="/contact" className="text-gray-300 hover:text-white hover:underline"><i className="fas fa-envelope mr-2"></i> Wasiliana Nasi</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="text-xl font-bold mb-4">{t.follow}</h5>
+              <p className="text-gray-300 mb-4">Jiunge na jumuiya yetu kupata taarifa za nyumba mpya kila siku.</p>
+              <div className="bg-gray-900 rounded-xl p-4">
+                <p className="text-sm">
+                  <i className="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+                  <strong>Ilani:</strong> Kamwe usilipie pesa kabla ya kuona nyumba!
                 </p>
               </div>
-              <div class="mt-4 md:mt-0 text-right">
-                <div class="text-4xl md:text-5xl font-bold text-orange-500">${listing.price.toLocaleString()} TZS</div>
-                <div class="text-gray-600">kwa mwezi</div>
-              </div>
-            </div>
-            
-            <div class="mb-8">
-              <h3 class="text-2xl font-bold mb-4">Maelezo</h3>
-              <p class="text-lg text-gray-700 leading-relaxed">${listing.description}</p>
-            </div>
-            
-            <!-- Contact Buttons -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <a 
-                href="https://wa.me/${listing.whatsapp || listing.phone}?text=Habari! Naomba kujua kuhusu nyumba hii: ${encodeURIComponent(listing.title)}"
-                target="_blank"
-                class="bg-green-600 hover:bg-green-700 text-white p-4 rounded-xl flex items-center justify-center gap-3 font-bold text-lg"
-              >
-                <i class="fab fa-whatsapp text-2xl"></i>
-                <span>WhatsApp</span>
-              </a>
-              
-              <a 
-                href="tel:${listing.phone}"
-                class="bg-teal-600 hover:bg-teal-700 text-white p-4 rounded-xl flex items-center justify-center gap-3 font-bold text-lg"
-            >
-                <i class="fas fa-phone-alt text-2xl"></i>
-                <span>Piga Simu</span>
-              </a>
-            </div>
-            
-            <!-- Additional Info -->
-            <div class="mt-8 pt-8 border-t">
-              <h4 class="text-xl font-bold mb-4">Taarifa za Ziada</h4>
-              <div class="grid grid-cols-2 gap-4">
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Aina ya Nyumba:</span>
-                  <span class="font-bold">${listing.type}</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Eneo:</span>
-                  <span class="font-bold">${listing.location}</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Nambari ya Simu:</span>
-                  <span class="font-bold">${listing.phone}</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-600">Hali:</span>
-                  <span class="font-bold">${listing.urgent ? 'Haraka' : 'Kawaida'}</span>
-                </div>
-              </div>
             </div>
           </div>
-        </div>
-        
-        <!-- Emergency Contacts -->
-        <div class="mt-8 bg-red-50 border border-red-200 rounded-2xl p-6">
-          <h4 class="text-xl font-bold text-red-700 mb-4">
-            <i class="fas fa-phone-alt mr-2"></i>
-            Nambari za Dharura
-          </h4>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="flex justify-between">
-              <span class="font-medium">Polisi:</span>
-              <a href="tel:112" class="text-red-600 font-bold">112 / 111</a>
-            </div>
-            <div class="flex justify-between">
-              <span class="font-medium">Zima moto:</span>
-              <a href="tel:114" class="text-red-600 font-bold">114</a>
-            </div>
+          <div className="border-t border-gray-700 mt-12 pt-8 text-center">
+            <p className="text-gray-400">
+              © {new Date().getFullYear()} HouseLink Tanzania. Haki zote zimehifadhiwa. 
+              <span className="mx-2">•</span>
+              <a href="#" className="hover:text-white hover:underline">Sera ya Faragha</a>
+              <span className="mx-2">•</span>
+              <a href="#" className="hover:text-white hover:underline">Masharti ya Matumizi</a>
+            </p>
           </div>
         </div>
-      `;
-      
-      // Add click handlers
-      container.querySelectorAll('a[href^="#"]').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          router.navigate(link.getAttribute('href'));
-        });
-      });
-      
-      return container;
-    }
+      </footer>
+    );
 
-    function renderUpload() {
-      const container = document.createElement('div');
-      container.className = 'max-w-4xl mx-auto p-4 animate-fade-in';
-      container.innerHTML = `
-        <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-10">
-          <h1 class="text-4xl font-bold mb-2">Weka Tangazo</h1>
-          <p class="text-gray-600 mb-8">Weka tangazo lako la nyumba kwa urahisi</p>
-          
-          <form id="uploadForm" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label class="block text-sm font-medium mb-2">Kichwa cha Tangazo *</label>
-                <input 
-                  type="text"
-                  placeholder="Mf: Bedsitter nzuri Sinza"
-                  required
-                  class="w-full p-4 border rounded-xl"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium mb-2">Bei (TZS) *</label>
-                <input 
-                  type="number"
-                  placeholder="Mf: 135000"
-                  required
-                  class="w-full p-4 border rounded-xl"
-                />
-              </div>
-              
-              <div>
-                <label class="block text-sm font-medium mb-2">Eneo *</label>
-                <select required class="w-full p-4 border rounded-xl">
-                  <option value="">Chagua Eneo</option>
-                  <option>Sinza</option>
-                  <option>Mbezi</option>
-                  <option>Masaki</option>
-                  <option>Upanga</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-sm font-medium mb-2">Aina ya Nyumba *</label>
-                <select required class="w-full p-4 border rounded-xl">
-                  <option value="">Chagua Aina</option>
-                  <option>Bedsitter</option>
-                  <option>Single Room</option>
-                  <option>Apartment</option>
-                  <option>Studio</option>
-                </select>
-              </div>
-              
-              <div>
-                <label class="block text-sm font-medium mb-2">Namba ya Simu *</label>
-                <input 
-                  type="tel"
-                  placeholder="+255712345678"
-                  required
-                  class="w-full p-4 border rounded-xl"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium mb-2">WhatsApp</label>
-                <input 
-                  type="tel"
-                  placeholder="+255712345678"
-                  class="w-full p-4 border rounded-xl"
-                />
-              </div>
-            </div>
+    const Navbar = ({ t, dark, toggleDark, lang, toggleLang, favs }) => {
+      const [mobileMenu, setMobileMenu] = useState(false);
+      
+      return (
+        <nav className="gradient-bg text-white sticky top-0 z-50 shadow-2xl">
+          <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <Link to="/" className="text-3xl font-black flex items-center gap-2">
+              <i className="fas fa-home"></i>
+              HouseLink
+            </Link>
             
-            <div>
-              <label class="block text-sm font-medium mb-2">Maelezo zaidi *</label>
-              <textarea 
-                rows="4"
-                placeholder="Eleza nyumba yako kwa kina..."
-                required
-                class="w-full p-4 border rounded-xl"
-              ></textarea>
+            <div className="hidden md:flex items-center gap-6">
+              <Link to="/listings" className="hover:underline font-medium">{t.listings}</Link>
+              <Link to="/upload" className="bg-white text-teal-600 hover:bg-gray-100 px-6 py-3 rounded-full font-bold shadow-lg flex items-center gap-2">
+                <i className="fas fa-plus"></i> {t.upload}
+              </Link>
+              <Link to="/favorites" className="relative hover:underline font-medium">
+                <i className="fas fa-heart"></i> {t.favorites}
+                <span className="absolute -top-2 -right-2 bg-red-600 text-xs rounded-full w-6 h-6 flex items-center justify-center">{favs.size}</span>
+              </Link>
+              <button onClick={toggleDark} className="text-xl p-2 rounded-full hover:bg-white/10">
+                {dark ? <i className="fas fa-sun"></i> : <i className="fas fa-moon"></i>}
+              </button>
+              <button onClick={toggleLang} className="font-bold px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20">
+                {lang.toUpperCase()}
+              </button>
             </div>
             
             <button 
-              type="submit"
-              class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white py-4 rounded-xl font-bold text-xl shadow-lg"
+              onClick={() => setMobileMenu(!mobileMenu)} 
+              className="md:hidden text-2xl p-2"
             >
-              Chapisha Tangazo
+              <i className="fas fa-bars"></i>
             </button>
-          </form>
+          </div>
+          
+          {mobileMenu && (
+            <div className="md:hidden bg-teal-700 p-6 space-y-4 text-lg">
+              <Link to="/listings" className="block p-3 hover:bg-white/10 rounded-lg" onClick={() => setMobileMenu(false)}>
+                <i className="fas fa-list mr-3"></i> {t.listings}
+              </Link>
+              <Link to="/upload" className="block bg-white text-teal-600 px-6 py-3 rounded-full text-center font-bold" onClick={() => setMobileMenu(false)}>
+                <i className="fas fa-plus mr-2"></i> {t.upload}
+              </Link>
+              <Link to="/favorites" className="block p-3 hover:bg-white/10 rounded-lg" onClick={() => setMobileMenu(false)}>
+                <i className="fas fa-heart mr-3"></i> {t.favorites} ({favs.size})
+              </Link>
+              <button onClick={toggleDark} className="block w-full text-left p-3 hover:bg-white/10 rounded-lg">
+                <i className="fas fa-adjust mr-3"></i> {dark ? t.light : t.dark}
+              </button>
+              <button onClick={() => { toggleLang(); setMobileMenu(false); }} className="block w-full text-left p-3 hover:bg-white/10 rounded-lg">
+                <i className="fas fa-language mr-3"></i> {lang === 'sw' ? 'English' : 'Kiswahili'}
+              </button>
+            </div>
+          )}
+        </nav>
+      );
+    };
+
+    const HomePage = ({ listings, t, recent }) => (
+      <div className="space-y-20 pb-20">
+        {/* Hero Section */}
+        <div className="gradient-bg text-white py-20 md:py-32 text-center">
+          <div className="max-w-6xl mx-auto px-6">
+            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
+              Pata Nyumba Bora Tanzania
+            </h1>
+            <p className="text-xl md:text-2xl mt-6 opacity-90">
+              Dar es Salaam • Arusha • Mwanza • Dodoma • Mbeya • Morogoro
+            </p>
+            <p className="mt-4 text-lg opacity-80">
+              Zaidi ya nyumba 5,000 zimepatikana. Anza kutafuta leo!
+            </p>
+            <Link to="/listings" className="mt-10 inline-block bg-white text-teal-600 hover:bg-gray-100 px-10 py-5 rounded-full text-xl font-bold shadow-xl">
+              <i className="fas fa-search mr-3"></i> Tafuta Sasa
+            </Link>
+          </div>
         </div>
-      `;
-      
-      container.querySelector('#uploadForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        alert('Tangazo limewekwa kikamilifu!');
-        router.navigate('#/listings');
-      });
-      
-      return container;
-    }
-
-    // Global Functions
-    window.toggleDarkMode = function() {
-      document.body.classList.toggle('dark');
-      const icon = document.querySelector('button[onclick="toggleDarkMode()"] i');
-      if (document.body.classList.contains('dark')) {
-        document.body.classList.add('bg-gray-900', 'text-gray-100');
-        document.body.classList.remove('bg-gray-50', 'text-gray-900');
-        icon.className = 'fas fa-sun';
-      } else {
-        document.body.classList.add('bg-gray-50', 'text-gray-900');
-        document.body.classList.remove('bg-gray-900', 'text-gray-100');
-        icon.className = 'fas fa-moon';
-      }
-    };
-
-    window.applyFilters = function() {
-      const location = document.getElementById('locationFilter')?.value || '';
-      const type = document.getElementById('typeFilter')?.value || '';
-      const minPrice = document.getElementById('minPrice')?.value || '';
-      const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
-      
-      let filtered = [...listings];
-      
-      if (location) {
-        filtered = filtered.filter(l => l.location === location);
-      }
-      
-      if (type) {
-        filtered = filtered.filter(l => l.type === type);
-      }
-      
-      if (minPrice) {
-        filtered = filtered.filter(l => l.price >= parseInt(minPrice));
-      }
-      
-      if (search) {
-        filtered = filtered.filter(l => 
-          l.title.toLowerCase().includes(search) || 
-          l.location.toLowerCase().includes(search) ||
-          l.description.toLowerCase().includes(search)
-        );
-      }
-      
-      const container = document.getElementById('listingsContainer');
-      if (container) {
-        container.innerHTML = renderListingCards(filtered);
         
-        // Reattach click handlers
-        container.querySelectorAll('a[href^="#"]').forEach(link => {
-          link.addEventListener('click', (e) => {
-            e.preventDefault();
-            router.navigate(link.getAttribute('href'));
-          });
-        });
-      }
+        {/* Stats */}
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { icon: 'fa-home', value: '5,000+', label: 'Nyumba Zilizopo' },
+              { icon: 'fa-users', value: '10,000+', label: 'Watumiaji' },
+              { icon: 'fa-city', value: '25+', label: 'Miji' },
+              { icon: 'fa-check-circle', value: '1,200+', label: 'Zilizothibitishwa' }
+            ].map((stat, idx) => (
+              <div key={idx} className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center">
+                <i className={`fas ${stat.icon} text-teal-600 text-3xl mb-4`}></i>
+                <div className="text-3xl font-bold">{stat.value}</div>
+                <div className="text-gray-600 dark:text-gray-400">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Featured Listings */}
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex justify-between items-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold">{t.featured}</h2>
+            <Link to="/listings" className="text-teal-600 dark:text-teal-400 font-bold hover:underline">
+              Angalia zote <i className="fas fa-arrow-right ml-2"></i>
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {listings.filter(l => l.featured).slice(0, 6).map(l => (
+              <ListingCard key={l.id} item={l} t={t} />
+            ))}
+          </div>
+        </div>
+        
+        {/* Recently Viewed */}
+        {recent.length > 0 && (
+          <div className="max-w-7xl mx-auto px-6">
+            <h2 className="text-3xl md:text-4xl font-bold mb-10">{t.recent}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {recent.slice(0, 3).map(l => (
+                <ListingCard key={l.id} item={l} t={t} />
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {/* How It Works */}
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center">Jinsi Inavyofanya Kazi</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { icon: 'fa-search', title: 'Tafuta', desc: 'Tafuta nyumba kwa eneo, bei, au aina' },
+              { icon: 'fa-phone-alt', title: 'Wasiliana', desc: 'Piga simu au tuma ujumbe kupitia WhatsApp' },
+              { icon: 'fa-home', title: 'Kaa', desc: 'Pata nyumba bora na ukae kwa raha' }
+            ].map((step, idx) => (
+              <div key={idx} className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-teal-100 dark:bg-teal-900/30 rounded-full mb-6">
+                  <i className={`fas ${step.icon} text-teal-600 text-2xl`}></i>
+                </div>
+                <h3 className="text-xl font-bold mb-3">{step.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+
+    // Main App Component
+    const App = () => {
+      const [dark, toggleDark] = useDarkMode();
+      const [lang, toggleLang, t] = useLanguage();
+      const { 
+        listings, 
+        filteredListings, 
+        loading, 
+        createListing, 
+        removeListing, 
+        incrementView,
+        filterListings 
+      } = useListings();
+      const [favs, toggleFav] = useFavorites();
+      const [recent, addRecent] = useRecent();
+
+      return (
+        <div className="min-h-screen flex flex-col">
+          <Navbar t={t} dark={dark} toggleDark={toggleDark} lang={lang} toggleLang={toggleLang} favs={favs} />
+          
+          <Switch>
+            <Route exact path="/" render={() => (
+              <HomePage listings={listings} t={t} recent={recent} />
+            )} />
+            
+            <Route exact path="/listings" render={() => (
+              <div className="max-w-7xl mx-auto p-4 md:p-6 flex-1">
+                <h1 className="text-3xl md:text-4xl font-bold mb-2">{t.listings}</h1>
+                <p className="text-gray-600 dark:text-gray-400 mb-8">
+                  Nyumba {filteredListings.length} zilizopatikana
+                </p>
+                
+                <SearchFilters t={t} onFilter={filterListings} />
+                
+                {loading ? (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {[1,2,3,4,5,6].map(n => <ListingSkeleton key={n} />)}
+                  </div>
+                ) : filteredListings.length === 0 ? (
+                  <div className="text-center py-20">
+                    <i className="fas fa-search text-gray-400 text-6xl mb-6"></i>
+                    <h3 className="text-2xl font-bold mb-2">{t.noListings}</h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-8">
+                      Jaribu kubadilisha vichujio vyako au
+                    </p>
+                    <Link to="/upload" className="bg-teal-600 text-white px-8 py-3 rounded-full font-bold">
+                      <i className="fas fa-plus mr-2"></i> TANGAZA NYUMBA
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {filteredListings.map(l => (
+                      <ListingCard key={l.id} item={l} t={t} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )} />
+            
+            <Route exact path="/upload" render={() => (
+              <UploadForm onSubmit={createListing} t={t} />
+            )} />
+            
+            <Route exact path="/favorites" render={() => (
+              <div className="max-w-7xl mx-auto p-6 flex-1">
+                <h1 className="text-4xl font-bold mb-8">{t.favorites}</h1>
+                {favs.size === 0 ? (
+                  <div className="text-center py-20">
+                    <i className="far fa-heart text-gray-400 text-6xl mb-6"></i>
+                    <h3 className="text-2xl font-bold mb-2">Hakuna nyumba ulizoweka kwenye vipendwa</h3>
+                    <p className="text-gray-600 mb-8">
+                      Bonyeza kwenye alama ya moyo kwenye tangazo lolote ili kulihifadhi hapa
+                    </p>
+                    <Link to="/listings" className="bg-teal-600 text-white px-8 py-3 rounded-full font-bold">
+                      <i className="fas fa-search mr-2"></i> TAZAMA TANGAZO
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {listings.filter(l => favs.has(l.id)).map(l => (
+                      <ListingCard key={l.id} item={l} t={t} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )} />
+            
+            <Route exact path="/listing/:id" render={() => {
+              const { id } = useParams();
+              const listing = listings.find(l => l.id === Number(id));
+              
+              if (!listing) {
+                return (
+                  <div className="text-center py-32">
+                    <i className="fas fa-home text-gray-400 text-6xl mb-6"></i>
+                    <h1 className="text-4xl font-bold mb-4">Tangazo halipatikani</h1>
+                    <p className="text-gray-600 mb-8">Tangazo liliyohitaji linaweza kuwa limefutwa</p>
+                    <Link to="/listings" className="bg-teal-600 text-white px-8 py-3 rounded-full font-bold">
+                      Rudi kwenye orodha
+                    </Link>
+                  </div>
+                );
+              }
+              
+              incrementView(listing.id);
+              addRecent(listing);
+              
+              return <ListingDetails listing={listing} t={t} />;
+            }} />
+            
+            <Route exact path="/about" render={() => (
+              <div className="max-w-4xl mx-auto p-6 flex-1">
+                <h1 className="text-4xl font-bold mb-8">{t.about} HouseLink</h1>
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl">
+                  <p className="text-lg mb-6">
+                    HouseLink ni jukwaa la mtandaoni la kutafuta na kuuza nyumba nchini Tanzania. 
+                    Tunalenga kuwezesha wananchi kupata makazi bora kwa bei nafuu.
+                  </p>
+                  <p className="text-lg mb-6">
+                    Tunaaminisha kuwa kila mtu anastahili kupata nyumba salama na ya kifahari.
+                    Kwa hivyo, tunafanya kazi kwa bidii kuhakikisha tangazo zote ni sahihi na za hali ya juu.
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+                    <div className="bg-teal-50 dark:bg-teal-900/20 p-6 rounded-xl">
+                      <h3 className="text-xl font-bold mb-3">Maono Yetu</h3>
+                      <p>Kuwa jukwaa kuu la mali isiyohamishika Tanzania</p>
+                    </div>
+                    <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl">
+                      <h3 className="text-xl font-bold mb-3">Dhamira Yetu</h3>
+                      <p>Kuharakisha upatikanaji wa makazi bora kwa wote</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )} />
+            
+            {/* 404 Page */}
+            <Route render={() => (
+              <div className="text-center py-32 flex-1">
+                <div className="text-9xl font-bold text-gray-300 dark:text-gray-700">404</div>
+                <h1 className="text-4xl font-bold my-6">Ukurasa haupo</h1>
+                <p className="text-gray-600 dark:text-gray-400 mb-8">Ukurasa unaotafuta haukupatikana</p>
+                <Link to="/" className="bg-teal-600 text-white px-8 py-3 rounded-full font-bold">
+                  <i className="fas fa-home mr-2"></i> Rudi Nyumbani
+                </Link>
+              </div>
+            )} />
+          </Switch>
+          
+          <Footer t={t} />
+          
+          {/* Scroll to top button */}
+          <button 
+            onClick={() => window.scrollTo({top:0, behavior:'smooth'})} 
+            className="fixed bottom-8 right-8 bg-teal-600 hover:bg-teal-700 text-white p-5 rounded-full shadow-2xl text-2xl z-40 transition-all duration-300"
+          >
+            <i className="fas fa-chevron-up"></i>
+          </button>
+          
+          {/* Emergency floating button */}
+          <Link 
+            to="#emergency" 
+            className="fixed bottom-8 left-8 bg-red-600 hover:bg-red-700 text-white p-5 rounded-full shadow-2xl text-2xl z-40"
+          >
+            <i className="fas fa-phone-alt"></i>
+          </Link>
+        </div>
+      );
     };
 
-    // Initialize App
-    function initApp() {
-      const app = document.getElementById('app');
-      
-      // Create main container
-      const mainContainer = document.createElement('div');
-      mainContainer.className = 'min-h-screen flex flex-col';
-      
-      // Add navbar
-      mainContainer.appendChild(renderNav());
-      
-      // Add content container
-      const content = document.createElement('main');
-      content.className = 'flex-1';
-      content.id = 'content';
-      mainContainer.appendChild(content);
-      
-      // Add footer
-      mainContainer.appendChild(renderFooter());
-      
-      // Add floating buttons
-      const floatingButtons = document.createElement('div');
-      floatingButtons.innerHTML = `
-        <button 
-          onclick="window.scrollTo({top:0, behavior:'smooth'})" 
-          class="fixed bottom-8 right-8 bg-teal-600 hover:bg-teal-700 text-white p-4 rounded-full shadow-2xl z-40"
-        >
-          <i class="fas fa-chevron-up"></i>
-        </button>
-        <a 
-          href="#emergency" 
-          class="fixed bottom-8 left-8 bg-red-600 hover:bg-red-700 text-white p-4 rounded-full shadow-2xl z-40"
-        >
-          <i class="fas fa-phone-alt"></i>
-        </a>
-      `;
-      mainContainer.appendChild(floatingButtons);
-      
-      app.appendChild(mainContainer);
-      
-      // Initialize router
-      window.addEventListener('hashchange', () => {
-        router.currentPath = window.location.hash;
-        router.render();
-      });
-      
-      // Initial render
-      router.render();
-    }
+    const Root = () => (
+      <ToastProvider>
+        <HashRouter>
+          <App />
+        </HashRouter>
+      </ToastProvider>
+    );
 
-    // Start the app when page loads
-    document.addEventListener('DOMContentLoaded', initApp);
+    // Render the app
+    ReactDOM.render(<Root />, document.getElementById('root'));
   </script>
 </body>
 </html>
