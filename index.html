@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HouseLink Tanzania - Nyumba Bora, Makazi Bora</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+    <link rel="stylesheet" href="styles/dark-mode.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-container">
+            <div class="spinner"></div>
+            <div class="loading-content">
+                <h2>HouseLink Tanzania</h2>
+                <p>Inapakia tovuti...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="app-container hidden"></div>
+
+    <!-- External Dependencies -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.4/babel.min.js"></script>
+
+    <!-- Utility Scripts -->
+    <script src="utils/translations.js"></script>
+    <script src="utils/config.js"></script>
+    <script src="utils/storage.js"></script>
+    <script src="utils/helpers.js"></script>
+
+    <!-- Components -->
+    <script src="components/Navbar.js" type="text/babel"></script>
+    <script src="components/Hero.js" type="text/babel"></script>
+    <script src="components/PropertyCard.js" type="text/babel"></script>
+    <script src="components/SearchBar.js" type="text/babel"></script>
+    <script src="components/Footer.js" type="text/babel"></script>
+
+    <!-- Pages -->
+    <script src="pages/Home.js" type="text/babel"></script>
+    <script src="pages/Listings.js" type="text/babel"></script>
+    <script src="pages/About.js" type="text/babel"></script>
+    <script src="pages/Services.js" type="text/babel"></script>
+    <script src="pages/Contact.js" type="text/babel"></script>
+    <script src="pages/Login.js" type="text/babel"></script>
+    <script src="pages/Signup.js" type="text/babel"></script>
+    <script src="pages/Dashboard.js" type="text/babel"></script>
+
+    <!-- Main App -->
+    <script src="app.js" type="text/babel"></script>
+
+    <script>
+        // Handle loading screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loadingScreen = document.getElementById('loading-screen');
+                const app = document.getElementById('app');
+                
+                loadingScreen.style.opacity = '0';
+                loadingScreen.style.transform = 'translateY(-20px)';
+                
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    app.classList.remove('hidden');
+                    app.style.opacity = '1';
+                    app.style.transform = 'translateY(0)';
+                }, 500);
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
