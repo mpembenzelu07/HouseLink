@@ -1,79 +1,46 @@
 <!DOCTYPE html>
 <html lang="sw">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HouseLink Tanzania - Nyumba Bora, Makazi Bora</title>
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/responsive.css">
-    <link rel="stylesheet" href="styles/dark-mode.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HouseLink Tanzania - Nyumba Bora, Makazi Bora</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏠</text></svg>">
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="loading-screen">
-        <div class="loading-container">
-            <div class="spinner"></div>
-            <div class="loading-content">
-                <h2>HouseLink Tanzania</h2>
-                <p>Inapakia tovuti...</p>
-            </div>
-        </div>
-    </div>
+  <div class="loading-screen">
+    <div class="spinner"></div>
+    <h2 style="color: white; margin-bottom: 10px; font-weight: 600;">HouseLink Tanzania</h2>
+    <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem;">Inapakia tovuti...</p>
+  </div>
 
-    <!-- Main App Container -->
-    <div id="app" class="app-container hidden"></div>
+  <div id="app" class="hidden"></div>
 
-    <!-- External Dependencies -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.4/babel.min.js"></script>
+  <!-- External Libraries -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Application Files -->
+  <script type="text/babel" src="config.js"></script>
+  <script type="text/babel" src="utils.js"></script>
+  <script type="text/babel" src="contexts.js"></script>
+  <script type="text/babel" src="components.js"></script>
+  <script type="text/babel" src="pages.js"></script>
+  <script type="text/babel" src="app.js"></script>
 
-    <!-- Utility Scripts -->
-    <script src="utils/translations.js"></script>
-    <script src="utils/config.js"></script>
-    <script src="utils/storage.js"></script>
-    <script src="utils/helpers.js"></script>
-
-    <!-- Components -->
-    <script src="components/Navbar.js" type="text/babel"></script>
-    <script src="components/Hero.js" type="text/babel"></script>
-    <script src="components/PropertyCard.js" type="text/babel"></script>
-    <script src="components/SearchBar.js" type="text/babel"></script>
-    <script src="components/Footer.js" type="text/babel"></script>
-
-    <!-- Pages -->
-    <script src="pages/Home.js" type="text/babel"></script>
-    <script src="pages/Listings.js" type="text/babel"></script>
-    <script src="pages/About.js" type="text/babel"></script>
-    <script src="pages/Services.js" type="text/babel"></script>
-    <script src="pages/Contact.js" type="text/babel"></script>
-    <script src="pages/Login.js" type="text/babel"></script>
-    <script src="pages/Signup.js" type="text/babel"></script>
-    <script src="pages/Dashboard.js" type="text/babel"></script>
-
-    <!-- Main App -->
-    <script src="app.js" type="text/babel"></script>
-
-    <script>
-        // Handle loading screen
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                const loadingScreen = document.getElementById('loading-screen');
-                const app = document.getElementById('app');
-                
-                loadingScreen.style.opacity = '0';
-                loadingScreen.style.transform = 'translateY(-20px)';
-                
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                    app.classList.remove('hidden');
-                    app.style.opacity = '1';
-                    app.style.transform = 'translateY(0)';
-                }, 500);
-            }, 1500);
-        });
-    </script>
+  <script>
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.querySelector('.loading-screen').style.animation = 'fadeOut 0.5s ease-out forwards';
+        setTimeout(() => {
+          document.querySelector('.loading-screen').style.display = 'none';
+          document.getElementById('app').classList.remove('hidden');
+        }, 500);
+      }, 1500);
+    });
+  </script>
 </body>
 </html>
