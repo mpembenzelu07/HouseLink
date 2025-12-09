@@ -1,38 +1,43 @@
 // ================ APP.JS ================
 // Main application component with routing and layout
 
-// Wait for DOM and all dependencies to be ready
-document.addEventListener('DOMContentLoaded', function() {
-  // Additional check for React and all required components
+// Use createRoot for React 18
+const { createRoot } = ReactDOM;
+
+// Wait for everything to load
+window.addEventListener('load', function() {
+  // Check if all dependencies are loaded
   function checkDependencies() {
-    return (
-      typeof React !== 'undefined' &&
-      typeof ReactDOM !== 'undefined' &&
-      window.ThemeContext &&
-      window.LanguageContext &&
-      window.AuthContext &&
-      window.ModalContext &&
-      window.SearchContext &&
-      window.HomePage &&
-      window.ListingsPage &&
-      window.PropertyCard &&
-      window.Modal
-    );
+    const required = [
+      'React', 'ReactDOM',
+      'ThemeContext', 'LanguageContext', 'AuthContext', 'ModalContext', 'SearchContext',
+      'ThemeProvider', 'LanguageProvider', 'AuthProvider', 'ModalProvider', 'SearchProvider',
+      'HomePage', 'ListingsPage', 'PropertyCard', 'Modal',
+      'LoginModal', 'SignupModal'
+    ];
+    
+    for (const dep of required) {
+      if (!window[dep]) {
+        console.log('Missing dependency:', dep);
+        return false;
+      }
+    }
+    return true;
   }
 
-  // Try to initialize, retry if dependencies aren't ready
-  function tryInitialize() {
+  // Initialize app when ready
+  function initializeWhenReady() {
     if (checkDependencies()) {
-      console.log('All dependencies loaded, initializing app...');
+      console.log('All dependencies loaded. Initializing app...');
       initializeApp();
     } else {
       console.log('Waiting for dependencies...');
-      setTimeout(tryInitialize, 100);
+      setTimeout(initializeWhenReady, 100);
     }
   }
 
-  // Start trying to initialize
-  setTimeout(tryInitialize, 100);
+  // Start checking
+  setTimeout(initializeWhenReady, 100);
 });
 
 // Main App Component
@@ -61,50 +66,60 @@ const App = () => {
   const renderPage = () => {
     switch (currentRoute) {
       case '#home':
-        return <window.HomePage />;
+        return window.HomePage ? React.createElement(window.HomePage) : null;
       case '#listings':
-        return <window.ListingsPage />;
+        return window.ListingsPage ? React.createElement(window.ListingsPage) : null;
       case '#about':
-        return <window.AboutPage />;
+        return window.AboutPage ? React.createElement(window.AboutPage) : null;
       case '#services':
-        return <window.ServicesPage />;
+        return window.ServicesPage ? React.createElement(window.ServicesPage) : null;
       case '#contact':
-        return <window.ContactPage />;
+        return window.ContactPage ? React.createElement(window.ContactPage) : null;
       case '#dashboard':
-        return <window.DashboardPage />;
+        return window.DashboardPage ? React.createElement(window.DashboardPage) : null;
       default:
         // Handle deep links like #listings?type=apartment
         if (currentRoute.startsWith('#listings')) {
-          return <window.ListingsPage />;
+          return window.ListingsPage ? React.createElement(window.ListingsPage) : null;
         }
-        return <window.HomePage />;
+        return window.HomePage ? React.createElement(window.HomePage) : null;
     }
   };
 
   // Calculate notification count
-  const unreadNotificationCount = notifications.filter(n => !n.read).length;
+  const unreadNotificationCount = notifications ? notifications.filter(n => !n.read).length : 0;
 
-  return (
-    <div style={{ 
+  return React.createElement('div', {
+    style: { 
       minHeight: '100vh',
       background: darkMode ? 'var(--dark-bg)' : 'var(--light-bg)',
       color: darkMode ? 'var(--dark-text)' : 'var(--light-text)',
       transition: 'background-color 0.3s, color 0.3s'
-    }}>
-      {/* Header */}
-      <header className="header" style={{ 
+    }
+  },
+    // Header
+    React.createElement('header', {
+      className: 'header',
+      style: { 
         position: 'sticky',
         top: 0,
         zIndex: 1000,
         background: darkMode ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(10px)',
-        borderBottom: `1px solid ${darkMode ? 'var(--border-dark)' : 'var(--border-light)'}`
-      }}>
-        <div className="container">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '80px' }}>
-            {/* Logo */}
-            <a href="#home" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <div style={{
+        borderBottom: `1px solid ${darkMode ? 'var(--border-dark)' : 'var(--border-light')}`
+      }
+    },
+      React.createElement('div', { className: 'container' },
+        React.createElement('div', {
+          style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '80px' }
+        },
+          // Logo
+          React.createElement('a', {
+            href: '#home',
+            style: { textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.75rem' }
+          },
+            React.createElement('div', {
+              style: {
                 width: '40px',
                 height: '40px',
                 background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%)',
@@ -115,127 +130,130 @@ const App = () => {
                 color: 'white',
                 fontSize: '1.25rem',
                 fontWeight: '700'
-              }}>
-                HL
-              </div>
-              <span style={{ 
+              }
+            }, 'HL'),
+            React.createElement('span', {
+              style: { 
                 fontSize: '1.5rem', 
                 fontWeight: '800',
                 background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%)',
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
                 color: 'transparent'
-              }}>
-                HouseLink
-              </span>
-            </a>
+              }
+            }, 'HouseLink')
+          ),
 
-            {/* Navigation */}
-            <nav style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-              {[
-                { hash: '#home', label: { sw: 'Nyumbani', en: 'Home' }, icon: 'fas fa-home' },
-                { hash: '#listings', label: { sw: 'Mali', en: 'Listings' }, icon: 'fas fa-search' },
-                { hash: '#services', label: { sw: 'Huduma', en: 'Services' }, icon: 'fas fa-concierge-bell' },
-                { hash: '#about', label: { sw: 'Kuhusu', en: 'About' }, icon: 'fas fa-info-circle' },
-                { hash: '#contact', label: { sw: 'Mawasiliano', en: 'Contact' }, icon: 'fas fa-envelope' }
-              ].map((item, i) => (
-                <a
-                  key={i}
-                  href={item.hash}
-                  style={{
-                    textDecoration: 'none',
-                    color: currentRoute === item.hash ? 'var(--primary-color)' : (darkMode ? 'var(--dark-text)' : 'var(--light-text)'),
-                    fontWeight: currentRoute === item.hash ? '600' : '400',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    fontSize: '0.875rem',
-                    transition: 'color 0.2s',
-                    padding: '0.5rem 0'
-                  }}
-                >
-                  <i className={item.icon} style={{ fontSize: '0.875rem' }}></i>
-                  {item.label[language]}
-                </a>
-              ))}
-            </nav>
+          // Navigation
+          React.createElement('nav', {
+            style: { display: 'flex', alignItems: 'center', gap: '2rem' }
+          },
+            [
+              { hash: '#home', label: { sw: 'Nyumbani', en: 'Home' }, icon: 'fas fa-home' },
+              { hash: '#listings', label: { sw: 'Mali', en: 'Listings' }, icon: 'fas fa-search' },
+              { hash: '#services', label: { sw: 'Huduma', en: 'Services' }, icon: 'fas fa-concierge-bell' },
+              { hash: '#about', label: { sw: 'Kuhusu', en: 'About' }, icon: 'fas fa-info-circle' },
+              { hash: '#contact', label: { sw: 'Mawasiliano', en: 'Contact' }, icon: 'fas fa-envelope' }
+            ].map((item, i) =>
+              React.createElement('a', {
+                key: i,
+                href: item.hash,
+                style: {
+                  textDecoration: 'none',
+                  color: currentRoute === item.hash ? 'var(--primary-color)' : (darkMode ? 'var(--dark-text)' : 'var(--light-text)'),
+                  fontWeight: currentRoute === item.hash ? '600' : '400',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontSize: '0.875rem',
+                  transition: 'color 0.2s',
+                  padding: '0.5rem 0'
+                }
+              },
+                React.createElement('i', { className: item.icon, style: { fontSize: '0.875rem' } }),
+                item.label[language]
+              )
+            )
+          ),
 
-            {/* User Actions */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              {/* Language Toggle */}
-              <window.LanguageToggle />
+          // User Actions
+          React.createElement('div', {
+            style: { display: 'flex', alignItems: 'center', gap: '1rem' }
+          },
+            // Language Toggle
+            window.LanguageToggle ? React.createElement(window.LanguageToggle) : null,
+            
+            // Theme Toggle
+            window.ThemeToggle ? React.createElement(window.ThemeToggle) : null,
+            
+            // User Menu
+            isAuthenticated ?
+              React.createElement('div', { style: { position: 'relative' } },
+                React.createElement('button', {
+                  className: 'btn btn-icon',
+                  onClick: () => window.ModalContextRef?.openModal('userMenu'),
+                  style: { position: 'relative' }
+                },
+                  React.createElement('i', { className: 'fas fa-user-circle', style: { fontSize: '1.25rem' } }),
+                  unreadNotificationCount > 0 && React.createElement('span', {
+                    style: {
+                      position: 'absolute',
+                      top: '-4px',
+                      right: '-4px',
+                      background: 'var(--accent-color)',
+                      color: 'white',
+                      fontSize: '0.625rem',
+                      fontWeight: '700',
+                      width: '18px',
+                      height: '18px',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }
+                  }, unreadNotificationCount)
+                )
+              ) :
+              React.createElement('div', { style: { display: 'flex', gap: '0.5rem' } },
+                React.createElement('button', {
+                  className: 'btn btn-outline',
+                  onClick: () => window.ModalContextRef?.openModal('login')
+                }, t('login')),
+                React.createElement('button', {
+                  className: 'btn btn-primary',
+                  onClick: () => window.ModalContextRef?.openModal('signup')
+                }, t('signup'))
+              )
+          )
+        )
+      )
+    ),
 
-              {/* Theme Toggle */}
-              <window.ThemeToggle />
+    // Main Content
+    React.createElement('main', {
+      style: { minHeight: 'calc(100vh - 180px)' }
+    }, renderPage()),
 
-              {/* User Menu */}
-              {isAuthenticated ? (
-                <div style={{ position: 'relative' }}>
-                  <button
-                    className="btn btn-icon"
-                    onClick={() => window.ModalContextRef?.openModal('userMenu')}
-                    style={{ position: 'relative' }}
-                  >
-                    <i className="fas fa-user-circle" style={{ fontSize: '1.25rem' }}></i>
-                    {unreadNotificationCount > 0 && (
-                      <span style={{
-                        position: 'absolute',
-                        top: '-4px',
-                        right: '-4px',
-                        background: 'var(--accent-color)',
-                        color: 'white',
-                        fontSize: '0.625rem',
-                        fontWeight: '700',
-                        width: '18px',
-                        height: '18px',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}>
-                        {unreadNotificationCount}
-                      </span>
-                    )}
-                  </button>
-                </div>
-              ) : (
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <button 
-                    className="btn btn-outline"
-                    onClick={() => window.ModalContextRef?.openModal('login')}
-                  >
-                    {t('login')}
-                  </button>
-                  <button 
-                    className="btn btn-primary"
-                    onClick={() => window.ModalContextRef?.openModal('signup')}
-                  >
-                    {t('signup')}
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main style={{ minHeight: 'calc(100vh - 180px)' }}>
-        {renderPage()}
-      </main>
-
-      {/* Footer */}
-      <footer style={{ 
+    // Footer
+    React.createElement('footer', {
+      style: { 
         background: darkMode ? 'var(--card-bg-dark)' : 'var(--card-bg-light)',
-        borderTop: `1px solid ${darkMode ? 'var(--border-dark)' : 'var(--border-light)'}`,
+        borderTop: `1px solid ${darkMode ? 'var(--border-dark)' : 'var(--border-light')}`,
         padding: '4rem 0 2rem'
-      }}>
-        <div className="container">
-          <div className="grid grid-cols-4 gap-8" style={{ marginBottom: '3rem' }}>
-            {/* Company Info */}
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-                <div style={{
+      }
+    },
+      React.createElement('div', { className: 'container' },
+        React.createElement('div', {
+          className: 'grid grid-cols-4 gap-8',
+          style: { marginBottom: '3rem' }
+        },
+          // Company Info
+          React.createElement('div', null,
+            React.createElement('div', {
+              style: { display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }
+            },
+              React.createElement('div', {
+                style: {
                   width: '40px',
                   height: '40px',
                   background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%)',
@@ -246,139 +264,146 @@ const App = () => {
                   color: 'white',
                   fontSize: '1.25rem',
                   fontWeight: '700'
-                }}>
-                  HL
-                </div>
-                <span style={{ 
+                }
+              }, 'HL'),
+              React.createElement('span', {
+                style: { 
                   fontSize: '1.5rem', 
                   fontWeight: '800',
                   background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%)',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   color: 'transparent'
-                }}>
-                  HouseLink
-                </span>
-              </div>
-              <p style={{ fontSize: '0.875rem', opacity: 0.8, lineHeight: '1.6', marginBottom: '1.5rem' }}>
-                {language === 'sw'
-                  ? 'Mfumo wa kwanza unaoaminika Tanzania wa mali, ukiwawezesha kila mwananchi kupata nyumba bora au mali ya uwekezaji kwa urahisi.'
-                  : 'Tanzania\'s most trusted property platform, empowering every citizen to find their ideal home or investment property with ease.'
                 }
-              </p>
-              <div style={{ display: 'flex', gap: '1rem' }}>
-                <a href="#" className="btn btn-icon">
-                  <i className="fab fa-facebook-f"></i>
-                </a>
-                <a href="#" className="btn btn-icon">
-                  <i className="fab fa-twitter"></i>
-                </a>
-                <a href="#" className="btn btn-icon">
-                  <i className="fab fa-instagram"></i>
-                </a>
-                <a href="#" className="btn btn-icon">
-                  <i className="fab fa-linkedin-in"></i>
-                </a>
-              </div>
-            </div>
+              }, 'HouseLink')
+            ),
+            React.createElement('p', {
+              style: { fontSize: '0.875rem', opacity: 0.8, lineHeight: '1.6', marginBottom: '1.5rem' }
+            }, language === 'sw'
+              ? 'Mfumo wa kwanza unaoaminika Tanzania wa mali, ukiwawezesha kila mwananchi kupata nyumba bora au mali ya uwekezaji kwa urahisi.'
+              : 'Tanzania\'s most trusted property platform, empowering every citizen to find their ideal home or investment property with ease.'
+            ),
+            React.createElement('div', { style: { display: 'flex', gap: '1rem' } },
+              React.createElement('a', { href: '#', className: 'btn btn-icon' },
+                React.createElement('i', { className: 'fab fa-facebook-f' })
+              ),
+              React.createElement('a', { href: '#', className: 'btn btn-icon' },
+                React.createElement('i', { className: 'fab fa-twitter' })
+              ),
+              React.createElement('a', { href: '#', className: 'btn btn-icon' },
+                React.createElement('i', { className: 'fab fa-instagram' })
+              ),
+              React.createElement('a', { href: '#', className: 'btn btn-icon' },
+                React.createElement('i', { className: 'fab fa-linkedin-in' })
+              )
+            )
+          ),
 
-            {/* Quick Links */}
-            <div>
-              <h4 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '1.5rem' }}>
-                {language === 'sw' ? 'Viungo vya Haraka' : 'Quick Links'}
-              </h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {[
-                  { hash: '#home', label: { sw: 'Nyumbani', en: 'Home' } },
-                  { hash: '#listings', label: { sw: 'Mali Zote', en: 'All Properties' } },
-                  { hash: '#services', label: { sw: 'Huduma Zetu', en: 'Our Services' } },
-                  { hash: '#about', label: { sw: 'Kuhusu Sisi', en: 'About Us' } },
-                  { hash: '#contact', label: { sw: 'Wasiliana', en: 'Contact' } }
-                ].map((link, i) => (
-                  <li key={i}>
-                    <a 
-                      href={link.hash}
-                      style={{
-                        fontSize: '0.875rem',
-                        opacity: 0.8,
-                        textDecoration: 'none',
-                        color: 'inherit',
-                        transition: 'opacity 0.2s',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem'
-                      }}
-                    >
-                      <i className="fas fa-chevron-right" style={{ fontSize: '0.625rem' }}></i>
-                      {link.label[language]}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          // Quick Links
+          React.createElement('div', null,
+            React.createElement('h4', {
+              style: { fontSize: '1rem', fontWeight: '600', marginBottom: '1.5rem' }
+            }, language === 'sw' ? 'Viungo vya Haraka' : 'Quick Links'),
+            React.createElement('ul', {
+              style: { listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }
+            },
+              [
+                { hash: '#home', label: { sw: 'Nyumbani', en: 'Home' } },
+                { hash: '#listings', label: { sw: 'Mali Zote', en: 'All Properties' } },
+                { hash: '#services', label: { sw: 'Huduma Zetu', en: 'Our Services' } },
+                { hash: '#about', label: { sw: 'Kuhusu Sisi', en: 'About Us' } },
+                { hash: '#contact', label: { sw: 'Wasiliana', en: 'Contact' } }
+              ].map((link, i) =>
+                React.createElement('li', { key: i },
+                  React.createElement('a', {
+                    href: link.hash,
+                    style: {
+                      fontSize: '0.875rem',
+                      opacity: 0.8,
+                      textDecoration: 'none',
+                      color: 'inherit',
+                      transition: 'opacity 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem'
+                    }
+                  },
+                    React.createElement('i', { className: 'fas fa-chevron-right', style: { fontSize: '0.625rem' } }),
+                    link.label[language]
+                  )
+                )
+              )
+            )
+          ),
 
-            {/* Services */}
-            <div>
-              <h4 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '1.5rem' }}>
-                {language === 'sw' ? 'Huduma' : 'Services'}
-              </h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {[
-                  { label: { sw: 'Utafutaji wa Mali', en: 'Property Search' } },
-                  { label: { sw: 'Ukodishaji wa Mali', en: 'Property Rental' } },
-                  { label: { sw: 'Uuzaji wa Mali', en: 'Property Sale' } },
-                  { label: { sw: 'Huduma za Wakala', en: 'Broker Services' } },
-                  { label: { sw: 'Usimamizi wa Mali', en: 'Property Management' } }
-                ].map((service, i) => (
-                  <li key={i}>
-                    <a 
-                      href="#services"
-                      style={{
-                        fontSize: '0.875rem',
-                        opacity: 0.8,
-                        textDecoration: 'none',
-                        color: 'inherit',
-                        transition: 'opacity 0.2s',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem'
-                      }}
-                    >
-                      <i className="fas fa-check-circle" style={{ fontSize: '0.625rem', color: 'var(--success-color)' }}></i>
-                      {service.label[language]}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          // Services
+          React.createElement('div', null,
+            React.createElement('h4', {
+              style: { fontSize: '1rem', fontWeight: '600', marginBottom: '1.5rem' }
+            }, language === 'sw' ? 'Huduma' : 'Services'),
+            React.createElement('ul', {
+              style: { listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }
+            },
+              [
+                { label: { sw: 'Utafutaji wa Mali', en: 'Property Search' } },
+                { label: { sw: 'Ukodishaji wa Mali', en: 'Property Rental' } },
+                { label: { sw: 'Uuzaji wa Mali', en: 'Property Sale' } },
+                { label: { sw: 'Huduma za Wakala', en: 'Broker Services' } },
+                { label: { sw: 'Usimamizi wa Mali', en: 'Property Management' } }
+              ].map((service, i) =>
+                React.createElement('li', { key: i },
+                  React.createElement('a', {
+                    href: '#services',
+                    style: {
+                      fontSize: '0.875rem',
+                      opacity: 0.8,
+                      textDecoration: 'none',
+                      color: 'inherit',
+                      transition: 'opacity 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem'
+                    }
+                  },
+                    React.createElement('i', {
+                      className: 'fas fa-check-circle',
+                      style: { fontSize: '0.625rem', color: 'var(--success-color)' }
+                    }),
+                    service.label[language]
+                  )
+                )
+              )
+            )
+          ),
 
-            {/* Newsletter */}
-            <div>
-              <h4 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '1.5rem' }}>
-                {language === 'sw' ? 'Jiandikishe kwa Habari' : 'Newsletter'}
-              </h4>
-              <p style={{ fontSize: '0.875rem', opacity: 0.8, lineHeight: '1.6', marginBottom: '1.5rem' }}>
-                {language === 'sw'
-                  ? 'Jiandikishe kupata habari za mali mpya na ofa maalum.'
-                  : 'Subscribe to get updates on new properties and special offers.'
-                }
-              </p>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <input
-                  type="email"
-                  placeholder={language === 'sw' ? 'Barua pepe yako' : 'Your email'}
-                  className="form-control"
-                  style={{ flex: 1 }}
-                />
-                <button className="btn btn-primary">
-                  <i className="fas fa-paper-plane"></i>
-                </button>
-              </div>
-            </div>
-          </div>
+          // Newsletter
+          React.createElement('div', null,
+            React.createElement('h4', {
+              style: { fontSize: '1rem', fontWeight: '600', marginBottom: '1.5rem' }
+            }, language === 'sw' ? 'Jiandikishe kwa Habari' : 'Newsletter'),
+            React.createElement('p', {
+              style: { fontSize: '0.875rem', opacity: 0.8, lineHeight: '1.6', marginBottom: '1.5rem' }
+            }, language === 'sw'
+              ? 'Jiandikishe kupata habari za mali mpya na ofa maalum.'
+              : 'Subscribe to get updates on new properties and special offers.'
+            ),
+            React.createElement('div', { style: { display: 'flex', gap: '0.5rem' } },
+              React.createElement('input', {
+                type: 'email',
+                placeholder: language === 'sw' ? 'Barua pepe yako' : 'Your email',
+                className: 'form-control',
+                style: { flex: 1 }
+              }),
+              React.createElement('button', { className: 'btn btn-primary' },
+                React.createElement('i', { className: 'fas fa-paper-plane' })
+              )
+            )
+          )
+        ),
 
-          {/* Bottom Bar */}
-          <div style={{ 
+        // Bottom Bar
+        React.createElement('div', {
+          style: { 
             paddingTop: '2rem',
             borderTop: `1px solid ${darkMode ? 'var(--border-dark)' : 'var(--border-light')}`,
             display: 'flex',
@@ -386,68 +411,31 @@ const App = () => {
             alignItems: 'center',
             flexWrap: 'wrap',
             gap: '1rem'
-          }}>
-            <div style={{ fontSize: '0.875rem', opacity: 0.7 }}>
-              © {new Date().getFullYear()} HouseLink Tanzania. {language === 'sw' ? 'Haki zote zimehifadhiwa.' : 'All rights reserved.'}
-            </div>
-            <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.875rem', opacity: 0.7 }}>
-              <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>
-                {language === 'sw' ? 'Sera ya Faragha' : 'Privacy Policy'}
-              </a>
-              <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>
-                {language === 'sw' ? 'Masharti ya Matumizi' : 'Terms of Service'}
-              </a>
-              <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>
-                {language === 'sw' ? 'Mapendekezo ya Udhibiti' : 'Cookie Policy'}
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+          }
+        },
+          React.createElement('div', {
+            style: { fontSize: '0.875rem', opacity: 0.7 }
+          }, `© ${new Date().getFullYear()} HouseLink Tanzania. ${language === 'sw' ? 'Haki zote zimehifadhiwa.' : 'All rights reserved.'}`),
+          React.createElement('div', {
+            style: { display: 'flex', gap: '1.5rem', fontSize: '0.875rem', opacity: 0.7 }
+          },
+            React.createElement('a', { href: '#', style: { color: 'inherit', textDecoration: 'none' } },
+              language === 'sw' ? 'Sera ya Faragha' : 'Privacy Policy'
+            ),
+            React.createElement('a', { href: '#', style: { color: 'inherit', textDecoration: 'none' } },
+              language === 'sw' ? 'Masharti ya Matumizi' : 'Terms of Service'
+            ),
+            React.createElement('a', { href: '#', style: { color: 'inherit', textDecoration: 'none' } },
+              language === 'sw' ? 'Mapendekezo ya Udhibiti' : 'Cookie Policy'
+            )
+          )
+        )
+      )
+    ),
 
-      {/* Modals */}
-      {window.LoginModal && <window.LoginModal />}
-      {window.SignupModal && <window.SignupModal />}
-      {window.PropertyDetailModal && <window.PropertyDetailModal />}
-      
-      {/* Loading Overlay */}
-      {window.API && window.API.isLoading && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 9999
-        }}>
-          <div style={{
-            background: darkMode ? 'var(--card-bg-dark)' : 'white',
-            padding: '2rem',
-            borderRadius: 'var(--border-radius-lg)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '1rem'
-          }}>
-            <div style={{ 
-              width: '50px', 
-              height: '50px', 
-              border: '3px solid var(--border-light)', 
-              borderTop: '3px solid var(--primary-color)', 
-              borderRadius: '50%', 
-              animation: 'spin 1s linear infinite' 
-            }}></div>
-            <div style={{ fontSize: '0.875rem', opacity: 0.8 }}>
-              {language === 'sw' ? 'Inapakia...' : 'Loading...'}
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+    // Modals (conditionally rendered)
+    window.LoginModal && React.createElement(window.LoginModal),
+    window.SignupModal && React.createElement(window.SignupModal)
   );
 };
 
@@ -457,86 +445,103 @@ const DashboardPage = () => {
   const { t, language } = React.useContext(window.LanguageContext);
   const { user, savedProperties, savedSearches, notifications } = React.useContext(window.AuthContext);
 
-  return (
-    <section id="dashboard" className="section" style={{ 
+  return React.createElement('section', {
+    id: 'dashboard',
+    className: 'section',
+    style: { 
       background: darkMode ? 'var(--dark-bg)' : 'var(--light-bg)',
       minHeight: '80vh',
       padding: '2rem 0'
-    }}>
-      <div className="container">
-        <h1 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '2rem' }}>
-          {language === 'sw' ? 'Dashibodi' : 'Dashboard'}
-        </h1>
+    }
+  },
+    React.createElement('div', { className: 'container' },
+      React.createElement('h1', {
+        style: { fontSize: '2.5rem', fontWeight: '800', marginBottom: '2rem' }
+      }, language === 'sw' ? 'Dashibodi' : 'Dashboard'),
+      
+      React.createElement('div', {
+        className: 'grid grid-cols-3 gap-6',
+        style: { marginBottom: '3rem' }
+      },
+        React.createElement('div', { className: 'card' },
+          React.createElement('h3', {
+            style: { fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }
+          }, language === 'sw' ? 'Mali Zilizohifadhiwa' : 'Saved Properties'),
+          React.createElement('div', {
+            style: { fontSize: '3rem', fontWeight: '800', color: 'var(--primary-color)' }
+          }, savedProperties.length)
+        ),
         
-        <div className="grid grid-cols-3 gap-6" style={{ marginBottom: '3rem' }}>
-          <div className="card">
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>
-              {language === 'sw' ? 'Mali Zilizohifadhiwa' : 'Saved Properties'}
-            </h3>
-            <div style={{ fontSize: '3rem', fontWeight: '800', color: 'var(--primary-color)' }}>
-              {savedProperties.length}
-            </div>
-          </div>
-          
-          <div className="card">
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>
-              {language === 'sw' ? 'Utafutaji Uliohifadhiwa' : 'Saved Searches'}
-            </h3>
-            <div style={{ fontSize: '3rem', fontWeight: '800', color: 'var(--secondary-color)' }}>
-              {savedSearches.length}
-            </div>
-          </div>
-          
-          <div className="card">
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>
-              {language === 'sw' ? 'Arifa Mpya' : 'New Notifications'}
-            </h3>
-            <div style={{ fontSize: '3rem', fontWeight: '800', color: 'var(--accent-color)' }}>
-              {notifications.filter(n => !n.read).length}
-            </div>
-          </div>
-        </div>
+        React.createElement('div', { className: 'card' },
+          React.createElement('h3', {
+            style: { fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }
+          }, language === 'sw' ? 'Utafutaji Uliohifadhiwa' : 'Saved Searches'),
+          React.createElement('div', {
+            style: { fontSize: '3rem', fontWeight: '800', color: 'var(--secondary-color)' }
+          }, savedSearches.length)
+        ),
         
-        <div className="card">
-          <h2 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '1.5rem' }}>
-            {language === 'sw' ? 'Karibu, ' : 'Welcome, '}{user?.name}
-          </h2>
-          <p style={{ lineHeight: '1.6', opacity: 0.8 }}>
-            {language === 'sw'
-              ? 'Hii ni dashibodi yako ya HouseLink. Unaweza kutazama mali ulizohifadhi, utafutaji uliohifadhi, na kupokea arifa.'
-              : 'This is your HouseLink dashboard. You can view saved properties, saved searches, and receive notifications.'
-            }
-          </p>
-        </div>
-      </div>
-    </section>
+        React.createElement('div', { className: 'card' },
+          React.createElement('h3', {
+            style: { fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }
+          }, language === 'sw' ? 'Arifa Mpya' : 'New Notifications'),
+          React.createElement('div', {
+            style: { fontSize: '3rem', fontWeight: '800', color: 'var(--accent-color)' }
+          }, notifications.filter(n => !n.read).length)
+        )
+      ),
+      
+      React.createElement('div', { className: 'card' },
+        React.createElement('h2', {
+          style: { fontSize: '1.5rem', fontWeight: '600', marginBottom: '1.5rem' }
+        }, `${language === 'sw' ? 'Karibu, ' : 'Welcome, '}${user?.name || ''}`),
+        React.createElement('p', {
+          style: { lineHeight: '1.6', opacity: 0.8 }
+        }, language === 'sw'
+          ? 'Hii ni dashibodi yako ya HouseLink. Unaweza kutazama mali ulizohifadhi, utafutaji uliohifadhi, na kupokea arifa.'
+          : 'This is your HouseLink dashboard. You can view saved properties, saved searches, and receive notifications.'
+        )
+      )
+    )
   );
 };
 
 // ================ INITIALIZE APP ================
 const initializeApp = () => {
-  // Create root container
-  const container = document.createElement('div');
-  container.id = 'houselink-root';
-  document.body.appendChild(container);
-
-  // Render app with all providers
-  ReactDOM.render(
-    <window.ThemeProvider>
-      <window.LanguageProvider>
-        <window.AuthProvider>
-          <window.ModalProvider>
-            <window.SearchProvider>
-              <App />
-            </window.SearchProvider>
-          </window.ModalProvider>
-        </window.AuthProvider>
-      </window.LanguageProvider>
-    </window.ThemeProvider>,
-    container
-  );
+  console.log('Initializing HouseLink app...');
   
-  console.log('App initialized successfully!');
+  // Create root container
+  const container = document.getElementById('app');
+  if (!container) {
+    console.error('App container not found!');
+    return;
+  }
+  
+  try {
+    const root = createRoot(container);
+    root.render(
+      React.createElement(window.ThemeProvider,
+        null,
+        React.createElement(window.LanguageProvider,
+          null,
+          React.createElement(window.AuthProvider,
+            null,
+            React.createElement(window.ModalProvider,
+              null,
+              React.createElement(window.SearchProvider,
+                null,
+                React.createElement(App)
+              )
+            )
+          )
+        )
+      )
+    );
+    
+    console.log('App rendered successfully!');
+  } catch (error) {
+    console.error('Error rendering app:', error);
+  }
 };
 
 // Export components
