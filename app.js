@@ -1,66 +1,23 @@
+[file name]: app.js
+[file content begin]
 // ================ APP.JS ================
 // Main application component with routing and layout
-
-// Use createRoot for React 18
-const { createRoot } = ReactDOM;
-
-// Wait for everything to load
-window.addEventListener('load', function() {
-  // Check if all dependencies are loaded
-  function checkDependencies() {
-    const required = [
-      'React', 'ReactDOM',
-      'ThemeContext', 'LanguageContext', 'AuthContext', 'ModalContext', 'SearchContext',
-      'ThemeProvider', 'LanguageProvider', 'AuthProvider', 'ModalProvider', 'SearchProvider',
-      'HomePage', 'ListingsPage', 'PropertyCard', 'Modal',
-      'LoginModal', 'SignupModal'
-    ];
-    
-    for (const dep of required) {
-      if (!window[dep]) {
-        console.log('Missing dependency:', dep);
-        return false;
-      }
-    }
-    return true;
-  }
-
-  // Initialize app when ready
-  function initializeWhenReady() {
-    if (checkDependencies()) {
-      console.log('All dependencies loaded. Initializing app...');
-      initializeApp();
-    } else {
-      console.log('Waiting for dependencies...');
-      setTimeout(initializeWhenReady, 100);
-    }
-  }
-
-  // Start checking
-  setTimeout(initializeWhenReady, 100);
-});
 
 // Main App Component
 const App = () => {
   const [currentRoute, setCurrentRoute] = React.useState(window.location.hash || '#home');
   const { darkMode } = React.useContext(window.ThemeContext);
-  const { t, language } = React.useContext(window.LanguageContext);
-  const { isAuthenticated, user, notifications, clearNotifications } = React.useContext(window.AuthContext);
-  const { modals, closeModal } = React.useContext(window.ModalContext);
+  const { language } = React.useContext(window.LanguageContext);
 
   // Handle hash-based routing
   React.useEffect(() => {
     const handleHashChange = () => {
       setCurrentRoute(window.location.hash || '#home');
-      // Close any open modals when route changes
-      Object.keys(modals).forEach(modal => {
-        if (modals[modal]) closeModal(modal);
-      });
     };
 
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [modals, closeModal]);
+  }, []);
 
   // Render current page based on route
   const renderPage = () => {
@@ -75,19 +32,10 @@ const App = () => {
         return window.ServicesPage ? React.createElement(window.ServicesPage) : null;
       case '#contact':
         return window.ContactPage ? React.createElement(window.ContactPage) : null;
-      case '#dashboard':
-        return window.DashboardPage ? React.createElement(window.DashboardPage) : null;
       default:
-        // Handle deep links like #listings?type=apartment
-        if (currentRoute.startsWith('#listings')) {
-          return window.ListingsPage ? React.createElement(window.ListingsPage) : null;
-        }
         return window.HomePage ? React.createElement(window.HomePage) : null;
     }
   };
-
-  // Calculate notification count
-  const unreadNotificationCount = notifications ? notifications.filter(n => !n.read).length : 0;
 
   return React.createElement('div', {
     style: { 
@@ -97,21 +45,21 @@ const App = () => {
       transition: 'background-color 0.3s, color 0.3s'
     }
   },
-    // Header
+    // Header (Simplified)
     React.createElement('header', {
-      className: 'header',
       style: { 
         position: 'sticky',
         top: 0,
         zIndex: 1000,
         background: darkMode ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(10px)',
-        borderBottom: `1px solid ${darkMode ? 'var(--border-dark)' : 'var(--border-light')}`
+        borderBottom: `1px solid ${darkMode ? 'var(--border-dark)' : 'var(--border-light')}`,
+        padding: '1rem 0'
       }
     },
       React.createElement('div', { className: 'container' },
         React.createElement('div', {
-          style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '80px' }
+          style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between' }
         },
           // Logo
           React.createElement('a', {
@@ -146,7 +94,7 @@ const App = () => {
 
           // Navigation
           React.createElement('nav', {
-            style: { display: 'flex', alignItems: 'center', gap: '2rem' }
+            style: { display: 'flex', alignItems: 'center', gap: '1.5rem' }
           },
             [
               { hash: '#home', label: { sw: 'Nyumbani', en: 'Home' }, icon: 'fas fa-home' },
@@ -176,54 +124,20 @@ const App = () => {
             )
           ),
 
-          // User Actions
+          // User Actions (Simplified)
           React.createElement('div', {
-            style: { display: 'flex', alignItems: 'center', gap: '1rem' }
+            style: { display: 'flex', alignItems: 'center', gap: '0.5rem' }
           },
-            // Language Toggle
-            window.LanguageToggle ? React.createElement(window.LanguageToggle) : null,
-            
-            // Theme Toggle
-            window.ThemeToggle ? React.createElement(window.ThemeToggle) : null,
-            
-            // User Menu
-            isAuthenticated ?
-              React.createElement('div', { style: { position: 'relative' } },
-                React.createElement('button', {
-                  className: 'btn btn-icon',
-                  onClick: () => window.ModalContextRef?.openModal('userMenu'),
-                  style: { position: 'relative' }
-                },
-                  React.createElement('i', { className: 'fas fa-user-circle', style: { fontSize: '1.25rem' } }),
-                  unreadNotificationCount > 0 && React.createElement('span', {
-                    style: {
-                      position: 'absolute',
-                      top: '-4px',
-                      right: '-4px',
-                      background: 'var(--accent-color)',
-                      color: 'white',
-                      fontSize: '0.625rem',
-                      fontWeight: '700',
-                      width: '18px',
-                      height: '18px',
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }
-                  }, unreadNotificationCount)
-                )
-              ) :
-              React.createElement('div', { style: { display: 'flex', gap: '0.5rem' } },
-                React.createElement('button', {
-                  className: 'btn btn-outline',
-                  onClick: () => window.ModalContextRef?.openModal('login')
-                }, t('login')),
-                React.createElement('button', {
-                  className: 'btn btn-primary',
-                  onClick: () => window.ModalContextRef?.openModal('signup')
-                }, t('signup'))
-              )
+            React.createElement('button', {
+              className: 'btn btn-primary',
+              onClick: () => {
+                if (window.ModalContextRef) {
+                  window.ModalContextRef.openModal('signup');
+                }
+              }
+            },
+              language === 'sw' ? 'Jisajili' : 'Sign Up'
+            )
           )
         )
       )
@@ -234,283 +148,31 @@ const App = () => {
       style: { minHeight: 'calc(100vh - 180px)' }
     }, renderPage()),
 
-    // Footer
+    // Footer (Simplified)
     React.createElement('footer', {
       style: { 
         background: darkMode ? 'var(--card-bg-dark)' : 'var(--card-bg-light)',
         borderTop: `1px solid ${darkMode ? 'var(--border-dark)' : 'var(--border-light')}`,
-        padding: '4rem 0 2rem'
+        padding: '2rem 0'
       }
     },
       React.createElement('div', { className: 'container' },
         React.createElement('div', {
-          className: 'grid grid-cols-4 gap-8',
-          style: { marginBottom: '3rem' }
+          style: { textAlign: 'center' }
         },
-          // Company Info
-          React.createElement('div', null,
-            React.createElement('div', {
-              style: { display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }
-            },
-              React.createElement('div', {
-                style: {
-                  width: '40px',
-                  height: '40px',
-                  background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%)',
-                  borderRadius: 'var(--border-radius)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'white',
-                  fontSize: '1.25rem',
-                  fontWeight: '700'
-                }
-              }, 'HL'),
-              React.createElement('span', {
-                style: { 
-                  fontSize: '1.5rem', 
-                  fontWeight: '800',
-                  background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%)',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  color: 'transparent'
-                }
-              }, 'HouseLink')
-            ),
-            React.createElement('p', {
-              style: { fontSize: '0.875rem', opacity: 0.8, lineHeight: '1.6', marginBottom: '1.5rem' }
-            }, language === 'sw'
-              ? 'Mfumo wa kwanza unaoaminika Tanzania wa mali, ukiwawezesha kila mwananchi kupata nyumba bora au mali ya uwekezaji kwa urahisi.'
-              : 'Tanzania\'s most trusted property platform, empowering every citizen to find their ideal home or investment property with ease.'
-            ),
-            React.createElement('div', { style: { display: 'flex', gap: '1rem' } },
-              React.createElement('a', { href: '#', className: 'btn btn-icon' },
-                React.createElement('i', { className: 'fab fa-facebook-f' })
-              ),
-              React.createElement('a', { href: '#', className: 'btn btn-icon' },
-                React.createElement('i', { className: 'fab fa-twitter' })
-              ),
-              React.createElement('a', { href: '#', className: 'btn btn-icon' },
-                React.createElement('i', { className: 'fab fa-instagram' })
-              ),
-              React.createElement('a', { href: '#', className: 'btn btn-icon' },
-                React.createElement('i', { className: 'fab fa-linkedin-in' })
-              )
-            )
-          ),
-
-          // Quick Links
-          React.createElement('div', null,
-            React.createElement('h4', {
-              style: { fontSize: '1rem', fontWeight: '600', marginBottom: '1.5rem' }
-            }, language === 'sw' ? 'Viungo vya Haraka' : 'Quick Links'),
-            React.createElement('ul', {
-              style: { listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }
-            },
-              [
-                { hash: '#home', label: { sw: 'Nyumbani', en: 'Home' } },
-                { hash: '#listings', label: { sw: 'Mali Zote', en: 'All Properties' } },
-                { hash: '#services', label: { sw: 'Huduma Zetu', en: 'Our Services' } },
-                { hash: '#about', label: { sw: 'Kuhusu Sisi', en: 'About Us' } },
-                { hash: '#contact', label: { sw: 'Wasiliana', en: 'Contact' } }
-              ].map((link, i) =>
-                React.createElement('li', { key: i },
-                  React.createElement('a', {
-                    href: link.hash,
-                    style: {
-                      fontSize: '0.875rem',
-                      opacity: 0.8,
-                      textDecoration: 'none',
-                      color: 'inherit',
-                      transition: 'opacity 0.2s',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem'
-                    }
-                  },
-                    React.createElement('i', { className: 'fas fa-chevron-right', style: { fontSize: '0.625rem' } }),
-                    link.label[language]
-                  )
-                )
-              )
-            )
-          ),
-
-          // Services
-          React.createElement('div', null,
-            React.createElement('h4', {
-              style: { fontSize: '1rem', fontWeight: '600', marginBottom: '1.5rem' }
-            }, language === 'sw' ? 'Huduma' : 'Services'),
-            React.createElement('ul', {
-              style: { listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }
-            },
-              [
-                { label: { sw: 'Utafutaji wa Mali', en: 'Property Search' } },
-                { label: { sw: 'Ukodishaji wa Mali', en: 'Property Rental' } },
-                { label: { sw: 'Uuzaji wa Mali', en: 'Property Sale' } },
-                { label: { sw: 'Huduma za Wakala', en: 'Broker Services' } },
-                { label: { sw: 'Usimamizi wa Mali', en: 'Property Management' } }
-              ].map((service, i) =>
-                React.createElement('li', { key: i },
-                  React.createElement('a', {
-                    href: '#services',
-                    style: {
-                      fontSize: '0.875rem',
-                      opacity: 0.8,
-                      textDecoration: 'none',
-                      color: 'inherit',
-                      transition: 'opacity 0.2s',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem'
-                    }
-                  },
-                    React.createElement('i', {
-                      className: 'fas fa-check-circle',
-                      style: { fontSize: '0.625rem', color: 'var(--success-color)' }
-                    }),
-                    service.label[language]
-                  )
-                )
-              )
-            )
-          ),
-
-          // Newsletter
-          React.createElement('div', null,
-            React.createElement('h4', {
-              style: { fontSize: '1rem', fontWeight: '600', marginBottom: '1.5rem' }
-            }, language === 'sw' ? 'Jiandikishe kwa Habari' : 'Newsletter'),
-            React.createElement('p', {
-              style: { fontSize: '0.875rem', opacity: 0.8, lineHeight: '1.6', marginBottom: '1.5rem' }
-            }, language === 'sw'
-              ? 'Jiandikishe kupata habari za mali mpya na ofa maalum.'
-              : 'Subscribe to get updates on new properties and special offers.'
-            ),
-            React.createElement('div', { style: { display: 'flex', gap: '0.5rem' } },
-              React.createElement('input', {
-                type: 'email',
-                placeholder: language === 'sw' ? 'Barua pepe yako' : 'Your email',
-                className: 'form-control',
-                style: { flex: 1 }
-              }),
-              React.createElement('button', { className: 'btn btn-primary' },
-                React.createElement('i', { className: 'fas fa-paper-plane' })
-              )
-            )
-          )
-        ),
-
-        // Bottom Bar
-        React.createElement('div', {
-          style: { 
-            paddingTop: '2rem',
-            borderTop: `1px solid ${darkMode ? 'var(--border-dark)' : 'var(--border-light')}`,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '1rem'
-          }
-        },
-          React.createElement('div', {
+          React.createElement('p', {
             style: { fontSize: '0.875rem', opacity: 0.7 }
-          }, `© ${new Date().getFullYear()} HouseLink Tanzania. ${language === 'sw' ? 'Haki zote zimehifadhiwa.' : 'All rights reserved.'}`),
-          React.createElement('div', {
-            style: { display: 'flex', gap: '1.5rem', fontSize: '0.875rem', opacity: 0.7 }
-          },
-            React.createElement('a', { href: '#', style: { color: 'inherit', textDecoration: 'none' } },
-              language === 'sw' ? 'Sera ya Faragha' : 'Privacy Policy'
-            ),
-            React.createElement('a', { href: '#', style: { color: 'inherit', textDecoration: 'none' } },
-              language === 'sw' ? 'Masharti ya Matumizi' : 'Terms of Service'
-            ),
-            React.createElement('a', { href: '#', style: { color: 'inherit', textDecoration: 'none' } },
-              language === 'sw' ? 'Mapendekezo ya Udhibiti' : 'Cookie Policy'
-            )
-          )
-        )
-      )
-    ),
-
-    // Modals (conditionally rendered)
-    window.LoginModal && React.createElement(window.LoginModal),
-    window.SignupModal && React.createElement(window.SignupModal)
-  );
-};
-
-// ================ SIMPLIFIED DASHBOARD PAGE ================
-const DashboardPage = () => {
-  const { darkMode } = React.useContext(window.ThemeContext);
-  const { t, language } = React.useContext(window.LanguageContext);
-  const { user, savedProperties, savedSearches, notifications } = React.useContext(window.AuthContext);
-
-  return React.createElement('section', {
-    id: 'dashboard',
-    className: 'section',
-    style: { 
-      background: darkMode ? 'var(--dark-bg)' : 'var(--light-bg)',
-      minHeight: '80vh',
-      padding: '2rem 0'
-    }
-  },
-    React.createElement('div', { className: 'container' },
-      React.createElement('h1', {
-        style: { fontSize: '2.5rem', fontWeight: '800', marginBottom: '2rem' }
-      }, language === 'sw' ? 'Dashibodi' : 'Dashboard'),
-      
-      React.createElement('div', {
-        className: 'grid grid-cols-3 gap-6',
-        style: { marginBottom: '3rem' }
-      },
-        React.createElement('div', { className: 'card' },
-          React.createElement('h3', {
-            style: { fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }
-          }, language === 'sw' ? 'Mali Zilizohifadhiwa' : 'Saved Properties'),
-          React.createElement('div', {
-            style: { fontSize: '3rem', fontWeight: '800', color: 'var(--primary-color)' }
-          }, savedProperties.length)
-        ),
-        
-        React.createElement('div', { className: 'card' },
-          React.createElement('h3', {
-            style: { fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }
-          }, language === 'sw' ? 'Utafutaji Uliohifadhiwa' : 'Saved Searches'),
-          React.createElement('div', {
-            style: { fontSize: '3rem', fontWeight: '800', color: 'var(--secondary-color)' }
-          }, savedSearches.length)
-        ),
-        
-        React.createElement('div', { className: 'card' },
-          React.createElement('h3', {
-            style: { fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }
-          }, language === 'sw' ? 'Arifa Mpya' : 'New Notifications'),
-          React.createElement('div', {
-            style: { fontSize: '3rem', fontWeight: '800', color: 'var(--accent-color)' }
-          }, notifications.filter(n => !n.read).length)
-        )
-      ),
-      
-      React.createElement('div', { className: 'card' },
-        React.createElement('h2', {
-          style: { fontSize: '1.5rem', fontWeight: '600', marginBottom: '1.5rem' }
-        }, `${language === 'sw' ? 'Karibu, ' : 'Welcome, '}${user?.name || ''}`),
-        React.createElement('p', {
-          style: { lineHeight: '1.6', opacity: 0.8 }
-        }, language === 'sw'
-          ? 'Hii ni dashibodi yako ya HouseLink. Unaweza kutazama mali ulizohifadhi, utafutaji uliohifadhi, na kupokea arifa.'
-          : 'This is your HouseLink dashboard. You can view saved properties, saved searches, and receive notifications.'
+          }, `© ${new Date().getFullYear()} HouseLink Tanzania. ${language === 'sw' ? 'Haki zote zimehifadhiwa.' : 'All rights reserved.'}`)
         )
       )
     )
   );
 };
 
-// ================ INITIALIZE APP ================
+// ================ SIMPLIFIED INITIALIZATION ================
 const initializeApp = () => {
   console.log('Initializing HouseLink app...');
   
-  // Create root container
   const container = document.getElementById('app');
   if (!container) {
     console.error('App container not found!');
@@ -518,33 +180,139 @@ const initializeApp = () => {
   }
   
   try {
-    const root = createRoot(container);
-    root.render(
-      React.createElement(window.ThemeProvider,
+    // Check if all required dependencies are available
+    const requiredDeps = ['ThemeProvider', 'LanguageProvider', 'AuthProvider', 'ModalProvider', 'SearchProvider'];
+    const missingDeps = requiredDeps.filter(dep => !window[dep]);
+    
+    if (missingDeps.length > 0) {
+      console.error('Missing dependencies:', missingDeps);
+      container.innerHTML = `
+        <div style="text-align: center; padding: 50px; color: var(--danger-color);">
+          <h3>Error loading application</h3>
+          <p>Missing: ${missingDeps.join(', ')}</p>
+          <button onclick="location.reload()" style="margin-top: 20px;">Retry</button>
+        </div>
+      `;
+      return;
+    }
+    
+    // Render the app
+    const appElement = React.createElement(
+      window.ThemeProvider,
+      null,
+      React.createElement(
+        window.LanguageProvider,
         null,
-        React.createElement(window.LanguageProvider,
+        React.createElement(
+          window.AuthProvider,
           null,
-          React.createElement(window.AuthProvider,
+          React.createElement(
+            window.ModalProvider,
             null,
-            React.createElement(window.ModalProvider,
+            React.createElement(
+              window.SearchProvider,
               null,
-              React.createElement(window.SearchProvider,
-                null,
-                React.createElement(App)
-              )
+              React.createElement(App)
             )
           )
         )
       )
     );
     
+    ReactDOM.render(appElement, container);
+    
     console.log('App rendered successfully!');
+    
+    // Hide loading screen after successful render
+    setTimeout(() => {
+      const loadingScreen = document.querySelector('.loading-screen');
+      if (loadingScreen) {
+        loadingScreen.style.animation = 'fadeOut 0.5s ease-out forwards';
+        setTimeout(() => {
+          loadingScreen.style.display = 'none';
+          container.classList.remove('hidden');
+        }, 500);
+      }
+    }, 100);
+    
   } catch (error) {
     console.error('Error rendering app:', error);
+    container.innerHTML = `
+      <div style="text-align: center; padding: 50px; color: var(--danger-color);">
+        <h3>Error loading application</h3>
+        <p>${error.message}</p>
+        <button onclick="location.reload()" style="margin-top: 20px;">Retry</button>
+      </div>
+    `;
   }
 };
 
-// Export components
+// ================ WAIT FOR DEPENDENCIES ================
+let initAttempts = 0;
+const maxInitAttempts = 50; // 5 seconds total
+
+function checkDependencies() {
+  const required = [
+    'React', 'ReactDOM',
+    'ThemeContext', 'LanguageContext', 'AuthContext', 'ModalContext', 'SearchContext',
+    'ThemeProvider', 'LanguageProvider', 'AuthProvider', 'ModalProvider', 'SearchProvider',
+    'HomePage', 'ListingsPage'
+  ];
+  
+  const missing = [];
+  for (const dep of required) {
+    if (!window[dep]) {
+      missing.push(dep);
+    }
+  }
+  
+  if (missing.length === 0) {
+    return true;
+  } else if (initAttempts < maxInitAttempts) {
+    console.log('Waiting for dependencies... Missing:', missing);
+    initAttempts++;
+    setTimeout(checkDependencies, 100);
+    return false;
+  } else {
+    console.error('Failed to load dependencies after maximum attempts');
+    const container = document.getElementById('app');
+    if (container) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 50px;">
+          <h3>Failed to load application</h3>
+          <p>Please check your internet connection and refresh the page.</p>
+          <button onclick="location.reload()" style="margin-top: 20px;">Refresh Page</button>
+        </div>
+      `;
+      container.classList.remove('hidden');
+      
+      // Hide loading screen
+      const loadingScreen = document.querySelector('.loading-screen');
+      if (loadingScreen) {
+        loadingScreen.style.display = 'none';
+      }
+    }
+    return false;
+  }
+}
+
+// ================ START INITIALIZATION ================
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded, checking dependencies...');
+  setTimeout(() => {
+    checkDependencies();
+  }, 100);
+});
+
+// Set a timeout as fallback
+setTimeout(() => {
+  if (document.querySelector('.loading-screen').style.display !== 'none') {
+    console.log('Fallback initialization...');
+    initializeApp();
+  }
+}, 3000); // 3 second fallback
+
+// Export for manual initialization
 window.App = App;
-window.DashboardPage = DashboardPage;
 window.initializeApp = initializeApp;
+[file content end]
