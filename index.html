@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HouseLink Tanzania - Nyumba Bora, Makazi Bora</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏠</text></svg>">
@@ -32,26 +32,26 @@
   <script type="text/babel" src="./app.js"></script>
 
   <script>
-  // Fallback loading screen timeout
-  setTimeout(() => {
-    const loadingScreen = document.querySelector('.loading-screen');
-    const appContainer = document.getElementById('app');
-    
-    if (loadingScreen && loadingScreen.style.display !== 'none') {
-      loadingScreen.style.animation = 'fadeOut 0.5s ease-out forwards';
-      setTimeout(() => {
-        loadingScreen.style.display = 'none';
-        if (appContainer) {
-          appContainer.classList.remove('hidden');
-        }
-        
-        // Try to initialize app if not already done
-        if (typeof window.initializeApp === 'function') {
-          setTimeout(window.initializeApp, 100);
-        }
-      }, 500);
-    }
-  }, 5000); // 5 second maximum loading time
+    // Fallback loading screen timeout
+    setTimeout(() => {
+      const loadingScreen = document.querySelector('.loading-screen');
+      const appContainer = document.getElementById('app');
+      
+      if (loadingScreen && loadingScreen.style.display !== 'none') {
+        loadingScreen.style.animation = 'fadeOut 0.5s ease-out forwards';
+        setTimeout(() => {
+          loadingScreen.style.display = 'none';
+          if (appContainer) {
+            appContainer.classList.remove('hidden');
+          }
+          
+          // Try to initialize app if not already done
+          if (typeof window.initializeApp === 'function') {
+            setTimeout(window.initializeApp, 100);
+          }
+        }, 500);
+      }
+    }, 5000); // 5 second maximum loading time
   </script>
 </body>
 </html>
