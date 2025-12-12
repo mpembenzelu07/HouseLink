@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wasiliana - HouseLink Tanzania</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-content">
+                <div class="contact-info">
+                    <span><i class="fas fa-phone"></i> +255 712 345 678</span>
+                    <span><i class="fas fa-envelope"></i> info@houselink.co.tz</span>
+                </div>
+                <div class="top-bar-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <select id="language-switcher">
+                        <option value="sw">Swahili</option>
+                        <option value="en">English</option>
+                    </select>
+                    <button id="dark-mode-toggle"><i class="fas fa-moon"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">HL</div>
+                    <h1>HouseLink<span>Tanzania</span></h1>
+                </a>
+                
+                <div class="nav-links">
+                    <a href="index.html">Nyumbani</a>
+                    <a href="properties.html">Nyumba</a>
+                    <a href="upload.html">Weka Tangazo</a>
+                    <a href="about.html">Kuhusu Sisi</a>
+                    <a href="contact.html" class="active">Wasiliana</a>
+                </div>
+                
+                <div class="nav-auth">
+                    <a href="login.html" class="btn btn-outline">Ingia</a>
+                    <a href="signup.html" class="btn btn-primary">Jisajili</a>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contact Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Wasiliana Nasi</h1>
+                    <p>Tuna karibu kukusikiliza na kukusaidia kupata nyumba bora au kutangaza nyumba yako. Tuwasiliane leo.</p>
+                    
+                    <div class="search-box">
+                        <form id="contact-form">
+                            <div class="search-input">
+                                <i class="fas fa-user"></i>
+                                <input type="text" placeholder="Jina lako kamili" required>
+                            </div>
+                            
+                            <div class="search-input" style="margin-top: 15px;">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" placeholder="Barua pepe yako" required>
+                            </div>
+                            
+                            <div class="search-input" style="margin-top: 15px;">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" placeholder="Namba ya simu">
+                            </div>
+                            
+                            <div style="margin-top: 15px;">
+                                <textarea class="search-input" placeholder="Ujumbe wako" rows="4" style="width: 100%; padding: 15px; resize: vertical;"></textarea>
+                            </div>
+                            
+                            <div style="margin-top: 20px;">
+                                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                    <i class="fas fa-paper-plane"></i> Tuma Ujumbe
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="hero-image">
+                    <div class="property-card" style="box-shadow: var(--shadow-lg);">
+                        <div class="property-info">
+                            <h3>Maelezo ya Mawasiliano</h3>
+                            
+                            <div class="property-features" style="border: none; margin-bottom: 30px;">
+                                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                                    <div style="width: 50px; height: 50px; background-color: #e0f2fe; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>
+                                    </div>
+                                    <div>
+                                        <h4>Mahali Tulipo</h4>
+                                        <p>Sokoine Drive, Dar es Salaam, Tanzania</p>
+                                    </div>
+                                </div>
+                                
+                                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                                    <div style="width: 50px; height: 50px; background-color: #e0f2fe; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-phone" style="color: var(--primary);"></i>
+                                    </div>
+                                    <div>
+                                        <h4>Piga Simu</h4>
+                                        <p>+255 712 345 678<br>+255 784 567 890</p>
+                                    </div>
+                                </div>
+                                
+                                <div style="display: flex; align-items: center; gap: 15px;">
+                                    <div style="width: 50px; height: 50px; background-color: #e0f2fe; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-envelope" style="color: var(--primary);"></i>
+                                    </div>
+                                    <div>
+                                        <h4>Tuma Barua Pepe</h4>
+                                        <p>info@houselink.co.tz<br>support@houselink.co.tz</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h3>Saa za Huduma</h3>
+                            <p style="margin-bottom: 20px;">Tunakupa huduma bora kwa nyakati zifuatazo:</p>
+                            <div class="property-features">
+                                <span><i class="fas fa-clock"></i> Jumatatu - Ijumaa: 8:00 - 18:00</span>
+                                <span><i class="fas fa-clock"></i> Jumamosi: 9:00 - 16:00</span>
+                                <span><i class="fas fa-clock"></i> Jumapili: Imefungwa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="featured-properties">
+        <div class="container">
+            <div class="section-title">
+                <h2>Maswali Yanayoulizwa Mara kwa Mara</h2>
+                <p>Pata majibu kwa maswali yako ya kawaida</p>
+            </div>
+            
+            <div class="properties-grid">
+                <div class="property-card">
+                    <div class="property-info">
+                        <h3><i class="fas fa-question-circle" style="color: var(--primary); margin-right: 10px;"></i> Je, ni bei gani ya kutangaza nyumba?</h3>
+                        <p class="property-description">Kutangaza nyumba ni bure kwa siku 30 za kwanza. Baada ya hapo, kuna malipo ya TZS 5,000 kwa mwezi au TZS 50,000 kwa mwaka.</p>
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-info">
+                        <h3><i class="fas fa-question-circle" style="color: var(--primary); margin-right: 10px;"></i> Vigezo gani vya kutangaza nyumba?</h3>
+                        <p class="property-description">Nyumba inapaswa kuwa halali, picha 3 za wazi, bei wazi, na maelezo kamili. Tunaangalia kila tangazo kabla ya kukubaliwa.</p>
+                    </div>
+                </div>
+                
+                <div class="property-card">
+                    <div class="property-info">
+                        <h3><i class="fas fa-question-circle" style="color: var(--primary); margin-right: 10px;"></i> Je, naweza kukodisha nyumba kupitia wavuti?</h3>
+                        <p class="property-description">Ndio, unaweza kuwasiliana na mwenye nyumba kupitia wavuti, kukaa mkataba, na kulipia nyumba kupitia mfumo wetu salama.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo">
+                        <div class="logo-icon">HL</div>
+                        <h2>HouseLink<span>Tanzania</span></h2>
+                    </div>
+                    <p>Nyumba bora Tanzania. Tupate nyumba unayotaka kwa urahisi na uhakika.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Haraka Links</h3>
+                    <ul>
+                        <li><a href="index.html">Nyumbani</a></li>
+                        <li><a href="properties.html">Nyumba</a></li>
+                        <li><a href="upload.html">Weka Tangazo</a></li>
+                        <li><a href="about.html">Kuhusu Sisi</a></li>
+                        <li><a href="contact.html">Wasiliana</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Miji Mikubwa</h3>
+                    <ul>
+                        <li><a href="#">Dar es Salaam</a></li>
+                        <li><a href="#">Arusha</a></li>
+                        <li><a href="#">Mwanza</a></li>
+                        <li><a href="#">Dodoma</a></li>
+                        <li><a href="#">Mbeya</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Wasiliana Nasi</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-map-marker-alt"></i> Sokoine Drive, Dar es Salaam</li>
+                        <li><i class="fas fa-phone"></i> +255 712 345 678</li>
+                        <li><i class="fas fa-envelope"></i> info@houselink.co.tz</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 HouseLink Tanzania. Haki zote zimehifadhiwa.</p>
+                <div class="footer-links">
+                    <a href="#">Masharti</a>
+                    <a href="#">Faragha</a>
+                    <a href="#">Mapendekezo</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Contact Form Submission
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Asante! Ujumbe wako umetumwa. Tutawasiliana nawe ndani ya masaa 24.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
