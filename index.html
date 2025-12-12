@@ -333,12 +333,12 @@
             border-color: var(--dark-1);
         }
 
-        /* Language Selector */
-        .language-selector {
+        /* Language Toggle - NEW IMPROVED STYLE */
+        .language-switcher {
             position: relative;
         }
 
-        .lang-btn {
+        .lang-toggle {
             display: flex;
             align-items: center;
             gap: var(--space-sm);
@@ -350,23 +350,59 @@
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
+            min-width: 110px;
+            justify-content: center;
         }
 
-        .dark-mode .lang-btn {
+        .dark-mode .lang-toggle {
             background: var(--dark-3);
             color: var(--light-1);
         }
 
-        .lang-btn:hover {
+        .lang-toggle:hover {
             background: var(--light-4);
+            transform: translateY(-2px);
         }
 
-        .dark-mode .lang-btn:hover {
+        .dark-mode .lang-toggle:hover {
             background: var(--dark-4);
         }
 
-        .lang-btn i {
+        .lang-toggle i {
             font-size: 0.9em;
+            transition: var(--transition);
+        }
+
+        .lang-toggle.active-swahili {
+            background: var(--primary);
+            color: white;
+        }
+
+        .lang-toggle.active-english {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .lang-flag {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .lang-flag.swahili {
+            background: linear-gradient(45deg, #43b02a, #007a33);
+            color: white;
+        }
+
+        .lang-flag.english {
+            background: linear-gradient(45deg, #00247d, #cf142b);
+            color: white;
         }
 
         /* Auth Buttons */
@@ -490,6 +526,47 @@
 
         .dark-mode .mobile-menu-btn:hover {
             background: var(--dark-4);
+        }
+
+        /* Contact Info in Header */
+        .header-contact {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .contact-info-small {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .contact-number {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .dark-mode .contact-number {
+            color: var(--light-1);
+        }
+
+        .contact-number i {
+            color: var(--primary);
+            font-size: 0.9em;
+        }
+
+        .contact-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .dark-mode .contact-label {
+            color: var(--text-light);
         }
 
         /* ====== HERO SECTION ====== */
@@ -1519,6 +1596,24 @@
             margin-top: 3px;
         }
 
+        /* Updated Contact Numbers in Footer */
+        .footer-contact .contact-numbers {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .footer-contact .phone-number {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-weight: 500;
+        }
+
+        .footer-contact .phone-number i {
+            color: var(--secondary);
+        }
+
         .social-links {
             display: flex;
             gap: var(--space-md);
@@ -1614,12 +1709,16 @@
             .properties-grid {
                 grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             }
+            
+            .header-contact {
+                display: none;
+            }
         }
 
         @media (max-width: 768px) {
             .nav-links,
             .auth-buttons,
-            .language-selector {
+            .language-switcher {
                 display: none;
             }
             
@@ -1928,24 +2027,37 @@
 
                 <!-- Header Actions -->
                 <div class="header-actions">
+                    <!-- Contact Numbers -->
+                    <div class="header-contact">
+                        <div class="contact-info-small">
+                            <div class="contact-number">
+                                <i class="fas fa-phone"></i> +255 717 323 383
+                            </div>
+                            <div class="contact-number">
+                                <i class="fas fa-phone"></i> +255 629 384 806
+                            </div>
+                            <div class="contact-label">Piga Sasa!</div>
+                        </div>
+                    </div>
+
                     <!-- Theme Toggle -->
                     <button class="action-btn" id="themeToggle">
                         <i class="fas fa-moon"></i>
                     </button>
 
+                    <!-- Language Toggle Button - IMPROVED -->
+                    <div class="language-switcher">
+                        <button class="lang-toggle active-swahili" id="languageToggle">
+                            <div class="lang-flag swahili">SW</div>
+                            <span>Swahili</span>
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                    </div>
+
                     <!-- Notifications -->
                     <button class="action-btn notification" id="notificationsBtn">
                         <i class="fas fa-bell"></i>
                     </button>
-
-                    <!-- Language Selector -->
-                    <div class="language-selector">
-                        <button class="lang-btn" id="languageBtn">
-                            <i class="fas fa-globe"></i>
-                            <span>SW</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                    </div>
 
                     <!-- Auth Buttons -->
                     <div class="auth-buttons">
@@ -1977,6 +2089,31 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
+            
+            <!-- Mobile Contact Info -->
+            <div class="mobile-contact-info" style="padding: var(--space-lg); background: var(--light-3); border-radius: var(--radius); margin-bottom: var(--space-lg);">
+                <div style="font-weight: 600; margin-bottom: var(--space-sm); color: var(--primary);">
+                    <i class="fas fa-phone"></i> Piga Simu Sasa:
+                </div>
+                <div style="margin-bottom: var(--space-sm);">
+                    <i class="fas fa-phone-alt" style="color: var(--secondary); margin-right: var(--space-sm);"></i>
+                    <span style="font-weight: 500;">+255 717 323 383</span>
+                </div>
+                <div>
+                    <i class="fas fa-phone-alt" style="color: var(--secondary); margin-right: var(--space-sm);"></i>
+                    <span style="font-weight: 500;">+255 629 384 806</span>
+                </div>
+            </div>
+            
+            <!-- Mobile Language Toggle -->
+            <div style="padding: 0 var(--space-lg); margin-bottom: var(--space-lg);">
+                <button class="lang-toggle active-swahili" id="mobileLanguageToggle" style="width: 100%;">
+                    <div class="lang-flag swahili">SW</div>
+                    <span>Swahili</span>
+                    <i class="fas fa-exchange-alt"></i>
+                </button>
+            </div>
+            
             <ul class="mobile-nav-links">
                 <li><a href="index.html" class="mobile-nav-link active"><i class="fas fa-home"></i> Nyumbani</a></li>
                 <li><a href="properties.html" class="mobile-nav-link"><i class="fas fa-search"></i> Tafuta Nyumba</a></li>
@@ -2008,6 +2145,23 @@
                         Ungana na makao bora kuanzia nyumba za kupanga, kuuza, hadi viwanja vya biashara. 
                         Huduma yetu ni ya uhakika, salama, na inakupa mabadiliko halisi.
                     </p>
+                    
+                    <!-- Contact Info in Hero -->
+                    <div class="hero-contact-info" style="margin-top: var(--space-xl); padding: var(--space-lg); background: rgba(255,255,255,0.1); border-radius: var(--radius); backdrop-filter: blur(10px);">
+                        <div style="font-weight: 600; color: white; margin-bottom: var(--space-sm);">
+                            <i class="fas fa-headset"></i> Piga Simu kwa Usaidizi:
+                        </div>
+                        <div style="display: flex; gap: var(--space-xl); flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                                <i class="fas fa-phone" style="color: var(--accent-light);"></i>
+                                <span style="color: white; font-weight: 500;">+255 717 323 383</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: var(--space-sm);">
+                                <i class="fas fa-phone" style="color: var(--accent-light);"></i>
+                                <span style="color: white; font-weight: 500;">+255 629 384 806</span>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="hero-stats animate-fade-in-up" style="animation-delay: 0.2s">
                         <div class="hero-stat">
@@ -2073,6 +2227,14 @@
                         <button type="submit" class="btn btn-primary btn-block">
                             <i class="fas fa-search"></i> Tafuta Nyumba Sasa
                         </button>
+                        
+                        <!-- Quick Contact in Search -->
+                        <div style="text-align: center; margin-top: var(--space-md);">
+                            <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                                <i class="fas fa-phone"></i> Piga kwa usaidizi:
+                                <span style="font-weight: 600; color: var(--primary);">+255 717 323 383</span>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -2466,6 +2628,26 @@
             <div class="cta-content">
                 <h2>Tayari Kupata Nyumba Yako?</h2>
                 <p>Jiunge na wamiliki wengine 25,000+ ambao wamepata nyumba bora kupitia HouseLink Tanzania. Anza safari yako ya kupata makao bora leo na ujione tofauti.</p>
+                
+                <!-- Contact Call-to-Action -->
+                <div style="background: rgba(255,255,255,0.1); padding: var(--space-xl); border-radius: var(--radius); margin: var(--space-xl) 0; backdrop-filter: blur(10px);">
+                    <div style="text-align: center; margin-bottom: var(--space-md);">
+                        <i class="fas fa-phone-alt" style="font-size: 2rem; color: var(--accent-light); margin-bottom: var(--space-sm);"></i>
+                        <h3 style="margin-bottom: var(--space-sm);">Piga Simu Sasa kwa Usaidizi</h3>
+                        <p style="opacity: 0.9;">Wataalam wetu wako tayari kukusaidia kupata nyumba bora</p>
+                    </div>
+                    <div style="display: flex; gap: var(--space-xl); justify-content: center; flex-wrap: wrap;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: white;">+255 717 323 383</div>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">Msimamizi</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: white;">+255 629 384 806</div>
+                            <div style="font-size: 0.9rem; opacity: 0.8;">Msaada wa Wateja</div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="cta-buttons">
                     <a href="signup.html" class="btn btn-secondary btn-large">Jisajili Sasa</a>
                     <a href="properties.html" class="btn btn-outline btn-large">Tazama Nyumba</a>
@@ -2526,12 +2708,21 @@
                             <span>Sokoine Drive, Dar es Salaam, Tanzania</span>
                         </li>
                         <li>
-                            <i class="fas fa-phone"></i>
-                            <span>+255 712 345 678<br>+255 784 567 890</span>
-                        </li>
-                        <li>
                             <i class="fas fa-envelope"></i>
                             <span>info@houselink.co.tz<br>support@houselink.co.tz</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <div class="contact-numbers">
+                                <div class="phone-number">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>+255 717 323 383</span>
+                                </div>
+                                <div class="phone-number">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>+255 629 384 806</span>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                     
@@ -2605,6 +2796,68 @@
                 themeToggle.querySelector('i').classList.add('fa-sun');
             }
 
+            // Language Toggle Functionality
+            const languageToggle = document.getElementById('languageToggle');
+            const mobileLanguageToggle = document.getElementById('mobileLanguageToggle');
+            let currentLanguage = 'swahili'; // Default language
+            
+            function toggleLanguage() {
+                if (currentLanguage === 'swahili') {
+                    // Switch to English
+                    currentLanguage = 'english';
+                    languageToggle.classList.remove('active-swahili');
+                    languageToggle.classList.add('active-english');
+                    languageToggle.querySelector('.lang-flag').className = 'lang-flag english';
+                    languageToggle.querySelector('.lang-flag').textContent = 'EN';
+                    languageToggle.querySelector('span').textContent = 'English';
+                    
+                    if (mobileLanguageToggle) {
+                        mobileLanguageToggle.classList.remove('active-swahili');
+                        mobileLanguageToggle.classList.add('active-english');
+                        mobileLanguageToggle.querySelector('.lang-flag').className = 'lang-flag english';
+                        mobileLanguageToggle.querySelector('.lang-flag').textContent = 'EN';
+                        mobileLanguageToggle.querySelector('span').textContent = 'English';
+                    }
+                    
+                    showToast('Language switched to English', 'info');
+                    // In a real app, you would load English content here
+                } else {
+                    // Switch to Swahili
+                    currentLanguage = 'swahili';
+                    languageToggle.classList.remove('active-english');
+                    languageToggle.classList.add('active-swahili');
+                    languageToggle.querySelector('.lang-flag').className = 'lang-flag swahili';
+                    languageToggle.querySelector('.lang-flag').textContent = 'SW';
+                    languageToggle.querySelector('span').textContent = 'Swahili';
+                    
+                    if (mobileLanguageToggle) {
+                        mobileLanguageToggle.classList.remove('active-english');
+                        mobileLanguageToggle.classList.add('active-swahili');
+                        mobileLanguageToggle.querySelector('.lang-flag').className = 'lang-flag swahili';
+                        mobileLanguageToggle.querySelector('.lang-flag').textContent = 'SW';
+                        mobileLanguageToggle.querySelector('span').textContent = 'Swahili';
+                    }
+                    
+                    showToast('Lugha imebadilishwa kuwa Kiswahili', 'info');
+                    // In a real app, you would load Swahili content here
+                }
+                
+                // Save language preference
+                localStorage.setItem('language', currentLanguage);
+            }
+            
+            // Add click event to language toggle
+            languageToggle.addEventListener('click', toggleLanguage);
+            if (mobileLanguageToggle) {
+                mobileLanguageToggle.addEventListener('click', toggleLanguage);
+            }
+            
+            // Check saved language
+            const savedLanguage = localStorage.getItem('language');
+            if (savedLanguage === 'english') {
+                toggleLanguage(); // Switch to English if saved
+            }
+
             // Header scroll effect
             const header = document.getElementById('header');
             window.addEventListener('scroll', () => {
@@ -2633,6 +2886,31 @@
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
+                    
+                    <!-- Mobile Contact Info -->
+                    <div class="mobile-contact-info" style="padding: var(--space-lg); background: var(--light-3); border-radius: var(--radius); margin-bottom: var(--space-lg);">
+                        <div style="font-weight: 600; margin-bottom: var(--space-sm); color: var(--primary);">
+                            <i class="fas fa-phone"></i> Piga Simu Sasa:
+                        </div>
+                        <div style="margin-bottom: var(--space-sm);">
+                            <i class="fas fa-phone-alt" style="color: var(--secondary); margin-right: var(--space-sm);"></i>
+                            <span style="font-weight: 500;">+255 717 323 383</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-phone-alt" style="color: var(--secondary); margin-right: var(--space-sm);"></i>
+                            <span style="font-weight: 500;">+255 629 384 806</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Language Toggle -->
+                    <div style="padding: 0 var(--space-lg); margin-bottom: var(--space-lg);">
+                        <button class="lang-toggle active-swahili" id="mobileLanguageToggle" style="width: 100%;">
+                            <div class="lang-flag swahili">SW</div>
+                            <span>Swahili</span>
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                    </div>
+                    
                     <ul class="mobile-nav-links">
                         <li><a href="index.html" class="mobile-nav-link active"><i class="fas fa-home"></i> Nyumbani</a></li>
                         <li><a href="properties.html" class="mobile-nav-link"><i class="fas fa-search"></i> Tafuta Nyumba</a></li>
@@ -2909,6 +3187,17 @@
                     display: flex;
                     flex-direction: column;
                     gap: var(--space-md);
+                }
+                
+                .mobile-contact-info {
+                    background: var(--light-3) !important;
+                    border-radius: var(--radius) !important;
+                    padding: var(--space-lg) !important;
+                    margin-bottom: var(--space-lg) !important;
+                }
+                
+                .dark-mode .mobile-contact-info {
+                    background: var(--dark-3) !important;
                 }
             `;
             
