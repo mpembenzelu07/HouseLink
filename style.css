@@ -733,3 +733,51 @@ section {
         text-align: center;
     }
 }
+/* Dark Mode Styles */
+.dark-mode {
+    --dark: #f8fafc;
+    --light: #1e293b;
+    --gray: #cbd5e1;
+    --gray-light: #334155;
+}
+
+.dark-mode body {
+    background-color: #0f172a;
+    color: #f1f5f9;
+}
+
+.dark-mode .navbar,
+.dark-mode .property-card,
+.dark-mode .search-box,
+.dark-mode .search-input input,
+.dark-mode .search-filters select {
+    background-color: #1e293b;
+    color: #f1f5f9;
+    border-color: #334155;
+}
+
+.dark-mode .nav-links a {
+    color: #f1f5f9;
+}
+
+.dark-mode .hero {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
+.dark-mode .how-it-works {
+    background-color: #0f172a;
+}
+
+.dark-mode .footer {
+    background-color: #0f172a;
+}
+
+.dark-mode .btn-outline {
+    border-color: #f1f5f9;
+    color: #f1f5f9;
+}
+
+.dark-mode .btn-outline:hover {
+    background-color: #f1f5f9;
+    color: #0f172a;
+}
