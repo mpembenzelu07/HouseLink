@@ -1,46 +1,91 @@
 <!DOCTYPE html>
-<html lang="sw">
+<html lang="sw" class="dark-mode">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HouseLink Tanzania | Nyumba Bora Tanzania</title>
+    <title>HouseLink Tanzania | Jukwaa la Mali isiyohamishika Nambari 1 Tanzania</title>
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <link rel="icon" type="image/x-icon" href="#">
+    
+    <!-- Primary Styles -->
     <style>
         :root {
+            /* Premium Color Palette */
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
-            --primary-light: #3b82f6;
+            --primary-light: #60a5fa;
             --secondary: #10b981;
-            --secondary-dark: #0da271;
+            --secondary-dark: #059669;
             --accent: #f59e0b;
+            --accent-light: #fbbf24;
             --danger: #ef4444;
-            --dark: #1e293b;
-            --darker: #0f172a;
-            --light: #f8fafc;
-            --gray: #64748b;
-            --gray-light: #e2e8f0;
-            --gray-dark: #475569;
+            --success: #10b981;
+            --warning: #f59e0b;
             
+            /* Dark Mode Colors */
+            --dark-1: #0f172a;
+            --dark-2: #1e293b;
+            --dark-3: #334155;
+            --dark-4: #475569;
+            
+            /* Light Mode Colors */
+            --light-1: #ffffff;
+            --light-2: #f8fafc;
+            --light-3: #f1f5f9;
+            --light-4: #e2e8f0;
+            
+            /* Text Colors */
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            
+            /* Gradients */
             --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
-            --gradient-dark: linear-gradient(135deg, var(--darker), var(--dark));
-            --gradient-light: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            --gradient-accent: linear-gradient(135deg, var(--accent), var(--danger));
+            --gradient-dark: linear-gradient(135deg, var(--dark-1), var(--dark-3));
+            --gradient-light: linear-gradient(135deg, #e0f2fe, #f0f9ff);
             
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1);
-            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1);
+            /* Shadows */
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
             --shadow-xl: 0 25px 50px -12px rgba(0,0,0,0.25);
+            --shadow-2xl: 0 50px 100px -20px rgba(0,0,0,0.25);
             
+            /* Border Radius */
             --radius-sm: 8px;
             --radius: 12px;
-            --radius-lg: 16px;
+            --radius-md: 16px;
+            --radius-lg: 20px;
             --radius-xl: 24px;
+            --radius-2xl: 32px;
             --radius-full: 9999px;
             
+            /* Transitions */
+            --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            --space-3xl: 64px;
+            --space-4xl: 80px;
+            
+            /* Layout */
+            --container-width: 1280px;
+            --header-height: 80px;
+            --sidebar-width: 280px;
         }
 
         * {
@@ -51,151 +96,103 @@
 
         html {
             scroll-behavior: smooth;
+            scroll-padding-top: 100px;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: var(--dark);
-            background: var(--light);
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--light-1);
             overflow-x: hidden;
+            transition: var(--transition);
+        }
+
+        body.dark-mode {
+            background: var(--dark-1);
+            color: var(--light-1);
         }
 
         h1, h2, h3, h4, h5, h6 {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Manrope', system-ui, -apple-system, sans-serif;
             font-weight: 700;
             line-height: 1.2;
+            letter-spacing: -0.02em;
         }
 
         .container {
             width: 100%;
-            max-width: 1280px;
+            max-width: var(--container-width);
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 var(--space-xl);
         }
 
-        /* Top Bar - Premium */
-        .top-bar {
-            background: var(--gradient-dark);
-            color: white;
-            padding: 10px 0;
-            font-size: 0.9rem;
+        /* ====== PREMIUM HEADER ====== */
+        .premium-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            transition: var(--transition);
+            height: var(--header-height);
+        }
+
+        .dark-mode .premium-header {
+            background: rgba(15, 23, 42, 0.95);
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .top-bar-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .top-contact {
-            display: flex;
-            gap: 25px;
-        }
-
-        .top-contact span {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: var(--transition);
-        }
-
-        .top-contact span:hover {
-            color: var(--primary-light);
-        }
-
-        .top-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .language-selector {
-            position: relative;
-        }
-
-        .language-btn {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .language-btn:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
-        .theme-toggle {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-
-        .theme-toggle:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        /* Navigation - Premium */
-        .navbar {
-            background: white;
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            transition: var(--transition);
-        }
-
-        .navbar.scrolled {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
+        .premium-header.scrolled {
             box-shadow: var(--shadow-lg);
+            transform: translateY(0);
         }
 
-        .nav-content {
+        .header-container {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
+            height: 100%;
         }
 
-        .logo {
+        /* Logo */
+        .premium-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: var(--space-md);
             text-decoration: none;
-            color: var(--dark);
         }
 
         .logo-icon {
-            width: 45px;
-            height: 45px;
+            position: relative;
+            width: 48px;
+            height: 48px;
             background: var(--gradient-primary);
-            color: white;
+            border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: var(--radius);
+            color: white;
             font-weight: 800;
-            font-size: 1.3rem;
-            box-shadow: var(--shadow);
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .premium-logo:hover .logo-icon::after {
+            transform: translateX(100%);
         }
 
         .logo-text {
@@ -204,94 +201,193 @@
         }
 
         .logo-text h1 {
-            font-size: 1.5rem;
-            font-weight: 800;
+            font-size: 1.8rem;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin: 0;
+            line-height: 1;
         }
 
-        .logo-text span {
-            font-size: 0.8rem;
-            color: var(--gray);
+        .logo-tagline {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
             font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .dark-mode .logo-tagline {
+            color: var(--text-light);
+        }
+
+        /* Navigation */
+        .premium-nav {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xl);
         }
 
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: var(--space-xl);
+            list-style: none;
         }
 
-        .nav-links a {
-            text-decoration: none;
-            color: var(--dark);
-            font-weight: 500;
-            padding: 8px 0;
+        .nav-link {
             position: relative;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: var(--space-sm) 0;
             transition: var(--transition);
         }
 
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: var(--primary);
+        .dark-mode .nav-link {
+            color: var(--light-1);
         }
 
-        .nav-links a.active::after {
+        .nav-link::before {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: 0;
             left: 0;
-            width: 100%;
+            width: 0;
             height: 3px;
             background: var(--gradient-primary);
             border-radius: var(--radius-full);
+            transition: var(--transition);
         }
 
-        .nav-actions {
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link:hover::before,
+        .nav-link.active::before {
+            width: 100%;
+        }
+
+        .nav-link i {
+            margin-right: var(--space-xs);
+            font-size: 0.9em;
+        }
+
+        /* Header Actions */
+        .header-actions {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: var(--space-md);
         }
 
-        .nav-auth {
-            display: flex;
-            gap: 12px;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: transparent;
+        .action-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius);
+            background: var(--light-3);
             border: none;
-            font-size: 1.5rem;
-            color: var(--dark);
+            color: var(--text-primary);
             cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-sm);
+            display: flex;
             align-items: center;
             justify-content: center;
             transition: var(--transition);
         }
 
-        .mobile-menu-btn:hover {
-            background: var(--gray-light);
+        .dark-mode .action-btn {
+            background: var(--dark-3);
+            color: var(--light-1);
         }
 
-        /* Buttons - Premium */
+        .action-btn:hover {
+            background: var(--light-4);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .dark-mode .action-btn:hover {
+            background: var(--dark-4);
+        }
+
+        .action-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .action-btn.notification::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid var(--light-1);
+        }
+
+        .dark-mode .action-btn.notification::after {
+            border-color: var(--dark-1);
+        }
+
+        /* Language Selector */
+        .language-selector {
+            position: relative;
+        }
+
+        .lang-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--light-3);
+            border: none;
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .dark-mode .lang-btn {
+            background: var(--dark-3);
+            color: var(--light-1);
+        }
+
+        .lang-btn:hover {
+            background: var(--light-4);
+        }
+
+        .dark-mode .lang-btn:hover {
+            background: var(--dark-4);
+        }
+
+        .lang-btn i {
+            font-size: 0.9em;
+        }
+
+        /* Auth Buttons */
+        .auth-buttons {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
         .btn {
-            padding: 12px 28px;
+            padding: var(--space-md) var(--space-xl);
             border-radius: var(--radius);
             font-weight: 600;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: var(--space-sm);
             cursor: pointer;
             transition: var(--transition);
-            border: none;
-            font-size: 1rem;
+            border: 2px solid transparent;
+            font-size: 0.95rem;
             position: relative;
             overflow: hidden;
         }
@@ -326,13 +422,13 @@
         }
 
         .btn-secondary {
-            background: var(--secondary);
+            background: var(--accent);
             color: white;
             box-shadow: var(--shadow);
         }
 
         .btn-secondary:hover {
-            background: var(--secondary-dark);
+            background: var(--accent-light);
             transform: translateY(-3px);
             box-shadow: var(--shadow-lg);
         }
@@ -340,7 +436,7 @@
         .btn-outline {
             background: transparent;
             color: var(--primary);
-            border: 2px solid var(--primary);
+            border-color: var(--primary);
         }
 
         .btn-outline:hover {
@@ -350,17 +446,17 @@
         }
 
         .btn-dark {
-            background: var(--dark);
+            background: var(--dark-1);
             color: white;
         }
 
         .btn-dark:hover {
-            background: var(--darker);
+            background: var(--dark-2);
             transform: translateY(-3px);
         }
 
         .btn-large {
-            padding: 16px 36px;
+            padding: var(--space-lg) var(--space-2xl);
             font-size: 1.1rem;
         }
 
@@ -368,82 +464,145 @@
             width: 100%;
         }
 
-        /* Hero Section - Premium */
-        .hero {
-            padding: 100px 0;
-            background: var(--gradient-light);
-            position: relative;
-            overflow: hidden;
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius);
+            background: var(--light-3);
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
         }
 
-        .hero::before {
+        .dark-mode .mobile-menu-btn {
+            background: var(--dark-3);
+            color: var(--light-1);
+        }
+
+        .mobile-menu-btn:hover {
+            background: var(--light-4);
+        }
+
+        .dark-mode .mobile-menu-btn:hover {
+            background: var(--dark-4);
+        }
+
+        /* ====== HERO SECTION ====== */
+        .premium-hero {
+            position: relative;
+            padding-top: calc(var(--header-height) + var(--space-4xl));
+            padding-bottom: var(--space-4xl);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-background {
+            position: absolute;
+            inset: 0;
+            background: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1920&q=80') center/cover;
+            opacity: 0.2;
+        }
+
+        .hero-background::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-            opacity: 0.1;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.9) 0%, rgba(16, 185, 129, 0.9) 100%);
+        }
+
+        .hero-container {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4xl);
+            align-items: center;
         }
 
         .hero-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            align-items: center;
-            position: relative;
-            z-index: 1;
+            max-width: 600px;
         }
 
-        .hero-text h1 {
+        .hero-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-full);
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: var(--space-lg);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .hero-title {
             font-size: 3.5rem;
-            margin-bottom: 20px;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: white;
+            margin-bottom: var(--space-lg);
             line-height: 1.1;
         }
 
-        .hero-text p {
-            font-size: 1.2rem;
-            color: var(--gray-dark);
-            margin-bottom: 40px;
-            max-width: 600px;
+        .hero-title span {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 1.25rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: var(--space-xl);
+            line-height: 1.6;
         }
 
         .hero-stats {
             display: flex;
-            gap: 40px;
-            margin-top: 50px;
+            gap: var(--space-2xl);
+            margin-top: var(--space-xl);
         }
 
         .hero-stat {
             text-align: center;
         }
 
-        .hero-stat h3 {
+        .hero-stat-number {
+            display: block;
             font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 5px;
+            font-weight: 800;
+            color: white;
+            line-height: 1;
+            margin-bottom: var(--space-xs);
         }
 
-        .hero-stat p {
-            color: var(--gray);
+        .hero-stat-label {
             font-size: 0.9rem;
-            margin: 0;
+            color: rgba(255,255,255,0.8);
+            font-weight: 500;
         }
 
+        /* Hero Search */
         .hero-search {
-            background: white;
-            padding: 40px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-xl);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            padding: var(--space-2xl);
+            box-shadow: var(--shadow-2xl);
             transform: translateY(0);
             animation: float 6s ease-in-out infinite;
+        }
+
+        .dark-mode .hero-search {
+            background: rgba(30, 41, 59, 0.95);
         }
 
         @keyframes float {
@@ -452,53 +611,88 @@
         }
 
         .search-header {
-            margin-bottom: 30px;
+            margin-bottom: var(--space-xl);
         }
 
         .search-header h3 {
             font-size: 1.5rem;
-            margin-bottom: 10px;
+            margin-bottom: var(--space-sm);
+            color: var(--text-primary);
+        }
+
+        .dark-mode .search-header h3 {
+            color: var(--light-1);
+        }
+
+        .search-header p {
+            color: var(--text-secondary);
+        }
+
+        .dark-mode .search-header p {
+            color: var(--text-light);
         }
 
         .search-tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xl);
         }
 
         .search-tab {
-            padding: 10px 20px;
-            background: var(--gray-light);
+            flex: 1;
+            padding: var(--space-md);
+            background: var(--light-3);
             border: none;
             border-radius: var(--radius);
-            font-weight: 500;
+            font-weight: 600;
+            color: var(--text-secondary);
             cursor: pointer;
             transition: var(--transition);
+            text-align: center;
+        }
+
+        .dark-mode .search-tab {
+            background: var(--dark-3);
+            color: var(--text-light);
+        }
+
+        .search-tab:hover {
+            background: var(--light-4);
+        }
+
+        .dark-mode .search-tab:hover {
+            background: var(--dark-4);
         }
 
         .search-tab.active {
             background: var(--primary);
             color: white;
+            box-shadow: var(--shadow);
         }
 
         .search-form {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: var(--space-lg);
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: var(--space-sm);
         }
 
         .form-group label {
-            font-weight: 500;
-            color: var(--dark);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: var(--space-sm);
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .dark-mode .form-group label {
+            color: var(--light-1);
         }
 
         .form-group label i {
@@ -506,12 +700,19 @@
         }
 
         .form-control {
-            padding: 15px 20px;
-            border: 2px solid var(--gray-light);
+            padding: var(--space-md) var(--space-lg);
+            border: 2px solid var(--light-4);
             border-radius: var(--radius);
             font-size: 1rem;
             transition: var(--transition);
-            background: white;
+            background: var(--light-1);
+            color: var(--text-primary);
+        }
+
+        .dark-mode .form-control {
+            background: var(--dark-2);
+            border-color: var(--dark-4);
+            color: var(--light-1);
         }
 
         .form-control:focus {
@@ -523,144 +724,115 @@
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: var(--space-lg);
         }
 
-        /* Categories - Premium */
-        .categories {
-            padding: 100px 0;
-            background: white;
+        /* ====== FEATURED PROPERTIES ====== */
+        .featured-section {
+            padding: var(--space-4xl) 0;
+            background: var(--light-2);
+        }
+
+        .dark-mode .featured-section {
+            background: var(--dark-2);
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: var(--space-3xl);
         }
 
-        .section-header h2 {
-            font-size: 2.8rem;
-            margin-bottom: 15px;
-            color: var(--dark);
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-md);
+            color: var(--text-primary);
         }
 
-        .section-header p {
+        .dark-mode .section-title {
+            color: var(--light-1);
+        }
+
+        .section-subtitle {
             font-size: 1.1rem;
-            color: var(--gray);
+            color: var(--text-secondary);
             max-width: 600px;
             margin: 0 auto;
         }
 
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
+        .dark-mode .section-subtitle {
+            color: var(--text-light);
         }
 
-        .category-card {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 40px 30px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            border: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .category-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-xl);
-            border-color: var(--primary);
-        }
-
-        .category-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-primary);
-        }
-
-        .category-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--gradient-light);
-            color: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin: 0 auto 25px;
-            transition: var(--transition);
-        }
-
-        .category-card:hover .category-icon {
-            background: var(--gradient-primary);
-            color: white;
-            transform: scale(1.1);
-        }
-
-        .category-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: var(--dark);
-        }
-
-        .category-card p {
-            color: var(--gray);
-            margin-bottom: 25px;
-            font-size: 0.95rem;
-        }
-
-        .category-price {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        /* Featured Properties - Premium */
-        .featured-properties {
-            padding: 100px 0;
-            background: var(--light);
-        }
-
-        .section-header-with-controls {
+        .section-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 60px;
+            margin-bottom: var(--space-xl);
             flex-wrap: wrap;
-            gap: 20px;
+            gap: var(--space-lg);
         }
 
+        .filter-buttons {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: var(--space-sm) var(--space-lg);
+            background: var(--light-1);
+            border: 2px solid var(--light-4);
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .dark-mode .filter-btn {
+            background: var(--dark-3);
+            border-color: var(--dark-4);
+            color: var(--text-light);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        /* Properties Grid */
         .properties-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin-bottom: 60px;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: var(--space-xl);
+            margin-bottom: var(--space-3xl);
         }
 
         .property-card {
-            background: white;
-            border-radius: var(--radius-lg);
+            background: var(--light-1);
+            border-radius: var(--radius-xl);
             overflow: hidden;
             box-shadow: var(--shadow);
-            transition: var(--transition);
+            transition: var(--transition-bounce);
             position: relative;
         }
 
+        .dark-mode .property-card {
+            background: var(--dark-2);
+        }
+
         .property-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-xl);
+            transform: translateY(-12px);
+            box-shadow: var(--shadow-2xl);
         }
 
         .property-image {
             position: relative;
-            height: 250px;
+            height: 280px;
             overflow: hidden;
         }
 
@@ -677,19 +849,20 @@
 
         .property-badge {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: var(--space-lg);
+            left: var(--space-lg);
             background: var(--primary);
             color: white;
-            padding: 8px 20px;
+            padding: var(--space-xs) var(--space-md);
             border-radius: var(--radius-full);
             font-size: 0.85rem;
-            font-weight: 600;
+            font-weight: 700;
             z-index: 2;
+            box-shadow: var(--shadow);
         }
 
         .property-badge.featured {
-            background: var(--accent);
+            background: var(--gradient-accent);
         }
 
         .property-badge.sale {
@@ -702,86 +875,114 @@
 
         .property-actions {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: var(--space-lg);
+            right: var(--space-lg);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: var(--space-sm);
             z-index: 2;
         }
 
         .property-action-btn {
             width: 40px;
             height: 40px;
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
             border: none;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--gray);
+            color: var(--text-primary);
             cursor: pointer;
             transition: var(--transition);
             box-shadow: var(--shadow);
+        }
+
+        .dark-mode .property-action-btn {
+            background: rgba(30, 41, 59, 0.9);
+            color: var(--light-1);
         }
 
         .property-action-btn:hover,
         .property-action-btn.active {
             background: var(--primary);
             color: white;
+            transform: scale(1.1);
         }
 
         .property-info {
-            padding: 30px;
+            padding: var(--space-xl);
         }
 
         .property-header {
-            margin-bottom: 15px;
+            margin-bottom: var(--space-md);
         }
 
         .property-header h3 {
             font-size: 1.4rem;
-            margin-bottom: 8px;
-            color: var(--dark);
+            margin-bottom: var(--space-xs);
+            color: var(--text-primary);
+        }
+
+        .dark-mode .property-header h3 {
+            color: var(--light-1);
         }
 
         .property-location {
-            color: var(--gray);
+            color: var(--text-secondary);
             font-size: 0.95rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: var(--space-sm);
+        }
+
+        .dark-mode .property-location {
+            color: var(--text-light);
         }
 
         .property-description {
-            color: var(--gray-dark);
-            margin-bottom: 20px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
             line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .dark-mode .property-description {
+            color: var(--text-light);
         }
 
         .property-features {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--gray-light);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-lg);
+            border-bottom: 1px solid var(--light-4);
+        }
+
+        .dark-mode .property-features {
+            border-bottom-color: var(--dark-4);
         }
 
         .property-feature {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: var(--space-sm);
         }
 
         .property-feature i {
             color: var(--primary);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         .property-feature span {
-            font-size: 0.85rem;
-            color: var(--gray);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .dark-mode .property-feature span {
+            color: var(--text-light);
         }
 
         .property-footer {
@@ -797,36 +998,153 @@
 
         .property-price span {
             font-size: 0.9rem;
-            color: var(--gray);
+            color: var(--text-secondary);
         }
 
-        /* How It Works - Premium */
-        .how-it-works {
-            padding: 100px 0;
-            background: var(--gradient-light);
+        .dark-mode .property-price span {
+            color: var(--text-light);
         }
 
-        .steps {
+        /* ====== CATEGORIES ====== */
+        .categories-section {
+            padding: var(--space-4xl) 0;
+            background: var(--light-1);
+        }
+
+        .dark-mode .categories-section {
+            background: var(--dark-1);
+        }
+
+        .categories-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-xl);
+        }
+
+        .category-card {
+            background: var(--light-2);
+            border-radius: var(--radius-xl);
+            padding: var(--space-2xl);
+            text-align: center;
+            transition: var(--transition-bounce);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dark-mode .category-card {
+            background: var(--dark-2);
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .category-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--light-3);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto var(--space-lg);
+            transition: var(--transition);
+        }
+
+        .dark-mode .category-icon {
+            background: var(--dark-3);
+        }
+
+        .category-card:hover .category-icon {
+            background: var(--gradient-primary);
+            color: white;
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .category-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-sm);
+            color: var(--text-primary);
+        }
+
+        .dark-mode .category-card h3 {
+            color: var(--light-1);
+        }
+
+        .category-card p {
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+            font-size: 0.95rem;
+        }
+
+        .dark-mode .category-card p {
+            color: var(--text-light);
+        }
+
+        .category-price {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        /* ====== HOW IT WORKS ====== */
+        .how-it-works {
+            padding: var(--space-4xl) 0;
+            background: linear-gradient(135deg, var(--light-2), var(--light-3));
+}
+
+        .dark-mode .how-it-works {
+            background: linear-gradient(135deg, var(--dark-2), var(--dark-3));
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--space-2xl);
             counter-reset: step;
         }
 
         .step {
-            text-align: center;
             position: relative;
+            padding: var(--space-2xl);
+            background: var(--light-1);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .dark-mode .step {
+            background: var(--dark-2);
+        }
+
+        .step:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-xl);
         }
 
         .step::before {
             counter-increment: step;
             content: counter(step);
             position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 60px;
+            top: -20px;
+            left: var(--space-xl);
+            width: 50px;
+            height: 50px;
             background: var(--gradient-primary);
             color: white;
             border-radius: 50%;
@@ -836,129 +1154,123 @@
             font-size: 1.5rem;
             font-weight: 700;
             box-shadow: var(--shadow);
-            z-index: 2;
-        }
-
-        .step-content {
-            background: white;
-            padding: 60px 30px 40px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
-            margin-top: 30px;
-            transition: var(--transition);
-        }
-
-        .step:hover .step-content {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-xl);
         }
 
         .step-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--gradient-light);
+            width: 70px;
+            height: 70px;
+            background: var(--light-3);
             color: var(--primary);
-            border-radius: 50%;
+            border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            margin: 0 auto 25px;
+            font-size: 1.8rem;
+            margin-bottom: var(--space-lg);
             transition: var(--transition);
+        }
+
+        .dark-mode .step-icon {
+            background: var(--dark-3);
         }
 
         .step:hover .step-icon {
             background: var(--gradient-primary);
             color: white;
+            transform: rotate(10deg);
         }
 
         .step h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: var(--dark);
+            font-size: 1.4rem;
+            margin-bottom: var(--space-md);
+            color: var(--text-primary);
+        }
+
+        .dark-mode .step h3 {
+            color: var(--light-1);
         }
 
         .step p {
-            color: var(--gray);
+            color: var(--text-secondary);
             line-height: 1.7;
         }
 
-        /* Stats - Premium */
-        .stats {
-            padding: 100px 0;
-            background: var(--gradient-dark);
-            color: white;
+        .dark-mode .step p {
+            color: var(--text-light);
+        }
+
+        /* ====== STATS SECTION ====== */
+        .stats-section {
+            padding: var(--space-4xl) 0;
+            background: var(--gradient-primary);
             position: relative;
             overflow: hidden;
         }
 
-        .stats::before {
+        .stats-section::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80');
+            inset: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100"><path d="M0,100 Q250,50 500,100 T1000,100 L1000,0 L0,0 Z" fill="%23ffffff" opacity="0.1"/></svg>');
             background-size: cover;
-            background-position: center;
-            opacity: 0.1;
         }
 
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
+            gap: var(--space-2xl);
             position: relative;
             z-index: 1;
         }
 
         .stat-item {
             text-align: center;
-            padding: 40px 20px;
-            background: rgba(255,255,255,0.05);
-            border-radius: var(--radius-lg);
+            padding: var(--space-2xl);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             transition: var(--transition);
         }
 
         .stat-item:hover {
             transform: translateY(-10px);
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .stat-item h3 {
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 3rem;
+            margin-bottom: var(--space-sm);
+            color: white;
+            font-weight: 800;
         }
 
         .stat-item p {
             font-size: 1.1rem;
-            opacity: 0.9;
+            color: rgba(255, 255, 255, 0.9);
         }
 
-        /* Locations - Premium */
-        .locations {
-            padding: 100px 0;
-            background: white;
+        /* ====== LOCATIONS ====== */
+        .locations-section {
+            padding: var(--space-4xl) 0;
+            background: var(--light-1);
+}
+
+        .dark-mode .locations-section {
+            background: var(--dark-1);
         }
 
         .locations-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-xl);
         }
 
         .location-card {
             position: relative;
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-xl);
             overflow: hidden;
-            height: 300px;
+            height: 320px;
             cursor: pointer;
         }
 
@@ -975,21 +1287,18 @@
 
         .location-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            padding: 30px;
+            padding: var(--space-2xl);
             color: white;
         }
 
         .location-overlay h3 {
             font-size: 1.8rem;
-            margin-bottom: 10px;
+            margin-bottom: var(--space-xs);
         }
 
         .location-overlay p {
@@ -997,10 +1306,14 @@
             opacity: 0.9;
         }
 
-        /* Testimonials - Premium */
-        .testimonials {
-            padding: 100px 0;
-            background: var(--light);
+        /* ====== TESTIMONIALS ====== */
+        .testimonials-section {
+            padding: var(--space-4xl) 0;
+            background: var(--light-2);
+        }
+
+        .dark-mode .testimonials-section {
+            background: var(--dark-2);
         }
 
         .testimonials-slider {
@@ -1009,21 +1322,29 @@
         }
 
         .testimonial-card {
-            background: white;
-            padding: 50px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
+            background: var(--light-1);
+            padding: var(--space-3xl);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-lg);
             text-align: center;
-            margin: 0 20px;
+            margin: var(--space-xl);
+        }
+
+        .dark-mode .testimonial-card {
+            background: var(--dark-2);
         }
 
         .testimonial-quote {
             font-size: 1.3rem;
             font-style: italic;
-            color: var(--gray-dark);
-            margin-bottom: 40px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xl);
             line-height: 1.8;
             position: relative;
+        }
+
+        .dark-mode .testimonial-quote {
+            color: var(--text-light);
         }
 
         .testimonial-quote::before,
@@ -1049,7 +1370,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: var(--space-lg);
         }
 
         .author-avatar {
@@ -1062,60 +1383,38 @@
 
         .author-info h4 {
             font-size: 1.3rem;
-            margin-bottom: 5px;
-            color: var(--dark);
+            margin-bottom: var(--space-xs);
+            color: var(--text-primary);
+        }
+
+        .dark-mode .author-info h4 {
+            color: var(--light-1);
         }
 
         .author-info p {
-            color: var(--gray);
+            color: var(--text-secondary);
             font-size: 0.95rem;
         }
 
-        /* Partners - Premium */
-        .partners {
-            padding: 80px 0;
-            background: white;
+        .dark-mode .author-info p {
+            color: var(--text-light);
         }
 
-        .partners-grid {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 50px;
-        }
-
-        .partner-logo {
-            height: 50px;
-            opacity: 0.6;
-            filter: grayscale(100%);
-            transition: var(--transition);
-        }
-
-        .partner-logo:hover {
-            opacity: 1;
-            filter: grayscale(0);
-            transform: scale(1.1);
-        }
-
-        /* CTA - Premium */
-        .cta {
-            padding: 120px 0;
-            background: var(--gradient-primary);
+        /* ====== CTA SECTION ====== */
+        .cta-section {
+            padding: var(--space-4xl) 0;
+            background: var(--gradient-dark);
             color: white;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
 
-        .cta::before {
+        .cta-section::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100"><path d="M0,100 Q250,50 500,100 T1000,100 L1000,0 L0,0 Z" fill="%23ffffff" opacity="0.1"/></svg>');
+            inset: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100"><path d="M0,100 Q250,50 500,100 T1000,100 L1000,0 L0,0 Z" fill="%23ffffff" opacity="0.05"/></svg>');
             background-size: cover;
         }
 
@@ -1128,42 +1427,43 @@
 
         .cta-content h2 {
             font-size: 3rem;
-            margin-bottom: 20px;
+            margin-bottom: var(--space-lg);
         }
 
         .cta-content p {
             font-size: 1.3rem;
-            margin-bottom: 50px;
+            margin-bottom: var(--space-3xl);
             opacity: 0.9;
+            line-height: 1.6;
         }
 
         .cta-buttons {
             display: flex;
-            gap: 20px;
+            gap: var(--space-lg);
             justify-content: center;
             flex-wrap: wrap;
         }
 
-        /* Footer - Premium */
-        .footer {
-            background: var(--darker);
-            color: white;
-            padding: 80px 0 20px;
+        /* ====== FOOTER ====== */
+        .premium-footer {
+            background: var(--dark-1);
+            color: var(--light-1);
+            padding: var(--space-4xl) 0 var(--space-xl);
         }
 
         .footer-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 50px;
-            margin-bottom: 60px;
+            gap: var(--space-3xl);
+            margin-bottom: var(--space-3xl);
         }
 
         .footer-col h3 {
             font-size: 1.3rem;
-            margin-bottom: 25px;
-            color: white;
+            margin-bottom: var(--space-xl);
+            color: var(--light-1);
             position: relative;
-            padding-bottom: 15px;
+            padding-bottom: var(--space-md);
         }
 
         .footer-col h3::after {
@@ -1178,8 +1478,8 @@
         }
 
         .footer-col p {
-            color: #94a3b8;
-            margin-bottom: 25px;
+            color: var(--text-light);
+            margin-bottom: var(--space-lg);
             line-height: 1.7;
         }
 
@@ -1188,29 +1488,29 @@
         }
 
         .footer-links li {
-            margin-bottom: 12px;
+            margin-bottom: var(--space-md);
         }
 
         .footer-links a {
-            color: #94a3b8;
+            color: var(--text-light);
             text-decoration: none;
             transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: var(--space-sm);
         }
 
         .footer-links a:hover {
             color: white;
-            padding-left: 5px;
+            padding-left: var(--space-sm);
         }
 
         .footer-contact li {
             display: flex;
             align-items: flex-start;
-            gap: 15px;
-            margin-bottom: 20px;
-            color: #94a3b8;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            color: var(--text-light);
         }
 
         .footer-contact i {
@@ -1221,14 +1521,14 @@
 
         .social-links {
             display: flex;
-            gap: 15px;
-            margin-top: 25px;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
         }
 
         .social-links a {
-            width: 45px;
-            height: 45px;
-            background: rgba(255,255,255,0.05);
+            width: 44px;
+            height: 44px;
+            background: var(--dark-3);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -1241,19 +1541,20 @@
         .social-links a:hover {
             background: var(--primary);
             transform: translateY(-5px);
+            box-shadow: var(--shadow);
         }
 
         .newsletter-form {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: var(--space-sm);
+            margin-top: var(--space-lg);
         }
 
         .newsletter-input {
             flex: 1;
-            padding: 12px 15px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            padding: var(--space-md) var(--space-lg);
+            background: var(--dark-3);
+            border: 1px solid var(--dark-4);
             border-radius: var(--radius);
             color: white;
             font-size: 0.95rem;
@@ -1265,27 +1566,27 @@
         }
 
         .footer-bottom {
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 30px;
+            border-top: 1px solid var(--dark-4);
+            padding-top: var(--space-xl);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: var(--space-lg);
         }
 
         .footer-bottom p {
-            color: #94a3b8;
+            color: var(--text-light);
             font-size: 0.95rem;
         }
 
         .footer-bottom-links {
             display: flex;
-            gap: 25px;
+            gap: var(--space-xl);
         }
 
         .footer-bottom-links a {
-            color: #94a3b8;
+            color: var(--text-light);
             text-decoration: none;
             font-size: 0.95rem;
             transition: var(--transition);
@@ -1295,25 +1596,30 @@
             color: white;
         }
 
-        /* Responsive Design */
+        /* ====== RESPONSIVE DESIGN ====== */
         @media (max-width: 1024px) {
-            .hero-content {
-                grid-template-columns: 1fr;
-                gap: 60px;
+            :root {
+                --container-width: 100%;
             }
             
-            .hero-text h1 {
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: var(--space-3xl);
+            }
+            
+            .hero-title {
                 font-size: 3rem;
             }
             
             .properties-grid {
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             }
         }
 
         @media (max-width: 768px) {
             .nav-links,
-            .nav-auth {
+            .auth-buttons,
+            .language-selector {
                 display: none;
             }
             
@@ -1321,28 +1627,24 @@
                 display: flex;
             }
             
-            .top-bar-content {
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
-            }
-            
-            .top-contact {
-                justify-content: center;
-                flex-wrap: wrap;
-                gap: 15px;
-            }
-            
-            .hero-text h1 {
+            .hero-title {
                 font-size: 2.5rem;
+            }
+            
+            .hero-description {
+                font-size: 1.1rem;
             }
             
             .form-row {
                 grid-template-columns: 1fr;
             }
             
-            .section-header h2 {
-                font-size: 2.2rem;
+            .properties-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title {
+                font-size: 2rem;
             }
             
             .cta-content h2 {
@@ -1361,64 +1663,120 @@
         }
 
         @media (max-width: 480px) {
-            .hero-text h1 {
+            .container {
+                padding: 0 var(--space-lg);
+            }
+            
+            .hero-title {
                 font-size: 2rem;
             }
             
             .hero-stats {
                 flex-direction: column;
-                gap: 20px;
+                gap: var(--space-lg);
             }
             
-            .properties-grid {
-                grid-template-columns: 1fr;
+            .section-title {
+                font-size: 1.8rem;
             }
             
             .testimonial-card {
-                padding: 30px 20px;
+                padding: var(--space-xl);
             }
         }
 
-        /* Animation Classes */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+        /* ====== ANIMATIONS ====== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
-        /* Loading Spinner */
-        .loading-spinner {
-            display: none;
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--gray-light);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
         }
 
-        /* Toast Notifications */
-        .toast {
+        @keyframes shimmer {
+            0% {
+                background-position: -200% center;
+            }
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .animate-slide-in-left {
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        .animate-slide-in-right {
+            animation: slideInRight 0.6s ease-out;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* ====== TOAST NOTIFICATIONS ====== */
+        .toast-container {
             position: fixed;
             top: 100px;
-            right: 20px;
-            background: white;
-            padding: 20px 30px;
+            right: var(--space-xl);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .toast {
+            background: var(--light-1);
             border-radius: var(--radius);
-            box-shadow: var(--shadow-xl);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-2xl);
             transform: translateX(400px);
             transition: transform 0.3s ease;
-            z-index: 9999;
             max-width: 350px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .dark-mode .toast {
+            background: var(--dark-2);
         }
 
         .toast.show {
@@ -1426,21 +1784,21 @@
         }
 
         .toast.success {
-            border-left: 4px solid var(--secondary);
+            border-left-color: var(--success);
         }
 
         .toast.error {
-            border-left: 4px solid var(--danger);
+            border-left-color: var(--danger);
         }
 
         .toast.info {
-            border-left: 4px solid var(--primary);
+            border-left-color: var(--primary);
         }
 
         .toast-content {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: var(--space-md);
         }
 
         .toast-icon {
@@ -1448,7 +1806,7 @@
         }
 
         .toast.success .toast-icon {
-            color: var(--secondary);
+            color: var(--success);
         }
 
         .toast.error .toast-icon {
@@ -1460,116 +1818,230 @@
         }
 
         .toast-text h4 {
-            margin-bottom: 5px;
+            margin-bottom: var(--space-xs);
             font-size: 1rem;
         }
 
         .toast-text p {
             font-size: 0.9rem;
-            color: var(--gray);
+            color: var(--text-secondary);
+        }
+
+        .dark-mode .toast-text p {
+            color: var(--text-light);
+        }
+
+        /* ====== LOADING STATES ====== */
+        .loading {
+            position: relative;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--light-4);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* ====== UTILITY CLASSES ====== */
+        .text-gradient {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .bg-gradient {
+            background: var(--gradient-primary);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .shadow-hover {
+            transition: var(--transition);
+        }
+
+        .shadow-hover:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hover-lift {
+            transition: var(--transition);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-4px);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .visible {
+            display: block !important;
         }
     </style>
 </head>
-<body>
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="container">
-            <div class="top-bar-content">
-                <div class="top-contact">
-                    <span><i class="fas fa-phone"></i> +255 712 345 678</span>
-                    <span><i class="fas fa-envelope"></i> info@houselink.co.tz</span>
-                    <span><i class="fas fa-clock"></i> Jumamosi - Alhamisi: 8:00 - 18:00</span>
-                </div>
-                <div class="top-actions">
-                    <div class="language-selector">
-                        <button class="language-btn">
-                            <i class="fas fa-globe"></i>
-                            <span>Swahili</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                    </div>
-                    <button class="theme-toggle" id="themeToggle">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+<body class="dark-mode">
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
+    <!-- Premium Header -->
+    <header class="premium-header" id="header">
         <div class="container">
-            <div class="nav-content">
-                <a href="index.html" class="logo">
+            <div class="header-container">
+                <!-- Logo -->
+                <a href="index.html" class="premium-logo">
                     <div class="logo-icon">HL</div>
                     <div class="logo-text">
                         <h1>HouseLink</h1>
-                        <span>Tanzania | Nyumba Bora</span>
+                        <span class="logo-tagline">Nyumba Bora Tanzania</span>
                     </div>
                 </a>
-                
-                <div class="nav-links">
-                    <a href="index.html" class="active">Nyumbani</a>
-                    <a href="properties.html">Nyumba</a>
-                    <a href="sell.html">Uza Nyumba</a>
-                    <a href="rent.html">Panga Nyumba</a>
-                    <a href="agents.html">Mawakala</a>
-                    <a href="about.html">Kuhusu Sisi</a>
-                    <a href="contact.html">Wasiliana</a>
-                </div>
-                
-                <div class="nav-actions">
-                    <div class="nav-auth">
+
+                <!-- Navigation -->
+                <nav class="premium-nav">
+                    <ul class="nav-links">
+                        <li><a href="index.html" class="nav-link active"><i class="fas fa-home"></i> Nyumbani</a></li>
+                        <li><a href="properties.html" class="nav-link"><i class="fas fa-search"></i> Tafuta Nyumba</a></li>
+                        <li><a href="sell.html" class="nav-link"><i class="fas fa-plus-circle"></i> Tangaza Nyumba</a></li>
+                        <li><a href="agents.html" class="nav-link"><i class="fas fa-user-tie"></i> Mawakala</a></li>
+                        <li><a href="about.html" class="nav-link"><i class="fas fa-info-circle"></i> Kuhusu Sisi</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Header Actions -->
+                <div class="header-actions">
+                    <!-- Theme Toggle -->
+                    <button class="action-btn" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+
+                    <!-- Notifications -->
+                    <button class="action-btn notification" id="notificationsBtn">
+                        <i class="fas fa-bell"></i>
+                    </button>
+
+                    <!-- Language Selector -->
+                    <div class="language-selector">
+                        <button class="lang-btn" id="languageBtn">
+                            <i class="fas fa-globe"></i>
+                            <span>SW</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+
+                    <!-- Auth Buttons -->
+                    <div class="auth-buttons">
                         <a href="login.html" class="btn btn-outline">Ingia</a>
                         <a href="signup.html" class="btn btn-primary">Jisajili</a>
                     </div>
+
+                    <!-- Mobile Menu Button -->
                     <button class="mobile-menu-btn" id="mobileMenuBtn">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
             </div>
         </div>
-    </nav>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu hidden" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <div class="mobile-menu-header">
+                <a href="index.html" class="premium-logo">
+                    <div class="logo-icon">HL</div>
+                    <div class="logo-text">
+                        <h1>HouseLink</h1>
+                        <span class="logo-tagline">Nyumba Bora Tanzania</span>
+                    </div>
+                </a>
+                <button class="mobile-menu-close" id="mobileMenuClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <ul class="mobile-nav-links">
+                <li><a href="index.html" class="mobile-nav-link active"><i class="fas fa-home"></i> Nyumbani</a></li>
+                <li><a href="properties.html" class="mobile-nav-link"><i class="fas fa-search"></i> Tafuta Nyumba</a></li>
+                <li><a href="sell.html" class="mobile-nav-link"><i class="fas fa-plus-circle"></i> Tangaza Nyumba</a></li>
+                <li><a href="agents.html" class="mobile-nav-link"><i class="fas fa-user-tie"></i> Mawakala</a></li>
+                <li><a href="about.html" class="mobile-nav-link"><i class="fas fa-info-circle"></i> Kuhusu Sisi</a></li>
+                <li><a href="contact.html" class="mobile-nav-link"><i class="fas fa-phone"></i> Wasiliana</a></li>
+            </ul>
+            <div class="mobile-auth-buttons">
+                <a href="login.html" class="btn btn-outline btn-block">Ingia</a>
+                <a href="signup.html" class="btn btn-primary btn-block">Jisajili</a>
+            </div>
+        </div>
+    </div>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="premium-hero" id="hero">
+        <div class="hero-background"></div>
         <div class="container">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <h1>Tafuta Nyumba Bora Tanzania</h1>
-                    <p>Ungana na makao bora katika maeneo mbalimbali ya Tanzania. Tuna nyumba za kupanga na kuuza kwa bei nafuu na uhakika kamili.</p>
+            <div class="hero-container animate-fade-in-up">
+                <!-- Hero Content -->
+                <div class="hero-content">
+                    <span class="hero-tag animate-slide-in-left">Jukwaa la Mali Nambari 1 Tanzania</span>
+                    <h1 class="hero-title animate-slide-in-left">
+                        Tafuta <span>Nyumba Bora</span><br>
+                        Katika Maeneo Yote Tanzania
+                    </h1>
+                    <p class="hero-description animate-slide-in-left">
+                        Ungana na makao bora kuanzia nyumba za kupanga, kuuza, hadi viwanja vya biashara. 
+                        Huduma yetu ni ya uhakika, salama, na inakupa mabadiliko halisi.
+                    </p>
                     
-                    <div class="hero-stats">
+                    <div class="hero-stats animate-fade-in-up" style="animation-delay: 0.2s">
                         <div class="hero-stat">
-                            <h3>5,000+</h3>
-                            <p>Nyumba Zilizotangazwa</p>
+                            <span class="hero-stat-number" data-count="5000">5,000+</span>
+                            <span class="hero-stat-label">Nyumba Zilizotangazwa</span>
                         </div>
                         <div class="hero-stat">
-                            <h3>25,000+</h3>
-                            <p>Wateja Waliosajiliwa</p>
+                            <span class="hero-stat-number" data-count="25000">25,000+</span>
+                            <span class="hero-stat-label">Wateja Waliosajiliwa</span>
                         </div>
                         <div class="hero-stat">
-                            <h3>15+</h3>
-                            <p>Miji Inayohudumiwa</p>
+                            <span class="hero-stat-number" data-count="15">15+</span>
+                            <span class="hero-stat-label">Miji Inayohudumiwa</span>
                         </div>
                     </div>
                 </div>
-                
-                <div class="hero-search">
+
+                <!-- Hero Search -->
+                <div class="hero-search animate-slide-in-right">
                     <div class="search-header">
                         <h3>Tafuta Nyumba Yako</h3>
-                        <p>Jaza maelezo chini na upate nyumba unayotaka</p>
+                        <p>Jaza maelezo chini na upate nyumba inayokufaa</p>
                     </div>
                     
                     <div class="search-tabs">
-                        <button class="search-tab active">Panga</button>
-                        <button class="search-tab">Nunua</button>
+                        <button class="search-tab active" data-tab="rent">Panga</button>
+                        <button class="search-tab" data-tab="buy">Nunua</button>
+                        <button class="search-tab" data-tab="commercial">Biashara</button>
                     </div>
                     
                     <form class="search-form" id="searchForm">
                         <div class="form-group">
-                            <label for="location"><i class="fas fa-map-marker-alt"></i> Eneo</label>
-                            <input type="text" class="form-control" id="location" placeholder="Andika eneo unalotaka" required>
+                            <label for="location"><i class="fas fa-map-marker-alt"></i> Eneo Unalotaka</label>
+                            <input type="text" class="form-control" id="location" placeholder="Andika eneo (mf. Dar es Salaam, Arusha)" required>
                         </div>
                         
                         <div class="form-row">
@@ -1599,7 +2071,7 @@
                         </div>
                         
                         <button type="submit" class="btn btn-primary btn-block">
-                            <i class="fas fa-search"></i> Tafuta Nyumba
+                            <i class="fas fa-search"></i> Tafuta Nyumba Sasa
                         </button>
                     </form>
                 </div>
@@ -1607,71 +2079,33 @@
         </div>
     </section>
 
-    <!-- Categories -->
-    <section class="categories">
+    <!-- Featured Properties -->
+    <section class="featured-section" id="featured">
         <div class="container">
             <div class="section-header">
-                <h2>Aina za Makao</h2>
-                <p>Chagua kati ya aina mbalimbali za nyumba zinazokidhi mahitaji yako na bajeti yako</p>
+                <h2 class="section-title">Nyumba Zilizoangaziwa</h2>
+                <p class="section-subtitle">Gundua nyumba bora zilizochaguliwa kwa uangalifu na wataalam wetu wa mali isiyohamishika</p>
             </div>
             
-            <div class="categories-grid">
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-bed"></i>
-                    </div>
-                    <h3>Bedsitter</h3>
-                    <p>Chumba kimoja chenye sehemu ya kulala, jiko na bafu kwa urahisi wa maisha</p>
-                    <div class="category-price">TZS 80,000+</div>
+            <div class="section-actions">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">Zote</button>
+                    <button class="filter-btn" data-filter="rent">Kupanga</button>
+                    <button class="filter-btn" data-filter="buy">Kuuza</button>
+                    <button class="filter-btn" data-filter="new">Mipya</button>
+                    <button class="filter-btn" data-filter="featured">Iliyoangaziwa</button>
                 </div>
-                
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-door-closed"></i>
-                    </div>
-                    <h3>Single Room</h3>
-                    <p>Chumba cha kulala pekee chenye bafu na jiko la pamoja kwa gharama nafuu</p>
-                    <div class="category-price">TZS 50,000+</div>
-                </div>
-                
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-building"></i>
-                    </div>
-                    <h3>Apartment</h3>
-                    <p>Nyumba yenye vyumba vingi, jiko na bafu binafsi kwa familia na wafanyakazi</p>
-                    <div class="category-price">TZS 300,000+</div>
-                </div>
-                
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-house-user"></i>
-                    </div>
-                    <h3>Nyumba</h3>
-                    <p>Nyumba ya kujitegemea na vyumba vingi vya kulala kwa familia kubwa</p>
-                    <div class="category-price">TZS 500,000+</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Properties -->
-    <section class="featured-properties">
-        <div class="container">
-            <div class="section-header-with-controls">
-                <div>
-                    <h2>Nyumba Zilizoangaziwa</h2>
-                    <p>Gundua nyumba bora zilizochaguliwa kwa uangalifu na wataalam wetu</p>
-                </div>
-                <a href="properties.html" class="btn btn-outline">Angalia Zote <i class="fas fa-arrow-right"></i></a>
+                <a href="properties.html" class="btn btn-outline">
+                    Angalia Zote <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
             
             <div class="properties-grid">
                 <!-- Property 1 -->
-                <div class="property-card">
+                <div class="property-card" data-type="rent" data-featured="true">
                     <div class="property-image">
                         <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Bedsitter Sinza">
-                        <span class="property-badge">Inapatikana</span>
+                        <span class="property-badge featured">Iliyoangaziwa</span>
                         <div class="property-actions">
                             <button class="property-action-btn favorite-btn" data-property="1">
                                 <i class="far fa-heart"></i>
@@ -1716,12 +2150,12 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Property 2 -->
-                <div class="property-card">
+                <div class="property-card" data-type="rent" data-new="true">
                     <div class="property-image">
                         <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Apartment Masaki">
-                        <span class="property-badge featured">Iliyoangaziwa</span>
+                        <span class="property-badge new">Mpya</span>
                         <div class="property-actions">
                             <button class="property-action-btn favorite-btn" data-property="2">
                                 <i class="far fa-heart"></i>
@@ -1766,12 +2200,12 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Property 3 -->
-                <div class="property-card">
+                <div class="property-card" data-type="buy" data-featured="true">
                     <div class="property-image">
-                        <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Chumba Mbezi">
-                        <span class="property-badge new">Mpya</span>
+                        <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Studio Mikocheni">
+                        <span class="property-badge sale">Inauzwa</span>
                         <div class="property-actions">
                             <button class="property-action-btn favorite-btn" data-property="3">
                                 <i class="far fa-heart"></i>
@@ -1783,15 +2217,15 @@
                     </div>
                     <div class="property-info">
                         <div class="property-header">
-                            <h3>Chumba Mbezi</h3>
-                            <p class="property-location"><i class="fas fa-map-marker-alt"></i> Mbezi, Dar es Salaam</p>
+                            <h3>Studio Mikocheni</h3>
+                            <p class="property-location"><i class="fas fa-map-marker-alt"></i> Mikocheni, Dar es Salaam</p>
                         </div>
-                        <p class="property-description">Chumba kizuri chenye jiko la kisasa, bafu binafsi, na usalama mzuri. Karibu na barabara kuu na vituo vya usafiri.</p>
+                        <p class="property-description">Studio ya kisasa yenye vifaa vyote vya kisasa. Inauzwa, sio kukodishwa. Nafasi nzuri ya kuwekeza katika eneo bora.</p>
                         
                         <div class="property-features">
                             <div class="property-feature">
                                 <i class="fas fa-bed"></i>
-                                <span>1 Chumba</span>
+                                <span>Studio</span>
                             </div>
                             <div class="property-feature">
                                 <i class="fas fa-bath"></i>
@@ -1799,18 +2233,18 @@
                             </div>
                             <div class="property-feature">
                                 <i class="fas fa-ruler-combined"></i>
-                                <span>25 m²</span>
+                                <span>40 m²</span>
                             </div>
                             <div class="property-feature">
-                                <i class="fas fa-tv"></i>
-                                <span>TV</span>
+                                <i class="fas fa-swimming-pool"></i>
+                                <span>Pool</span>
                             </div>
                         </div>
                         
                         <div class="property-footer">
                             <div class="property-price">
-                                <h4>TZS 98,000</h4>
-                                <span>/mwezi</span>
+                                <h4>TZS 180,000,000</h4>
+                                <span>/kumiliki</span>
                             </div>
                             <a href="property-detail.html" class="btn btn-primary">Angalia Zaidi</a>
                         </div>
@@ -1820,66 +2254,108 @@
         </div>
     </section>
 
-    <!-- How It Works -->
-    <section class="how-it-works">
+    <!-- Categories -->
+    <section class="categories-section" id="categories">
         <div class="container">
             <div class="section-header">
-                <h2>Jinsi Inavyofanya Kazi</h2>
-                <p>Hatua tatu rahisi kupata nyumba ya ndoto zako kwa urahisi na uhakika</p>
+                <h2 class="section-title">Aina za Makao</h2>
+                <p class="section-subtitle">Chagua kati ya aina mbalimbali za nyumba zinazokidhi mahitaji yako na bajeti yako</p>
             </div>
             
-            <div class="steps">
-                <div class="step">
-                    <div class="step-content">
-                        <div class="step-icon">
-                            <i class="fas fa-search"></i>
-                        </div>
-                        <h3>Tafuta</h3>
-                        <p>Tumia vichujio vyetu vya hali ya juu kupata nyumba inayokidhi mahitaji yako katika eneo unalopenda. Tuna orodha ya nyumba 5,000+ kutoka maeneo yote Tanzania.</p>
+            <div class="categories-grid">
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-bed"></i>
                     </div>
+                    <h3>Bedsitter</h3>
+                    <p>Chumba kimoja chenye sehemu ya kulala, jiko na bafu kwa urahisi wa maisha ya mjini</p>
+                    <div class="category-price">TZS 80,000+</div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-door-closed"></i>
+                    </div>
+                    <h3>Single Room</h3>
+                    <p>Chumba cha kulala pekee chenye bafu na jiko la pamoja kwa gharama nafuu zaidi</p>
+                    <div class="category-price">TZS 50,000+</div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>Apartment</h3>
+                    <p>Nyumba yenye vyumba vingi, jiko na bafu binafsi kwa familia na wafanyakazi wenye kipato</p>
+                    <div class="category-price">TZS 300,000+</div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-house-user"></i>
+                    </div>
+                    <h3>Nyumba</h3>
+                    <p>Nyumba ya kujitegemea na vyumba vingi vya kulala kwa familia kubwa na mahitaji makubwa</p>
+                    <div class="category-price">TZS 500,000+</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Jinsi Inavyofanya Kazi</h2>
+                <p class="section-subtitle">Hatua tatu rahisi kupata nyumba ya ndoto zako kwa urahisi na uhakika kamili</p>
+            </div>
+            
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Tafuta Nyumba</h3>
+                    <p>Tumia vichujio vyetu vya hali ya juu kupata nyumba inayokidhi mahitaji yako katika eneo unalopenda. Tuna orodha ya nyumba 5,000+ kutoka maeneo yote Tanzania.</p>
                 </div>
                 
                 <div class="step">
-                    <div class="step-content">
-                        <div class="step-icon">
-                            <i class="fas fa-eye"></i>
-                        </div>
-                        <h3>Angalia</h3>
-                        <p>Panga uangalizi wa nyumba kupitia mfumo wetu au wasiliana na mwenye nyumba moja kwa moja. Tuna timu ya wakala wanao weza kukusaidia.</p>
+                    <div class="step-icon">
+                        <i class="fas fa-eye"></i>
                     </div>
+                    <h3>Angalia na Hakiki</h3>
+                    <p>Panga uangalizi wa nyumba kupitia mfumo wetu au wasiliana na mwenye nyumba moja kwa moja. Tuna timu ya wakala wanao weza kukusaidia kwenye mchakato wote.</p>
                 </div>
                 
                 <div class="step">
-                    <div class="step-content">
-                        <div class="step-icon">
-                            <i class="fas fa-file-contract"></i>
-                        </div>
-                        <h3>Hifadhi</h3>
-                        <p>Maliza mikataba, lipa kwa njia salama, na upate nyumba yako kwa urahisi na uhakika. Tuna mikataba ya kisheria inayokulinda.</p>
+                    <div class="step-icon">
+                        <i class="fas fa-file-contract"></i>
                     </div>
+                    <h3>Hifadhi na Kaa Makazi</h3>
+                    <p>Maliza mikataba, lipa kwa njia salama, na upate nyumba yako kwa urahisi na uhakika. Tuna mikataba ya kisheria inayokulinda wote.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Stats -->
-    <section class="stats">
+    <section class="stats-section" id="stats">
         <div class="container">
             <div class="stats-grid">
                 <div class="stat-item">
-                    <h3>98%</h3>
+                    <h3><span class="counter" data-count="98">98</span>%</h3>
                     <p>Wateja Waliokuridhika</p>
                 </div>
                 <div class="stat-item">
-                    <h3>24/7</h3>
+                    <h3><span class="counter" data-count="24">24</span>/<span class="counter" data-count="7">7</span></h3>
                     <p>Huduma ya Wateja</p>
                 </div>
                 <div class="stat-item">
-                    <h3>15+</h3>
+                    <h3><span class="counter" data-count="15">15</span>+</h3>
                     <p>Miaka ya Uzoefu</p>
                 </div>
                 <div class="stat-item">
-                    <h3>50+</h3>
+                    <h3><span class="counter" data-count="50">50</span>+</h3>
                     <p>Wafanyakazi</p>
                 </div>
             </div>
@@ -1887,11 +2363,11 @@
     </section>
 
     <!-- Locations -->
-    <section class="locations">
+    <section class="locations-section" id="locations">
         <div class="container">
             <div class="section-header">
-                <h2>Maeneo Maarufu</h2>
-                <p>Pata nyumba katika maeneo bora ya Tanzania yenye miundombinu bora</p>
+                <h2 class="section-title">Maeneo Maarufu</h2>
+                <p class="section-subtitle">Pata nyumba katika maeneo bora ya Tanzania yenye miundombinu bora na usalama</p>
             </div>
             
             <div class="locations-grid">
@@ -1931,63 +2407,75 @@
     </section>
 
     <!-- Testimonials -->
-    <section class="testimonials">
+    <section class="testimonials-section" id="testimonials">
         <div class="container">
             <div class="section-header">
-                <h2>Wateja Wetu Wanachosema</h2>
-                <p>Usikilize kutoka kwa wateja wetu waliofurahia huduma yetu ya kupata nyumba bora</p>
+                <h2 class="section-title">Wateja Wetu Wanachosema</h2>
+                <p class="section-subtitle">Usikilize kutoka kwa wateja wetu waliofurahia huduma yetu ya kupata nyumba bora</p>
             </div>
             
-            <div class="testimonials-slider">
-                <div class="testimonial-card">
-                    <div class="testimonial-quote">
-                        "Nilipata nyumba nzuri kabisa katika eneo nililotaka kwa bei nafuu. Huduma ya HouseLink ni ya haraka na ya uhakika. Nimeweza kupanga nyumba ndani ya siku 3 tu!"
+            <div class="testimonials-slider swiper">
+                <div class="swiper-wrapper">
+                    <div class="testimonial-card swiper-slide">
+                        <div class="testimonial-quote">
+                            "Nilipata nyumba nzuri kabisa katika eneo nililotaka kwa bei nafuu. Huduma ya HouseLink ni ya haraka na ya uhakika. Nimeweza kupanga nyumba ndani ya siku 3 tu! Timu yao ilinisaidia kwenye kila hatua."
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://images.unsplash.com/photo-1494790108755-2616b786d4d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Sarah Juma" class="author-avatar">
+                            <div class="author-info">
+                                <h4>Sarah Juma</h4>
+                                <p>Mwanafunzi, Dar es Salaam</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="testimonial-author">
-                        <img src="https://images.unsplash.com/photo-1494790108755-2616b786d4d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Sarah Juma" class="author-avatar">
-                        <div class="author-info">
-                            <h4>Sarah Juma</h4>
-                            <p>Mwanafunzi, Dar es Salaam</p>
+                    
+                    <div class="testimonial-card swiper-slide">
+                        <div class="testimonial-quote">
+                            "Kama mwenye nyumba, nimeweza kukodisha nyumba yangu kwa urahisi kupitia HouseLink. Wateja wanaokuja ni wa kuaminika na mfumo wao wa malipo ni salama kabisa. Nimepata wakodishi wazuri kwa muda mrefu."
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="John Michael" class="author-avatar">
+                            <div class="author-info">
+                                <h4>John Michael</h4>
+                                <p>Mwenye Nyumba, Arusha</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card swiper-slide">
+                        <div class="testimonial-quote">
+                            "Nilihamisha kazi Dodoma na HouseLink ilinisaidia kupata nyumba haraka kabla ya kuanza kazi. Wakala wao walinisaidia kupata nyumba inayokidhi mahitaji yangu ya kifamilia. Asante kwa huduma nzuri!"
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Fatma Hassan" class="author-avatar">
+                            <div class="author-info">
+                                <h4>Fatma Hassan</h4>
+                                <p>Mfanyakazi Serikalini, Dodoma</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Partners -->
-    <section class="partners">
-        <div class="container">
-            <div class="section-header">
-                <h2>Washirika Wetu</h2>
-                <p>Tunashirikiana na taasisi muhimu kuhakikisha huduma bora na salama kwa wateja wetu</p>
-            </div>
-            
-            <div class="partners-grid">
-                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/8b/NMB_Bank_%28Tanzania%29_logo.svg/320px-NMB_Bank_%28Tanzania%29_logo.svg.png" alt="NMB Bank" class="partner-logo">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Crb_logo_2016.png/320px-Crb_logo_2016.png" alt="CRB" class="partner-logo">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Tanzania_Revenue_Authority_logo.png/320px-Tanzania_Revenue_Authority_logo.png" alt="TRA" class="partner-logo">
-                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d9/National_Housing_Corporation_%28Tanzania%29_logo.svg/320px-National_Housing_Corporation_%28Tanzania%29_logo.svg.png" alt="NHC" class="partner-logo">
+                <div class="swiper-pagination"></div>
             </div>
         </div>
     </section>
 
     <!-- CTA -->
-    <section class="cta">
+    <section class="cta-section" id="cta">
         <div class="container">
             <div class="cta-content">
                 <h2>Tayari Kupata Nyumba Yako?</h2>
-                <p>Jiunge na wamiliki wengine 25,000+ ambao wamepata nyumba bora kupitia HouseLink Tanzania. Anza safari yako ya kupata makao bora leo.</p>
+                <p>Jiunge na wamiliki wengine 25,000+ ambao wamepata nyumba bora kupitia HouseLink Tanzania. Anza safari yako ya kupata makao bora leo na ujione tofauti.</p>
                 <div class="cta-buttons">
                     <a href="signup.html" class="btn btn-secondary btn-large">Jisajili Sasa</a>
-                    <a href="properties.html" class="btn btn-outline btn-large">Angalia Nyumba</a>
+                    <a href="properties.html" class="btn btn-outline btn-large">Tazama Nyumba</a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="premium-footer">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-col">
@@ -1995,10 +2483,10 @@
                         <div class="logo-icon">HL</div>
                         <div class="logo-text">
                             <h1>HouseLink</h1>
-                            <span style="color: #94a3b8;">Tanzania | Nyumba Bora</span>
+                            <span style="color: var(--text-light);">Nyumba Bora Tanzania</span>
                         </div>
                     </div>
-                    <p>Nyumba bora Tanzania. Tupate nyumba unayotaka kwa urahisi, uhakika, na usalama kamili. Tunaongoza kwa huduma bora za mali isiyohamishika nchini.</p>
+                    <p>Jukwaa la kwanza la mali isiyohamishika nchini Tanzania. Tunaunganisha wamiliki wa nyumba na watafutaji kwa urahisi, uhakika, na usalama kamili.</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -2012,10 +2500,10 @@
                     <h3>Haraka Links</h3>
                     <ul class="footer-links">
                         <li><a href="index.html"><i class="fas fa-chevron-right"></i> Nyumbani</a></li>
-                        <li><a href="properties.html"><i class="fas fa-chevron-right"></i> Nyumba</a></li>
-                        <li><a href="sell.html"><i class="fas fa-chevron-right"></i> Uza Nyumba</a></li>
-                        <li><a href="rent.html"><i class="fas fa-chevron-right"></i> Panga Nyumba</a></li>
+                        <li><a href="properties.html"><i class="fas fa-chevron-right"></i> Tafuta Nyumba</a></li>
+                        <li><a href="sell.html"><i class="fas fa-chevron-right"></i> Tangaza Nyumba</a></li>
                         <li><a href="agents.html"><i class="fas fa-chevron-right"></i> Mawakala</a></li>
+                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> Kuhusu Sisi</a></li>
                     </ul>
                 </div>
                 
@@ -2068,189 +2556,11 @@
         </div>
     </footer>
 
-    <!-- Toast Container -->
-    <div class="toast" id="toast"></div>
-
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script>
         // DOM Ready
         document.addEventListener('DOMContentLoaded', function() {
-            // Theme Toggle
-            const themeToggle = document.getElementById('themeToggle');
-            const html = document.documentElement;
-            
-            themeToggle.addEventListener('click', () => {
-                html.classList.toggle('dark-theme');
-                const icon = themeToggle.querySelector('i');
-                if (html.classList.contains('dark-theme')) {
-                    icon.classList.remove('fa-moon');
-                    icon.classList.add('fa-sun');
-                    localStorage.setItem('theme', 'dark');
-                    showToast('Dark mode imewashwa', 'success');
-                } else {
-                    icon.classList.remove('fa-sun');
-                    icon.classList.add('fa-moon');
-                    localStorage.setItem('theme', 'light');
-                    showToast('Light mode imewashwa', 'success');
-                }
-            });
-            
-            // Check saved theme
-            if (localStorage.getItem('theme') === 'dark') {
-                html.classList.add('dark-theme');
-                themeToggle.querySelector('i').classList.remove('fa-moon');
-                themeToggle.querySelector('i').classList.add('fa-sun');
-            }
-            
-            // Navbar scroll effect
-            const navbar = document.getElementById('navbar');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-            });
-            
-            // Mobile Menu
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const navLinks = document.querySelector('.nav-links');
-            const navAuth = document.querySelector('.nav-auth');
-            
-            mobileMenuBtn.addEventListener('click', () => {
-                const isVisible = navLinks.style.display === 'flex';
-                
-                if (!isVisible) {
-                    navLinks.style.display = 'flex';
-                    navAuth.style.display = 'flex';
-                    navLinks.style.flexDirection = 'column';
-                    navAuth.style.flexDirection = 'column';
-                    navLinks.style.position = 'absolute';
-                    navLinks.style.top = '100%';
-                    navLinks.style.left = '0';
-                    navLinks.style.right = '0';
-                    navLinks.style.backgroundColor = 'white';
-                    navLinks.style.padding = '30px';
-                    navLinks.style.boxShadow = 'var(--shadow-xl)';
-                    navLinks.style.gap = '25px';
-                    navLinks.style.zIndex = '1000';
-                    
-                    navAuth.style.position = 'absolute';
-                    navAuth.style.top = 'calc(100% + 250px)';
-                    navAuth.style.left = '0';
-                    navAuth.style.right = '0';
-                    navAuth.style.backgroundColor = 'white';
-                    navAuth.style.padding = '30px';
-                    navAuth.style.boxShadow = 'var(--shadow-xl)';
-                    navAuth.style.gap = '20px';
-                    navAuth.style.zIndex = '1000';
-                    
-                    mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
-                } else {
-                    navLinks.style.display = '';
-                    navAuth.style.display = '';
-                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                }
-            });
-            
-            // Search Tabs
-            const searchTabs = document.querySelectorAll('.search-tab');
-            searchTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    searchTabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                });
-            });
-            
-            // Search Form
-            const searchForm = document.getElementById('searchForm');
-            searchForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                const location = document.getElementById('location').value;
-                const propertyType = document.getElementById('propertyType').value;
-                const priceRange = document.getElementById('priceRange').value;
-                
-                showToast(`Inatafuta nyumba: ${location || 'Maeneo yote'} | Aina: ${propertyType || 'Zote'} | Bei: ${priceRange || 'Yoyote'}`, 'info');
-                
-                // Simulate search
-                setTimeout(() => {
-                    showToast('Matokeo 243 yamepatikana', 'success');
-                }, 1000);
-            });
-            
-            // Favorite Buttons
-            const favoriteBtns = document.querySelectorAll('.favorite-btn');
-            favoriteBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const propertyId = btn.dataset.property;
-                    const icon = btn.querySelector('i');
-                    
-                    if (btn.classList.contains('active')) {
-                        btn.classList.remove('active');
-                        icon.classList.remove('fas');
-                        icon.classList.add('far');
-                        showToast('Imeondolewa kwenye vipendwa', 'info');
-                    } else {
-                        btn.classList.add('active');
-                        icon.classList.remove('far');
-                        icon.classList.add('fas');
-                        showToast('Imeongezwa kwenye vipendwa', 'success');
-                    }
-                });
-            });
-            
-            // Toast Function
-            function showToast(message, type = 'info') {
-                const toast = document.getElementById('toast');
-                const icons = {
-                    success: 'fa-check-circle',
-                    error: 'fa-exclamation-circle',
-                    info: 'fa-info-circle'
-                };
-                
-                toast.innerHTML = `
-                    <div class="toast-content">
-                        <i class="fas ${icons[type]} toast-icon"></i>
-                        <div class="toast-text">
-                            <h4>${type === 'success' ? 'Imefanikiwa!' : type === 'error' ? 'Hitilafu!' : 'Taarifa'}</h4>
-                            <p>${message}</p>
-                        </div>
-                    </div>
-                `;
-                
-                toast.className = `toast ${type} show`;
-                
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 3000);
-            }
-            
-            // Scroll Animations
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, observerOptions);
-            
-            // Observe elements
-            document.querySelectorAll('.fade-in').forEach(el => {
-                observer.observe(el);
-            });
-            
-            // Add fade-in class to elements
-            document.querySelectorAll('.category-card, .property-card, .step-content, .location-card, .stat-item').forEach(el => {
-                el.classList.add('fade-in');
-            });
-            
             // Initialize Swiper
             const swiper = new Swiper('.testimonials-slider', {
                 loop: true,
@@ -2267,8 +2577,201 @@
                     prevEl: '.swiper-button-prev',
                 },
             });
+
+            // Theme Toggle
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
             
-            // Location Cards Click
+            themeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                const icon = themeToggle.querySelector('i');
+                if (body.classList.contains('dark-mode')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                    localStorage.setItem('theme', 'dark');
+                    showToast('Dark mode imewashwa', 'success');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                    localStorage.setItem('theme', 'light');
+                    showToast('Light mode imewashwa', 'success');
+                }
+            });
+            
+            // Check saved theme
+            if (localStorage.getItem('theme') === 'dark') {
+                body.classList.add('dark-mode');
+                themeToggle.querySelector('i').classList.remove('fa-moon');
+                themeToggle.querySelector('i').classList.add('fa-sun');
+            }
+
+            // Header scroll effect
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Mobile Menu
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.createElement('div');
+            mobileMenu.className = 'mobile-menu hidden';
+            mobileMenu.innerHTML = `
+                <div class="mobile-menu-content">
+                    <div class="mobile-menu-header">
+                        <a href="index.html" class="premium-logo">
+                            <div class="logo-icon">HL</div>
+                            <div class="logo-text">
+                                <h1>HouseLink</h1>
+                                <span class="logo-tagline">Nyumba Bora Tanzania</span>
+                            </div>
+                        </a>
+                        <button class="mobile-menu-close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <ul class="mobile-nav-links">
+                        <li><a href="index.html" class="mobile-nav-link active"><i class="fas fa-home"></i> Nyumbani</a></li>
+                        <li><a href="properties.html" class="mobile-nav-link"><i class="fas fa-search"></i> Tafuta Nyumba</a></li>
+                        <li><a href="sell.html" class="mobile-nav-link"><i class="fas fa-plus-circle"></i> Tangaza Nyumba</a></li>
+                        <li><a href="agents.html" class="mobile-nav-link"><i class="fas fa-user-tie"></i> Mawakala</a></li>
+                        <li><a href="about.html" class="mobile-nav-link"><i class="fas fa-info-circle"></i> Kuhusu Sisi</a></li>
+                        <li><a href="contact.html" class="mobile-nav-link"><i class="fas fa-phone"></i> Wasiliana</a></li>
+                    </ul>
+                    <div class="mobile-auth-buttons">
+                        <a href="login.html" class="btn btn-outline btn-block">Ingia</a>
+                        <a href="signup.html" class="btn btn-primary btn-block">Jisajili</a>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(mobileMenu);
+
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+
+            mobileMenu.querySelector('.mobile-menu-close').addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                document.body.style.overflow = '';
+            });
+
+            // Search Tabs
+            document.querySelectorAll('.search-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                });
+            });
+
+            // Search Form
+            document.getElementById('searchForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const location = document.getElementById('location').value;
+                showToast(`Inatafuta nyumba katika: ${location || 'Maeneo yote Tanzania'}`, 'info');
+            });
+
+            // Filter Buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const filter = btn.dataset.filter;
+                    
+                    document.querySelectorAll('.property-card').forEach(card => {
+                        if (filter === 'all') {
+                            card.style.display = 'block';
+                        } else {
+                            const hasFilter = card.dataset.type === filter || 
+                                            card.dataset.featured === 'true' && filter === 'featured' ||
+                                            card.dataset.new === 'true' && filter === 'new';
+                            card.style.display = hasFilter ? 'block' : 'none';
+                        }
+                    });
+                });
+            });
+
+            // Favorite Buttons
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const icon = btn.querySelector('i');
+                    if (btn.classList.contains('active')) {
+                        btn.classList.remove('active');
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        showToast('Imeondolewa kwenye vipendwa', 'info');
+                    } else {
+                        btn.classList.add('active');
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        showToast('Imeongezwa kwenye vipendwa', 'success');
+                    }
+                });
+            });
+
+            // Animate counters
+            const counters = document.querySelectorAll('.counter');
+            counters.forEach(counter => {
+                const target = parseInt(counter.dataset.count);
+                let current = 0;
+                const increment = target / 50;
+                
+                const updateCounter = () => {
+                    if (current < target) {
+                        current += increment;
+                        counter.textContent = Math.ceil(current);
+                        setTimeout(updateCounter, 30);
+                    } else {
+                        counter.textContent = target;
+                    }
+                };
+                
+                // Start counter when in viewport
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            updateCounter();
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                });
+                
+                observer.observe(counter);
+            });
+
+            // Toast function
+            function showToast(message, type = 'info') {
+                const toastContainer = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `
+                    <div class="toast-content">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} toast-icon"></i>
+                        <div class="toast-text">
+                            <h4>${type === 'success' ? 'Imefanikiwa!' : type === 'error' ? 'Hitilafu!' : 'Taarifa'}</h4>
+                            <p>${message}</p>
+                        </div>
+                    </div>
+                `;
+                
+                toastContainer.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.classList.add('show');
+                }, 10);
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 300);
+                }, 3000);
+            }
+
+            // Location cards click
             document.querySelectorAll('.location-card').forEach(card => {
                 card.addEventListener('click', () => {
                     const location = card.querySelector('h3').textContent;
@@ -2276,63 +2779,143 @@
                     showToast(`Eneo limewekwa: ${location}`, 'info');
                 });
             });
-            
-            // Category Cards Click
+
+            // Category cards click
             document.querySelectorAll('.category-card').forEach(card => {
                 card.addEventListener('click', () => {
-                    const type = card.querySelector('h3').textContent;
-                    document.getElementById('propertyType').value = type.toLowerCase().includes('bedsitter') ? 'bedsitter' : 
-                                                                   type.toLowerCase().includes('single') ? 'single-room' :
-                                                                   type.toLowerCase().includes('apartment') ? 'apartment' : 'house';
-                    showToast(`Aina ya nyumba imewekwa: ${type}`, 'info');
+                    const type = card.querySelector('h3').textContent.toLowerCase();
+                    document.getElementById('propertyType').value = type.includes('bedsitter') ? 'bedsitter' : 
+                                                                   type.includes('single') ? 'single-room' :
+                                                                   type.includes('apartment') ? 'apartment' : 'house';
+                    showToast(`Aina ya nyumba imewekwa: ${card.querySelector('h3').textContent}`, 'info');
                 });
             });
+
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Add CSS for mobile menu
+            const mobileMenuStyles = `
+                .mobile-menu {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0,0,0,0.8);
+                    backdrop-filter: blur(10px);
+                    z-index: 2000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                
+                .mobile-menu-content {
+                    background: var(--light-1);
+                    width: 90%;
+                    max-width: 400px;
+                    border-radius: var(--radius-xl);
+                    padding: var(--space-xl);
+                    max-height: 90vh;
+                    overflow-y: auto;
+                }
+                
+                .dark-mode .mobile-menu-content {
+                    background: var(--dark-2);
+                }
+                
+                .mobile-menu-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: var(--space-xl);
+                }
+                
+                .mobile-menu-close {
+                    width: 44px;
+                    height: 44px;
+                    border-radius: var(--radius);
+                    background: var(--light-3);
+                    border: none;
+                    color: var(--text-primary);
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: var(--transition);
+                }
+                
+                .dark-mode .mobile-menu-close {
+                    background: var(--dark-3);
+                    color: var(--light-1);
+                }
+                
+                .mobile-menu-close:hover {
+                    background: var(--light-4);
+                }
+                
+                .dark-mode .mobile-menu-close:hover {
+                    background: var(--dark-4);
+                }
+                
+                .mobile-nav-links {
+                    list-style: none;
+                    margin-bottom: var(--space-xl);
+                }
+                
+                .mobile-nav-links li {
+                    margin-bottom: var(--space-sm);
+                }
+                
+                .mobile-nav-link {
+                    display: flex;
+                    align-items: center;
+                    gap: var(--space-md);
+                    padding: var(--space-md) var(--space-lg);
+                    background: var(--light-3);
+                    border-radius: var(--radius);
+                    color: var(--text-primary);
+                    text-decoration: none;
+                    transition: var(--transition);
+                }
+                
+                .dark-mode .mobile-nav-link {
+                    background: var(--dark-3);
+                    color: var(--light-1);
+                }
+                
+                .mobile-nav-link:hover,
+                .mobile-nav-link.active {
+                    background: var(--primary);
+                    color: white;
+                    transform: translateX(10px);
+                }
+                
+                .mobile-auth-buttons {
+                    display: flex;
+                    flex-direction: column;
+                    gap: var(--space-md);
+                }
+            `;
+            
+            const styleSheet = document.createElement('style');
+            styleSheet.textContent = mobileMenuStyles;
+            document.head.appendChild(styleSheet);
         });
-        
-        // Add dark theme styles
-        const darkThemeStyles = `
-            .dark-theme {
-                --dark: #f8fafc;
-                --light: #0f172a;
-                --darker: #020617;
-                --gray: #cbd5e1;
-                --gray-light: #334155;
-                --gray-dark: #e2e8f0;
-            }
-            
-            .dark-theme .navbar {
-                background: rgba(15, 23, 42, 0.95);
-                backdrop-filter: blur(10px);
-            }
-            
-            .dark-theme .category-card,
-            .dark-theme .property-card,
-            .dark-theme .step-content,
-            .dark-theme .hero-search {
-                background: #1e293b;
-                color: var(--gray-dark);
-            }
-            
-            .dark-theme .form-control {
-                background: #334155;
-                border-color: #475569;
-                color: white;
-            }
-            
-            .dark-theme .btn-outline {
-                color: white;
-                border-color: white;
-            }
-            
-            .dark-theme .btn-outline:hover {
-                background: white;
-                color: var(--dark);
-            }
-        `;
-        
-        const styleSheet = document.createElement('style');
-        styleSheet.textContent = darkThemeStyles;
-        document.head.appendChild(styleSheet);
     </script>
 </body>
 </html>
