@@ -3,198 +3,1470 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HouseLink Tanzania - Nyumba Bora Tanzania</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>HouseLink Tanzania | Nyumba Bora Tanzania</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <style>
-        /* Additional styles for enhanced homepage */
-        .categories {
-            padding: 60px 0;
-            background-color: #f8fafc;
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary: #10b981;
+            --secondary-dark: #0da271;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --gray-dark: #475569;
+            
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-dark: linear-gradient(135deg, var(--darker), var(--dark));
+            --gradient-light: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1);
+            --shadow-xl: 0 25px 50px -12px rgba(0,0,0,0.25);
+            
+            --radius-sm: 8px;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Top Bar - Premium */
+        .top-bar {
+            background: var(--gradient-dark);
+            color: white;
+            padding: 10px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .top-bar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .top-contact {
+            display: flex;
+            gap: 25px;
+        }
+
+        .top-contact span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .top-contact span:hover {
+            color: var(--primary-light);
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .language-selector {
+            position: relative;
+        }
+
+        .language-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .language-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Navigation - Premium */
+        .navbar {
+            background: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--dark);
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--gradient-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+            font-weight: 800;
+            font-size: 1.3rem;
+            box-shadow: var(--shadow);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text span {
+            font-size: 0.8rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            padding: 8px 0;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-full);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-auth {
+            display: flex;
+            gap: 12px;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--dark);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn:hover {
+            background: var(--gray-light);
+        }
+
+        /* Buttons - Premium */
+        .btn {
+            padding: 12px 28px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary-dark);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .btn-dark {
+            background: var(--dark);
+            color: white;
+        }
+
+        .btn-dark:hover {
+            background: var(--darker);
+            transform: translateY(-3px);
+        }
+
+        .btn-large {
+            padding: 16px 36px;
+            font-size: 1.1rem;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        /* Hero Section - Premium */
+        .hero {
+            padding: 100px 0;
+            background: var(--gradient-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: var(--gray-dark);
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat h3 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .hero-stat p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .hero-search {
+            background: white;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            transform: translateY(0);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .search-header {
+            margin-bottom: 30px;
+        }
+
+        .search-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .search-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .search-tab {
+            padding: 10px 20px;
+            background: var(--gray-light);
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group label i {
+            color: var(--primary);
+        }
+
+        .form-control {
+            padding: 15px 20px;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Categories - Premium */
+        .categories {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
         .categories-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
         }
-        
+
         .category-card {
             background: white;
-            padding: 30px;
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
+            padding: 40px 30px;
             text-align: center;
             box-shadow: var(--shadow);
             transition: var(--transition);
-            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
         }
-        
+
         .category-card:hover {
             transform: translateY(-10px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
         }
-        
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
         .category-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-light);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 25px;
+            transition: var(--transition);
+        }
+
+        .category-card:hover .category-icon {
+            background: var(--gradient-primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .category-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .category-card p {
+            color: var(--gray);
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .category-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Featured Properties - Premium */
+        .featured-properties {
+            padding: 100px 0;
+            background: var(--light);
+        }
+
+        .section-header-with-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .property-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .property-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .property-image {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .property-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .property-card:hover .property-image img {
+            transform: scale(1.1);
+        }
+
+        .property-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .property-badge.featured {
+            background: var(--accent);
+        }
+
+        .property-badge.sale {
+            background: var(--danger);
+        }
+
+        .property-badge.new {
+            background: var(--secondary);
+        }
+
+        .property-actions {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 2;
+        }
+
+        .property-action-btn {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .property-action-btn:hover,
+        .property-action-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .property-info {
+            padding: 30px;
+        }
+
+        .property-header {
+            margin-bottom: 15px;
+        }
+
+        .property-header h3 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .property-location {
+            color: var(--gray);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .property-description {
+            color: var(--gray-dark);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .property-features {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .property-feature {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .property-feature i {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .property-feature span {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .property-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .property-price h4 {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .property-price span {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* How It Works - Premium */
+        .how-it-works {
+            padding: 100px 0;
+            background: var(--gradient-light);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            counter-reset: step;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            margin: 0 auto 20px;
-        }
-        
-        .category-card h3 {
-            margin-bottom: 10px;
-            font-size: 1.3rem;
-        }
-        
-        .category-card p {
-            color: var(--gray);
-            font-size: 0.95rem;
-        }
-        
-        .testimonials {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-        }
-        
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-        
-        .testimonial-card {
-            background: white;
-            padding: 30px;
-            border-radius: var(--radius);
+            font-size: 1.5rem;
+            font-weight: 700;
             box-shadow: var(--shadow);
-            position: relative;
+            z-index: 2;
         }
-        
-        .testimonial-card:before {
-            content: '"';
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            font-size: 4rem;
+
+        .step-content {
+            background: white;
+            padding: 60px 30px 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            margin-top: 30px;
+            transition: var(--transition);
+        }
+
+        .step:hover .step-content {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-light);
             color: var(--primary);
-            opacity: 0.2;
-            font-family: serif;
-        }
-        
-        .testimonial-text {
-            font-style: italic;
-            margin-bottom: 25px;
-            color: var(--gray);
-            line-height: 1.8;
-        }
-        
-        .testimonial-author {
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 15px;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 25px;
+            transition: var(--transition);
         }
-        
-        .author-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        
-        .author-info h4 {
-            margin-bottom: 5px;
-            font-size: 1.1rem;
-        }
-        
-        .author-info p {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-        
-        .stats-section {
-            padding: 60px 0;
-            background-color: var(--dark);
+
+        .step:hover .step-icon {
+            background: var(--gradient-primary);
             color: white;
         }
-        
+
+        .step h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .step p {
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        /* Stats - Premium */
+        .stats {
+            padding: 100px 0;
+            background: var(--gradient-dark);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+        }
+
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-item {
             text-align: center;
+            padding: 40px 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: var(--transition);
         }
-        
+
+        .stat-item:hover {
+            transform: translateY(-10px);
+            background: rgba(255,255,255,0.1);
+        }
+
         .stat-item h3 {
-            font-size: 3rem;
-            color: var(--secondary);
-            margin-bottom: 10px;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        
+
         .stat-item p {
             font-size: 1.1rem;
             opacity: 0.9;
         }
-        
-        .partners {
-            padding: 60px 0;
+
+        /* Locations - Premium */
+        .locations {
+            padding: 100px 0;
+            background: white;
         }
-        
+
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .location-card {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            height: 300px;
+            cursor: pointer;
+        }
+
+        .location-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .location-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .location-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px;
+            color: white;
+        }
+
+        .location-overlay h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .location-overlay p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Testimonials - Premium */
+        .testimonials {
+            padding: 100px 0;
+            background: var(--light);
+        }
+
+        .testimonials-slider {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 50px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin: 0 20px;
+        }
+
+        .testimonial-quote {
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--gray-dark);
+            margin-bottom: 40px;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .testimonial-quote::before,
+        .testimonial-quote::after {
+            content: '"';
+            font-size: 4rem;
+            color: var(--primary);
+            opacity: 0.2;
+            position: absolute;
+        }
+
+        .testimonial-quote::before {
+            top: -20px;
+            left: -20px;
+        }
+
+        .testimonial-quote::after {
+            bottom: -40px;
+            right: -20px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .author-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+        }
+
+        .author-info h4 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .author-info p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        /* Partners - Premium */
+        .partners {
+            padding: 80px 0;
+            background: white;
+        }
+
         .partners-grid {
             display: flex;
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            gap: 40px;
-            margin-top: 40px;
+            gap: 50px;
         }
-        
+
         .partner-logo {
-            height: 60px;
+            height: 50px;
+            opacity: 0.6;
             filter: grayscale(100%);
-            opacity: 0.7;
             transition: var(--transition);
         }
-        
+
         .partner-logo:hover {
-            filter: grayscale(0);
             opacity: 1;
+            filter: grayscale(0);
+            transform: scale(1.1);
         }
-        
-        .hero-stats {
+
+        /* CTA - Premium */
+        .cta {
+            padding: 120px 0;
+            background: var(--gradient-primary);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100"><path d="M0,100 Q250,50 500,100 T1000,100 L1000,0 L0,0 Z" fill="%23ffffff" opacity="0.1"/></svg>');
+            background-size: cover;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-content p {
+            font-size: 1.3rem;
+            margin-bottom: 50px;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
             display: flex;
-            gap: 30px;
-            margin-top: 40px;
+            gap: 20px;
+            justify-content: center;
             flex-wrap: wrap;
         }
-        
-        .hero-stat {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: var(--radius);
-            min-width: 150px;
-            box-shadow: var(--shadow);
+
+        /* Footer - Premium */
+        .footer {
+            background: var(--darker);
+            color: white;
+            padding: 80px 0 20px;
         }
-        
-        .hero-stat h4 {
-            font-size: 2rem;
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+
+        .footer-col h3 {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: white;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-full);
+        }
+
+        .footer-col p {
+            color: #94a3b8;
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer-contact li {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+            color: #94a3b8;
+        }
+
+        .footer-contact i {
             color: var(--primary);
-            margin-bottom: 5px;
+            font-size: 1.2rem;
+            margin-top: 3px;
         }
-        
-        .hero-stat p {
-            color: var(--gray);
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .social-links a {
+            width: 45px;
+            height: 45px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 12px 15px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius);
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        .newsletter-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-bottom p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .footer-bottom-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .footer-bottom-links a:hover {
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+            
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+            
+            .properties-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links,
+            .nav-auth {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .top-bar-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .top-contact {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header h2 {
+                font-size: 2.2rem;
+            }
+            
+            .cta-content h2 {
+                font-size: 2.2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .properties-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .testimonial-card {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: white;
+            padding: 20px 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-xl);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 9999;
+            max-width: 350px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--secondary);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast.info {
+            border-left: 4px solid var(--primary);
+        }
+
+        .toast-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+        }
+
+        .toast.success .toast-icon {
+            color: var(--secondary);
+        }
+
+        .toast.error .toast-icon {
+            color: var(--danger);
+        }
+
+        .toast.info .toast-icon {
+            color: var(--primary);
+        }
+
+        .toast-text h4 {
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .toast-text p {
             font-size: 0.9rem;
+            color: var(--gray);
         }
     </style>
 </head>
@@ -203,49 +1475,58 @@
     <div class="top-bar">
         <div class="container">
             <div class="top-bar-content">
-                <div class="contact-info">
+                <div class="top-contact">
                     <span><i class="fas fa-phone"></i> +255 712 345 678</span>
                     <span><i class="fas fa-envelope"></i> info@houselink.co.tz</span>
+                    <span><i class="fas fa-clock"></i> Jumamosi - Alhamisi: 8:00 - 18:00</span>
                 </div>
-                <div class="top-bar-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <select id="language-switcher">
-                        <option value="sw">Swahili</option>
-                        <option value="en">English</option>
-                    </select>
-                    <button id="dark-mode-toggle"><i class="fas fa-moon"></i></button>
+                <div class="top-actions">
+                    <div class="language-selector">
+                        <button class="language-btn">
+                            <i class="fas fa-globe"></i>
+                            <span>Swahili</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="container">
             <div class="nav-content">
                 <a href="index.html" class="logo">
                     <div class="logo-icon">HL</div>
-                    <h1>HouseLink<span>Tanzania</span></h1>
+                    <div class="logo-text">
+                        <h1>HouseLink</h1>
+                        <span>Tanzania | Nyumba Bora</span>
+                    </div>
                 </a>
                 
                 <div class="nav-links">
                     <a href="index.html" class="active">Nyumbani</a>
                     <a href="properties.html">Nyumba</a>
-                    <a href="upload.html">Weka Tangazo</a>
+                    <a href="sell.html">Uza Nyumba</a>
+                    <a href="rent.html">Panga Nyumba</a>
+                    <a href="agents.html">Mawakala</a>
                     <a href="about.html">Kuhusu Sisi</a>
                     <a href="contact.html">Wasiliana</a>
                 </div>
                 
-                <div class="nav-auth">
-                    <a href="login.html" class="btn btn-outline">Ingia</a>
-                    <a href="signup.html" class="btn btn-primary">Jisajili</a>
+                <div class="nav-actions">
+                    <div class="nav-auth">
+                        <a href="login.html" class="btn btn-outline">Ingia</a>
+                        <a href="signup.html" class="btn btn-primary">Jisajili</a>
+                    </div>
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
                 </div>
-                
-                <button class="mobile-menu-btn">
-                    <i class="fas fa-bars"></i>
-                </button>
             </div>
         </div>
     </nav>
@@ -256,64 +1537,71 @@
             <div class="hero-content">
                 <div class="hero-text">
                     <h1>Tafuta Nyumba Bora Tanzania</h1>
-                    <p>Ungana na makao bora katika maeneo mbalimbali ya Tanzania. Tuna nyumba za kupanga na kuuza kwa bei nafuu.</p>
+                    <p>Ungana na makao bora katika maeneo mbalimbali ya Tanzania. Tuna nyumba za kupanga na kuuza kwa bei nafuu na uhakika kamili.</p>
                     
-                    <div class="search-box">
-                        <form id="main-search-form">
-                            <div class="search-input">
-                                <i class="fas fa-search"></i>
-                                <input type="text" id="search-input" placeholder="Tafuta eneo, aina ya nyumba..." required>
-                            </div>
-                            <div class="search-filters">
-                                <select id="location-select">
-                                    <option value="">Chagua Eneo</option>
-                                    <option value="dar">Dar es Salaam</option>
-                                    <option value="arusha">Arusha</option>
-                                    <option value="mwanza">Mwanza</option>
-                                    <option value="dodoma">Dodoma</option>
-                                    <option value="mbeya">Mbeya</option>
-                                    <option value="tanga">Tanga</option>
-                                    <option value="morogoro">Morogoro</option>
-                                </select>
-                                <select id="type-select">
-                                    <option value="">Aina ya Nyumba</option>
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <h3>5,000+</h3>
+                            <p>Nyumba Zilizotangazwa</p>
+                        </div>
+                        <div class="hero-stat">
+                            <h3>25,000+</h3>
+                            <p>Wateja Waliosajiliwa</p>
+                        </div>
+                        <div class="hero-stat">
+                            <h3>15+</h3>
+                            <p>Miji Inayohudumiwa</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hero-search">
+                    <div class="search-header">
+                        <h3>Tafuta Nyumba Yako</h3>
+                        <p>Jaza maelezo chini na upate nyumba unayotaka</p>
+                    </div>
+                    
+                    <div class="search-tabs">
+                        <button class="search-tab active">Panga</button>
+                        <button class="search-tab">Nunua</button>
+                    </div>
+                    
+                    <form class="search-form" id="searchForm">
+                        <div class="form-group">
+                            <label for="location"><i class="fas fa-map-marker-alt"></i> Eneo</label>
+                            <input type="text" class="form-control" id="location" placeholder="Andika eneo unalotaka" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="propertyType"><i class="fas fa-home"></i> Aina ya Nyumba</label>
+                                <select class="form-control" id="propertyType" required>
+                                    <option value="">Chagua aina ya nyumba</option>
                                     <option value="bedsitter">Bedsitter</option>
                                     <option value="single-room">Single Room</option>
                                     <option value="apartment">Apartment</option>
-                                    <option value="studio">Studio</option>
                                     <option value="house">Nyumba</option>
                                     <option value="commercial">Biashara</option>
                                 </select>
-                                <select id="price-select">
-                                    <option value="">Bei (TZS)</option>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="priceRange"><i class="fas fa-money-bill-wave"></i> Bei (TZS)</label>
+                                <select class="form-control" id="priceRange" required>
+                                    <option value="">Chagua bei</option>
                                     <option value="0-100000">Chini ya 100,000</option>
                                     <option value="100000-300000">100,000 - 300,000</option>
                                     <option value="300000-500000">300,000 - 500,000</option>
                                     <option value="500000-1000000">500,000 - 1,000,000</option>
                                     <option value="1000000+">Zaidi ya 1,000,000</option>
                                 </select>
-                                <button type="submit" class="btn btn-primary">Tafuta <i class="fas fa-search"></i></button>
                             </div>
-                        </form>
-                    </div>
-                    
-                    <div class="hero-stats">
-                        <div class="hero-stat">
-                            <h4>5,000+</h4>
-                            <p>Nyumba Zilizotangazwa</p>
                         </div>
-                        <div class="hero-stat">
-                            <h4>25,000+</h4>
-                            <p>Wateja Waliosajiliwa</p>
-                        </div>
-                        <div class="hero-stat">
-                            <h4>15+</h4>
-                            <p>Miji Inayohudumiwa</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="hero-image">
-                    <img src="https://images.unsplash.com/photo-1560184897-ae75f418493e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Modern House in Tanzania">
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-search"></i> Tafuta Nyumba
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -322,54 +1610,46 @@
     <!-- Categories -->
     <section class="categories">
         <div class="container">
-            <div class="section-title">
+            <div class="section-header">
                 <h2>Aina za Makao</h2>
-                <p>Chagua kati ya aina mbalimbali za nyumba zinazokidhi mahitaji yako</p>
+                <p>Chagua kati ya aina mbalimbali za nyumba zinazokidhi mahitaji yako na bajeti yako</p>
             </div>
             
             <div class="categories-grid">
-                <div class="category-card" onclick="filterByType('bedsitter')">
+                <div class="category-card">
                     <div class="category-icon">
-                        <i class="fas fa-home"></i>
+                        <i class="fas fa-bed"></i>
                     </div>
                     <h3>Bedsitter</h3>
-                    <p>Chumba kimoja chenye sehemu ya kulala, jiko na bafu</p>
-                    <div class="property-features" style="margin-top: 15px; border: none; justify-content: center;">
-                        <span>TZS 80,000+</span>
-                    </div>
+                    <p>Chumba kimoja chenye sehemu ya kulala, jiko na bafu kwa urahisi wa maisha</p>
+                    <div class="category-price">TZS 80,000+</div>
                 </div>
                 
-                <div class="category-card" onclick="filterByType('single-room')">
+                <div class="category-card">
                     <div class="category-icon">
                         <i class="fas fa-door-closed"></i>
                     </div>
                     <h3>Single Room</h3>
-                    <p>Chumba cha kulala pekee chenye bafu na jiko la pamoja</p>
-                    <div class="property-features" style="margin-top: 15px; border: none; justify-content: center;">
-                        <span>TZS 50,000+</span>
-                    </div>
+                    <p>Chumba cha kulala pekee chenye bafu na jiko la pamoja kwa gharama nafuu</p>
+                    <div class="category-price">TZS 50,000+</div>
                 </div>
                 
-                <div class="category-card" onclick="filterByType('apartment')">
+                <div class="category-card">
                     <div class="category-icon">
                         <i class="fas fa-building"></i>
                     </div>
                     <h3>Apartment</h3>
-                    <p>Nyumba yenye vyumba vingi, jiko na bafu binafsi</p>
-                    <div class="property-features" style="margin-top: 15px; border: none; justify-content: center;">
-                        <span>TZS 300,000+</span>
-                    </div>
+                    <p>Nyumba yenye vyumba vingi, jiko na bafu binafsi kwa familia na wafanyakazi</p>
+                    <div class="category-price">TZS 300,000+</div>
                 </div>
                 
-                <div class="category-card" onclick="filterByType('house')">
+                <div class="category-card">
                     <div class="category-icon">
                         <i class="fas fa-house-user"></i>
                     </div>
                     <h3>Nyumba</h3>
-                    <p>Nyumba ya kujitegemea na vyumba vingi vya kulala</p>
-                    <div class="property-features" style="margin-top: 15px; border: none; justify-content: center;">
-                        <span>TZS 500,000+</span>
-                    </div>
+                    <p>Nyumba ya kujitegemea na vyumba vingi vya kulala kwa familia kubwa</p>
+                    <div class="category-price">TZS 500,000+</div>
                 </div>
             </div>
         </div>
@@ -378,111 +1658,164 @@
     <!-- Featured Properties -->
     <section class="featured-properties">
         <div class="container">
-            <div class="section-title">
-                <h2>Nyumba Zilizoangaziwa</h2>
-                <p>Gundua nyumba bora zilizochaguliwa kwa uangalifu</p>
+            <div class="section-header-with-controls">
+                <div>
+                    <h2>Nyumba Zilizoangaziwa</h2>
+                    <p>Gundua nyumba bora zilizochaguliwa kwa uangalifu na wataalam wetu</p>
+                </div>
+                <a href="properties.html" class="btn btn-outline">Angalia Zote <i class="fas fa-arrow-right"></i></a>
             </div>
             
             <div class="properties-grid">
-                <!-- Property Card 1 -->
-                <div class="property-card" data-id="property-1">
+                <!-- Property 1 -->
+                <div class="property-card">
                     <div class="property-image">
-                        <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Modern Apartment">
+                        <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Bedsitter Sinza">
                         <span class="property-badge">Inapatikana</span>
-                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
+                        <div class="property-actions">
+                            <button class="property-action-btn favorite-btn" data-property="1">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <button class="property-action-btn">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="property-info">
-                        <h3>Bedsitter Sinza</h3>
-                        <p class="property-location"><i class="fas fa-map-marker-alt"></i> Sinza, Dar es Salaam</p>
+                        <div class="property-header">
+                            <h3>Bedsitter Sinza</h3>
+                            <p class="property-location"><i class="fas fa-map-marker-alt"></i> Sinza, Dar es Salaam</p>
+                        </div>
                         <p class="property-description">Bedsitter nzuri na maji 24/7, umeme wa kudumu, karibu na chuo kikuu na duka la karibu. Inafaa kwa wanafunzi na wafanyakazi.</p>
+                        
                         <div class="property-features">
-                            <span><i class="fas fa-bed"></i> Studio</span>
-                            <span><i class="fas fa-bath"></i> 1</span>
-                            <span><i class="fas fa-ruler-combined"></i> 35 m²</span>
-                            <span><i class="fas fa-wifi"></i> WiFi</span>
+                            <div class="property-feature">
+                                <i class="fas fa-bed"></i>
+                                <span>Studio</span>
+                            </div>
+                            <div class="property-feature">
+                                <i class="fas fa-bath"></i>
+                                <span>1 Bafu</span>
+                            </div>
+                            <div class="property-feature">
+                                <i class="fas fa-ruler-combined"></i>
+                                <span>35 m²</span>
+                            </div>
+                            <div class="property-feature">
+                                <i class="fas fa-wifi"></i>
+                                <span>WiFi</span>
+                            </div>
                         </div>
-                        <div class="property-price">
-                            <h4>TZS 135,000 <span>/mwezi</span></h4>
+                        
+                        <div class="property-footer">
+                            <div class="property-price">
+                                <h4>TZS 135,000</h4>
+                                <span>/mwezi</span>
+                            </div>
                             <a href="property-detail.html" class="btn btn-primary">Angalia Zaidi</a>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Property Card 2 -->
-                <div class="property-card" data-id="property-2">
+                <!-- Property 2 -->
+                <div class="property-card">
                     <div class="property-image">
-                        <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Luxury House">
+                        <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Apartment Masaki">
                         <span class="property-badge featured">Iliyoangaziwa</span>
-                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
+                        <div class="property-actions">
+                            <button class="property-action-btn favorite-btn" data-property="2">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <button class="property-action-btn">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="property-info">
-                        <h3>Apartment Masaki</h3>
-                        <p class="property-location"><i class="fas fa-map-marker-alt"></i> Masaki, Dar es Salaam</p>
+                        <div class="property-header">
+                            <h3>Apartment Masaki</h3>
+                            <p class="property-location"><i class="fas fa-map-marker-alt"></i> Masaki, Dar es Salaam</p>
+                        </div>
                         <p class="property-description">Apartment ya kisasa yenye mtazamo wa bahari, gym, na usalama kamili. Inafaa kwa familia na wafanyabiashara.</p>
+                        
                         <div class="property-features">
-                            <span><i class="fas fa-bed"></i> 2</span>
-                            <span><i class="fas fa-bath"></i> 2</span>
-                            <span><i class="fas fa-ruler-combined"></i> 85 m²</span>
-                            <span><i class="fas fa-car"></i> Parking</span>
+                            <div class="property-feature">
+                                <i class="fas fa-bed"></i>
+                                <span>2 Vyumba</span>
+                            </div>
+                            <div class="property-feature">
+                                <i class="fas fa-bath"></i>
+                                <span>2 Bafu</span>
+                            </div>
+                            <div class="property-feature">
+                                <i class="fas fa-ruler-combined"></i>
+                                <span>85 m²</span>
+                            </div>
+                            <div class="property-feature">
+                                <i class="fas fa-car"></i>
+                                <span>Parking</span>
+                            </div>
                         </div>
-                        <div class="property-price">
-                            <h4>TZS 950,000 <span>/mwezi</span></h4>
+                        
+                        <div class="property-footer">
+                            <div class="property-price">
+                                <h4>TZS 950,000</h4>
+                                <span>/mwezi</span>
+                            </div>
                             <a href="property-detail.html" class="btn btn-primary">Angalia Zaidi</a>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Property Card 3 -->
-                <div class="property-card" data-id="property-3">
+                <!-- Property 3 -->
+                <div class="property-card">
                     <div class="property-image">
-                        <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Cozy Room">
-                        <span class="property-badge">Mpya</span>
-                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
+                        <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Chumba Mbezi">
+                        <span class="property-badge new">Mpya</span>
+                        <div class="property-actions">
+                            <button class="property-action-btn favorite-btn" data-property="3">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <button class="property-action-btn">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="property-info">
-                        <h3>Chumba Mbezi</h3>
-                        <p class="property-location"><i class="fas fa-map-marker-alt"></i> Mbezi, Dar es Salaam</p>
+                        <div class="property-header">
+                            <h3>Chumba Mbezi</h3>
+                            <p class="property-location"><i class="fas fa-map-marker-alt"></i> Mbezi, Dar es Salaam</p>
+                        </div>
                         <p class="property-description">Chumba kizuri chenye jiko la kisasa, bafu binafsi, na usalama mzuri. Karibu na barabara kuu na vituo vya usafiri.</p>
+                        
                         <div class="property-features">
-                            <span><i class="fas fa-bed"></i> 1</span>
-                            <span><i class="fas fa-bath"></i> 1</span>
-                            <span><i class="fas fa-ruler-combined"></i> 25 m²</span>
-                            <span><i class="fas fa-tv"></i> TV</span>
+                            <div class="property-feature">
+                                <i class="fas fa-bed"></i>
+                                <span>1 Chumba</span>
+                            </div>
+                            <div class="property-feature">
+                                <i class="fas fa-bath"></i>
+                                <span>1 Bafu</span>
+                            </div>
+                            <div class="property-feature">
+                                <i class="fas fa-ruler-combined"></i>
+                                <span>25 m²</span>
+                            </div>
+                            <div class="property-feature">
+                                <i class="fas fa-tv"></i>
+                                <span>TV</span>
+                            </div>
                         </div>
-                        <div class="property-price">
-                            <h4>TZS 98,000 <span>/mwezi</span></h4>
+                        
+                        <div class="property-footer">
+                            <div class="property-price">
+                                <h4>TZS 98,000</h4>
+                                <span>/mwezi</span>
+                            </div>
                             <a href="property-detail.html" class="btn btn-primary">Angalia Zaidi</a>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Property Card 4 -->
-                <div class="property-card" data-id="property-4">
-                    <div class="property-image">
-                        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Modern Studio">
-                        <span class="property-badge">Inauzwa</span>
-                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
-                    </div>
-                    <div class="property-info">
-                        <h3>Studio Mikocheni</h3>
-                        <p class="property-location"><i class="fas fa-map-marker-alt"></i> Mikocheni, Dar es Salaam</p>
-                        <p class="property-description">Studio ya kisasa yenye vifaa vyote vya kisasa. Inauzwa, sio kukodishwa. Nafasi nzuri ya kuwekeza.</p>
-                        <div class="property-features">
-                            <span><i class="fas fa-bed"></i> Studio</span>
-                            <span><i class="fas fa-bath"></i> 1</span>
-                            <span><i class="fas fa-ruler-combined"></i> 40 m²</span>
-                            <span><i class="fas fa-swimming-pool"></i> Pool</span>
-                        </div>
-                        <div class="property-price">
-                            <h4>TZS 180,000,000 <span>/kumiliki</span></h4>
-                            <a href="property-detail.html" class="btn btn-primary">Angalia Zaidi</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="text-center">
-                <a href="properties.html" class="btn btn-secondary">Angalia Nyumba Zote <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
     </section>
@@ -490,41 +1823,47 @@
     <!-- How It Works -->
     <section class="how-it-works">
         <div class="container">
-            <div class="section-title">
+            <div class="section-header">
                 <h2>Jinsi Inavyofanya Kazi</h2>
-                <p>Hatua tatu rahisi kupata nyumba ya ndoto zako</p>
+                <p>Hatua tatu rahisi kupata nyumba ya ndoto zako kwa urahisi na uhakika</p>
             </div>
             
-            <div class="steps-grid">
+            <div class="steps">
                 <div class="step">
-                    <div class="step-icon">
-                        <i class="fas fa-search"></i>
+                    <div class="step-content">
+                        <div class="step-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>Tafuta</h3>
+                        <p>Tumia vichujio vyetu vya hali ya juu kupata nyumba inayokidhi mahitaji yako katika eneo unalopenda. Tuna orodha ya nyumba 5,000+ kutoka maeneo yote Tanzania.</p>
                     </div>
-                    <h3>Tafuta</h3>
-                    <p>Tumia vichujio vyetu kupata nyumba inayokidhi mahitaji yako katika eneo unalopenda</p>
                 </div>
                 
                 <div class="step">
-                    <div class="step-icon">
-                        <i class="fas fa-eye"></i>
+                    <div class="step-content">
+                        <div class="step-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3>Angalia</h3>
+                        <p>Panga uangalizi wa nyumba kupitia mfumo wetu au wasiliana na mwenye nyumba moja kwa moja. Tuna timu ya wakala wanao weza kukusaidia.</p>
                     </div>
-                    <h3>Angalia</h3>
-                    <p>Panga uangalizi wa nyumba kupitia mfumo wetu au wasiliana na mwenye nyumba moja kwa moja</p>
                 </div>
                 
                 <div class="step">
-                    <div class="step-icon">
-                        <i class="fas fa-file-contract"></i>
+                    <div class="step-content">
+                        <div class="step-icon">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <h3>Hifadhi</h3>
+                        <p>Maliza mikataba, lipa kwa njia salama, na upate nyumba yako kwa urahisi na uhakika. Tuna mikataba ya kisheria inayokulinda.</p>
                     </div>
-                    <h3>Hifadhi</h3>
-                    <p>Maliza mikataba, lipa kwa njia salama, na upate nyumba yako kwa urahisi na uhakika</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="stats-section">
+    <!-- Stats -->
+    <section class="stats">
         <div class="container">
             <div class="stats-grid">
                 <div class="stat-item">
@@ -550,39 +1889,39 @@
     <!-- Locations -->
     <section class="locations">
         <div class="container">
-            <div class="section-title">
+            <div class="section-header">
                 <h2>Maeneo Maarufu</h2>
-                <p>Pata nyumba katika maeneo bora ya Tanzania</p>
+                <p>Pata nyumba katika maeneo bora ya Tanzania yenye miundombinu bora</p>
             </div>
             
             <div class="locations-grid">
-                <div class="location-card" onclick="filterByLocation('dar')">
-                    <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Dar es Salaam">
-                    <div class="location-info">
+                <div class="location-card">
+                    <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Dar es Salaam">
+                    <div class="location-overlay">
                         <h3>Dar es Salaam</h3>
                         <p>240+ Nyumba</p>
                     </div>
                 </div>
                 
-                <div class="location-card" onclick="filterByLocation('arusha')">
-                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Arusha">
-                    <div class="location-info">
+                <div class="location-card">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Arusha">
+                    <div class="location-overlay">
                         <h3>Arusha</h3>
                         <p>180+ Nyumba</p>
                     </div>
                 </div>
                 
-                <div class="location-card" onclick="filterByLocation('mwanza')">
-                    <img src="https://images.unsplash.com/photo-1548013146-72479768bada?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Mwanza">
-                    <div class="location-info">
+                <div class="location-card">
+                    <img src="https://images.unsplash.com/photo-1548013146-72479768bada?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Mwanza">
+                    <div class="location-overlay">
                         <h3>Mwanza</h3>
                         <p>150+ Nyumba</p>
                     </div>
                 </div>
                 
-                <div class="location-card" onclick="filterByLocation('dodoma')">
-                    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Dodoma">
-                    <div class="location-info">
+                <div class="location-card">
+                    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Dodoma">
+                    <div class="location-overlay">
                         <h3>Dodoma</h3>
                         <p>120+ Nyumba</p>
                     </div>
@@ -594,47 +1933,21 @@
     <!-- Testimonials -->
     <section class="testimonials">
         <div class="container">
-            <div class="section-title">
+            <div class="section-header">
                 <h2>Wateja Wetu Wanachosema</h2>
-                <p>Usikilize kutoka kwa wateja wetu waliofurahia huduma yetu</p>
+                <p>Usikilize kutoka kwa wateja wetu waliofurahia huduma yetu ya kupata nyumba bora</p>
             </div>
             
-            <div class="testimonials-grid">
+            <div class="testimonials-slider">
                 <div class="testimonial-card">
-                    <div class="testimonial-text">
-                        "Nilipata nyumba nzuri kabisa katika eneo nililotaka kwa bei nafuu. Huduma ya HouseLink ni ya haraka na ya uhakika."
+                    <div class="testimonial-quote">
+                        "Nilipata nyumba nzuri kabisa katika eneo nililotaka kwa bei nafuu. Huduma ya HouseLink ni ya haraka na ya uhakika. Nimeweza kupanga nyumba ndani ya siku 3 tu!"
                     </div>
                     <div class="testimonial-author">
-                        <img src="https://images.unsplash.com/photo-1494790108755-2616b786d4d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Sarah Juma" class="author-avatar">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b786d4d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Sarah Juma" class="author-avatar">
                         <div class="author-info">
                             <h4>Sarah Juma</h4>
                             <p>Mwanafunzi, Dar es Salaam</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="testimonial-card">
-                    <div class="testimonial-text">
-                        "Kama mwenye nyumba, nimeweza kukodisha nyumba yangu kwa urahisi kupitia HouseLink. Wateja wanaokuja ni wa kuaminika."
-                    </div>
-                    <div class="testimonial-author">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="John Michael" class="author-avatar">
-                        <div class="author-info">
-                            <h4>John Michael</h4>
-                            <p>Mwenye Nyumba, Arusha</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="testimonial-card">
-                    <div class="testimonial-text">
-                        "Nilihamisha kazi Dodoma na HouseLink ilinisaidia kupata nyumba haraka kabla ya kuanza kazi. Asante kwa huduma nzuri!"
-                    </div>
-                    <div class="testimonial-author">
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Fatma Hassan" class="author-avatar">
-                        <div class="author-info">
-                            <h4>Fatma Hassan</h4>
-                            <p>Mfanyakazi Serikalini, Dodoma</p>
                         </div>
                     </div>
                 </div>
@@ -645,9 +1958,9 @@
     <!-- Partners -->
     <section class="partners">
         <div class="container">
-            <div class="section-title">
+            <div class="section-header">
                 <h2>Washirika Wetu</h2>
-                <p>Tunashirikiana na taasisi muhimu kuhakikisha huduma bora</p>
+                <p>Tunashirikiana na taasisi muhimu kuhakikisha huduma bora na salama kwa wateja wetu</p>
             </div>
             
             <div class="partners-grid">
@@ -659,15 +1972,15 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
+    <!-- CTA -->
     <section class="cta">
         <div class="container">
             <div class="cta-content">
                 <h2>Tayari Kupata Nyumba Yako?</h2>
-                <p>Jiunge na wamiliki wengine 25,000+ ambao wamepata nyumba bora kupitia HouseLink Tanzania</p>
+                <p>Jiunge na wamiliki wengine 25,000+ ambao wamepata nyumba bora kupitia HouseLink Tanzania. Anza safari yako ya kupata makao bora leo.</p>
                 <div class="cta-buttons">
-                    <a href="properties.html" class="btn btn-primary btn-large">Anza Kutafuta</a>
-                    <a href="signup.html" class="btn btn-outline btn-large">Jisajili Sasa</a>
+                    <a href="signup.html" class="btn btn-secondary btn-large">Jisajili Sasa</a>
+                    <a href="properties.html" class="btn btn-outline btn-large">Angalia Nyumba</a>
                 </div>
             </div>
         </div>
@@ -680,94 +1993,241 @@
                 <div class="footer-col">
                     <div class="logo">
                         <div class="logo-icon">HL</div>
-                        <h2>HouseLink<span>Tanzania</span></h2>
+                        <div class="logo-text">
+                            <h1>HouseLink</h1>
+                            <span style="color: #94a3b8;">Tanzania | Nyumba Bora</span>
+                        </div>
                     </div>
-                    <p>Nyumba bora Tanzania. Tupate nyumba unayotaka kwa urahisi na uhakika.</p>
+                    <p>Nyumba bora Tanzania. Tupate nyumba unayotaka kwa urahisi, uhakika, na usalama kamili. Tunaongoza kwa huduma bora za mali isiyohamishika nchini.</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
                         <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                 
                 <div class="footer-col">
                     <h3>Haraka Links</h3>
-                    <ul>
-                        <li><a href="index.html">Nyumbani</a></li>
-                        <li><a href="properties.html">Nyumba</a></li>
-                        <li><a href="upload.html">Weka Tangazo</a></li>
-                        <li><a href="about.html">Kuhusu Sisi</a></li>
-                        <li><a href="contact.html">Wasiliana</a></li>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Nyumbani</a></li>
+                        <li><a href="properties.html"><i class="fas fa-chevron-right"></i> Nyumba</a></li>
+                        <li><a href="sell.html"><i class="fas fa-chevron-right"></i> Uza Nyumba</a></li>
+                        <li><a href="rent.html"><i class="fas fa-chevron-right"></i> Panga Nyumba</a></li>
+                        <li><a href="agents.html"><i class="fas fa-chevron-right"></i> Mawakala</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-col">
                     <h3>Miji Mikubwa</h3>
-                    <ul>
-                        <li><a href="#" onclick="filterByLocation('dar')">Dar es Salaam</a></li>
-                        <li><a href="#" onclick="filterByLocation('arusha')">Arusha</a></li>
-                        <li><a href="#" onclick="filterByLocation('mwanza')">Mwanza</a></li>
-                        <li><a href="#" onclick="filterByLocation('dodoma')">Dodoma</a></li>
-                        <li><a href="#" onclick="filterByLocation('mbeya')">Mbeya</a></li>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Dar es Salaam</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Arusha</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Mwanza</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Dodoma</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Mbeya</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-col">
                     <h3>Wasiliana Nasi</h3>
-                    <ul class="contact-info">
-                        <li><i class="fas fa-map-marker-alt"></i> Sokoine Drive, Dar es Salaam</li>
-                        <li><i class="fas fa-phone"></i> +255 712 345 678</li>
-                        <li><i class="fas fa-envelope"></i> info@houselink.co.tz</li>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Sokoine Drive, Dar es Salaam, Tanzania</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>+255 712 345 678<br>+255 784 567 890</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@houselink.co.tz<br>support@houselink.co.tz</span>
+                        </li>
                     </ul>
+                    
+                    <div class="newsletter-form">
+                        <input type="email" class="newsletter-input" placeholder="Barua pepe yako">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2024 HouseLink Tanzania. Haki zote zimehifadhiwa.</p>
-                <div class="footer-links">
+                <p>&copy; 2024 HouseLink Tanzania. Haki zote zimehifadhiwa. | <a href="#" style="color: var(--primary);">Haki Miliki</a></p>
+                <div class="footer-bottom-links">
                     <a href="#">Masharti</a>
                     <a href="#">Faragha</a>
                     <a href="#">Mapendekezo</a>
+                    <a href="#">Usaidizi</a>
                 </div>
             </div>
         </div>
     </footer>
 
-    <script src="js/main.js"></script>
+    <!-- Toast Container -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script>
-        // Additional functionality for homepage
-        function filterByType(type) {
-            const typeSelect = document.getElementById('type-select');
-            typeSelect.value = type;
-            document.getElementById('main-search-form').submit();
-        }
-        
-        function filterByLocation(location) {
-            const locationSelect = document.getElementById('location-select');
-            locationSelect.value = location;
-            document.getElementById('main-search-form').submit();
-        }
-        
-        // Form submission
-        document.getElementById('main-search-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const search = document.getElementById('search-input').value;
-            const location = document.getElementById('location-select').value;
-            const type = document.getElementById('type-select').value;
-            const price = document.getElementById('price-select').value;
-            
-            // In a real application, this would redirect to search results
-            alert(`Kutafuta: ${search || 'Yoyote'}\nEneo: ${location || 'Yoyote'}\nAina: ${type || 'Yoyote'}\nBei: ${price || 'Yoyote'}\n\nKatika programu halisi, hii ingekuelekeza kwenye matokeo ya utafutaji.`);
-            
-            // Simulate redirect to properties page
-            // window.location.href = `properties.html?search=${encodeURIComponent(search)}&location=${location}&type=${type}&price=${price}`;
-        });
-        
-        // Initialize
+        // DOM Ready
         document.addEventListener('DOMContentLoaded', function() {
-            // Add animation to elements
+            // Theme Toggle
+            const themeToggle = document.getElementById('themeToggle');
+            const html = document.documentElement;
+            
+            themeToggle.addEventListener('click', () => {
+                html.classList.toggle('dark-theme');
+                const icon = themeToggle.querySelector('i');
+                if (html.classList.contains('dark-theme')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                    localStorage.setItem('theme', 'dark');
+                    showToast('Dark mode imewashwa', 'success');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                    localStorage.setItem('theme', 'light');
+                    showToast('Light mode imewashwa', 'success');
+                }
+            });
+            
+            // Check saved theme
+            if (localStorage.getItem('theme') === 'dark') {
+                html.classList.add('dark-theme');
+                themeToggle.querySelector('i').classList.remove('fa-moon');
+                themeToggle.querySelector('i').classList.add('fa-sun');
+            }
+            
+            // Navbar scroll effect
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+            
+            // Mobile Menu
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const navLinks = document.querySelector('.nav-links');
+            const navAuth = document.querySelector('.nav-auth');
+            
+            mobileMenuBtn.addEventListener('click', () => {
+                const isVisible = navLinks.style.display === 'flex';
+                
+                if (!isVisible) {
+                    navLinks.style.display = 'flex';
+                    navAuth.style.display = 'flex';
+                    navLinks.style.flexDirection = 'column';
+                    navAuth.style.flexDirection = 'column';
+                    navLinks.style.position = 'absolute';
+                    navLinks.style.top = '100%';
+                    navLinks.style.left = '0';
+                    navLinks.style.right = '0';
+                    navLinks.style.backgroundColor = 'white';
+                    navLinks.style.padding = '30px';
+                    navLinks.style.boxShadow = 'var(--shadow-xl)';
+                    navLinks.style.gap = '25px';
+                    navLinks.style.zIndex = '1000';
+                    
+                    navAuth.style.position = 'absolute';
+                    navAuth.style.top = 'calc(100% + 250px)';
+                    navAuth.style.left = '0';
+                    navAuth.style.right = '0';
+                    navAuth.style.backgroundColor = 'white';
+                    navAuth.style.padding = '30px';
+                    navAuth.style.boxShadow = 'var(--shadow-xl)';
+                    navAuth.style.gap = '20px';
+                    navAuth.style.zIndex = '1000';
+                    
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+                } else {
+                    navLinks.style.display = '';
+                    navAuth.style.display = '';
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+            
+            // Search Tabs
+            const searchTabs = document.querySelectorAll('.search-tab');
+            searchTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    searchTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                });
+            });
+            
+            // Search Form
+            const searchForm = document.getElementById('searchForm');
+            searchForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const location = document.getElementById('location').value;
+                const propertyType = document.getElementById('propertyType').value;
+                const priceRange = document.getElementById('priceRange').value;
+                
+                showToast(`Inatafuta nyumba: ${location || 'Maeneo yote'} | Aina: ${propertyType || 'Zote'} | Bei: ${priceRange || 'Yoyote'}`, 'info');
+                
+                // Simulate search
+                setTimeout(() => {
+                    showToast('Matokeo 243 yamepatikana', 'success');
+                }, 1000);
+            });
+            
+            // Favorite Buttons
+            const favoriteBtns = document.querySelectorAll('.favorite-btn');
+            favoriteBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const propertyId = btn.dataset.property;
+                    const icon = btn.querySelector('i');
+                    
+                    if (btn.classList.contains('active')) {
+                        btn.classList.remove('active');
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        showToast('Imeondolewa kwenye vipendwa', 'info');
+                    } else {
+                        btn.classList.add('active');
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        showToast('Imeongezwa kwenye vipendwa', 'success');
+                    }
+                });
+            });
+            
+            // Toast Function
+            function showToast(message, type = 'info') {
+                const toast = document.getElementById('toast');
+                const icons = {
+                    success: 'fa-check-circle',
+                    error: 'fa-exclamation-circle',
+                    info: 'fa-info-circle'
+                };
+                
+                toast.innerHTML = `
+                    <div class="toast-content">
+                        <i class="fas ${icons[type]} toast-icon"></i>
+                        <div class="toast-text">
+                            <h4>${type === 'success' ? 'Imefanikiwa!' : type === 'error' ? 'Hitilafu!' : 'Taarifa'}</h4>
+                            <p>${message}</p>
+                        </div>
+                    </div>
+                `;
+                
+                toast.className = `toast ${type} show`;
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+            
+            // Scroll Animations
             const observerOptions = {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
@@ -776,20 +2236,103 @@
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
+                        entry.target.classList.add('visible');
                     }
                 });
             }, observerOptions);
             
-            // Observe elements for animation
-            document.querySelectorAll('.category-card, .property-card, .step, .location-card, .testimonial-card').forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(20px)';
-                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            // Observe elements
+            document.querySelectorAll('.fade-in').forEach(el => {
                 observer.observe(el);
             });
+            
+            // Add fade-in class to elements
+            document.querySelectorAll('.category-card, .property-card, .step-content, .location-card, .stat-item').forEach(el => {
+                el.classList.add('fade-in');
+            });
+            
+            // Initialize Swiper
+            const swiper = new Swiper('.testimonials-slider', {
+                loop: true,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });
+            
+            // Location Cards Click
+            document.querySelectorAll('.location-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const location = card.querySelector('h3').textContent;
+                    document.getElementById('location').value = location;
+                    showToast(`Eneo limewekwa: ${location}`, 'info');
+                });
+            });
+            
+            // Category Cards Click
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const type = card.querySelector('h3').textContent;
+                    document.getElementById('propertyType').value = type.toLowerCase().includes('bedsitter') ? 'bedsitter' : 
+                                                                   type.toLowerCase().includes('single') ? 'single-room' :
+                                                                   type.toLowerCase().includes('apartment') ? 'apartment' : 'house';
+                    showToast(`Aina ya nyumba imewekwa: ${type}`, 'info');
+                });
+            });
         });
+        
+        // Add dark theme styles
+        const darkThemeStyles = `
+            .dark-theme {
+                --dark: #f8fafc;
+                --light: #0f172a;
+                --darker: #020617;
+                --gray: #cbd5e1;
+                --gray-light: #334155;
+                --gray-dark: #e2e8f0;
+            }
+            
+            .dark-theme .navbar {
+                background: rgba(15, 23, 42, 0.95);
+                backdrop-filter: blur(10px);
+            }
+            
+            .dark-theme .category-card,
+            .dark-theme .property-card,
+            .dark-theme .step-content,
+            .dark-theme .hero-search {
+                background: #1e293b;
+                color: var(--gray-dark);
+            }
+            
+            .dark-theme .form-control {
+                background: #334155;
+                border-color: #475569;
+                color: white;
+            }
+            
+            .dark-theme .btn-outline {
+                color: white;
+                border-color: white;
+            }
+            
+            .dark-theme .btn-outline:hover {
+                background: white;
+                color: var(--dark);
+            }
+        `;
+        
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = darkThemeStyles;
+        document.head.appendChild(styleSheet);
     </script>
 </body>
 </html>
