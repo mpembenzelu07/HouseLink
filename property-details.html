@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="sw" class="dark-mode">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Apartment Kinondoni | HouseLink Tanzania</title>
+    
+    <!-- Property Detail CSS -->
+    <style>
+        /* Property Gallery */
+        .property-gallery {
+            margin-bottom: var(--space-3xl);
+        }
+        
+        .gallery-main {
+            height: 500px;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            margin-bottom: var(--space-md);
+        }
+        
+        .gallery-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .gallery-thumbs {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: var(--space-md);
+        }
+        
+        .gallery-thumb {
+            height: 100px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+        
+        .gallery-thumb:hover,
+        .gallery-thumb.active {
+            opacity: 1;
+        }
+        
+        .gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Property Info */
+        .property-info-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-3xl);
+        }
+        
+        .property-sidebar {
+            background: var(--light-2);
+            padding: var(--space-2xl);
+            border-radius: var(--radius-xl);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .dark-mode .property-sidebar {
+            background: var(--dark-2);
+        }
+        
+        .agent-card {
+            text-align: center;
+            padding: var(--space-xl);
+            background: var(--light-1);
+            border-radius: var(--radius-lg);
+            margin-top: var(--space-xl);
+        }
+        
+        .dark-mode .agent-card {
+            background: var(--dark-3);
+        }
+        
+        .agent-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto var(--space-lg);
+            overflow: hidden;
+        }
+        
+        .agent-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            margin: var(--space-2xl) 0;
+        }
+        
+        .feature-item-box {
+            background: var(--light-2);
+            padding: var(--space-lg);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+        
+        .dark-mode .feature-item-box {
+            background: var(--dark-3);
+        }
+        
+        /* Map */
+        .property-map {
+            height: 400px;
+            background: var(--light-3);
+            border-radius: var(--radius-xl);
+            margin: var(--space-3xl) 0;
+        }
+        
+        /* Similar Properties */
+        .similar-properties {
+            margin-top: var(--space-4xl);
+        }
+        
+        @media (max-width: 992px) {
+            .property-info-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .property-sidebar {
+                position: static;
+            }
+            
+            .gallery-thumbs {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">HL</div>
+                <div class="logo-text">
+                    <h1>HouseLink</h1>
+                </div>
+            </a>
+
+            <nav class="main-nav">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="properties.html" class="nav-link">Properties</a></li>
+                    <li><a href="agents.html" class="nav-link">Agents</a></li>
+                    <li><a href="about.html" class="nav-link">About Us</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <button class="action-btn" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="login.html" class="btn btn-primary">Login</a>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-links">
+                <a href="index.html">Home</a>
+                <span>/</span>
+                <a href="properties.html">Properties</a>
+                <span>/</span>
+                <span>Modern Apartment Kinondoni</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Property Content -->
+    <section class="section">
+        <div class="container">
+            <!-- Property Gallery -->
+            <div class="property-gallery">
+                <div class="gallery-main">
+                    <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=1200&q=80" 
+                         id="mainImage" alt="Modern Apartment">
+                </div>
+                <div class="gallery-thumbs">
+                    <div class="gallery-thumb active" onclick="changeImage(0)">
+                        <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=400&q=80" alt="Living Room">
+                    </div>
+                    <div class="gallery-thumb" onclick="changeImage(1)">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80" alt="Kitchen">
+                    </div>
+                    <div class="gallery-thumb" onclick="changeImage(2)">
+                        <img src="https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?auto=format&fit=crop&w=400&q=80" alt="Bedroom">
+                    </div>
+                    <div class="gallery-thumb" onclick="changeImage(3)">
+                        <img src="https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=400&q=80" alt="Bathroom">
+                    </div>
+                    <div class="gallery-thumb" onclick="changeImage(4)">
+                        <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=400&q=80" alt="View">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Info -->
+            <div class="property-info-layout">
+                <main>
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-xl);">
+                        <div>
+                            <h1 style="font-size: 2.5rem; margin-bottom: var(--space-sm);">Modern Apartment Kinondoni</h1>
+                            <p style="color: var(--text-secondary); font-size: 1.1rem;">
+                                <i class="fas fa-map-marker-alt" style="margin-right: var(--space-sm);"></i>
+                                Kinondoni, Dar es Salaam
+                            </p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 2rem; font-weight: 800; color: var(--primary);">Tsh 850,000,000</div>
+                            <div style="color: var(--text-secondary);">For Sale</div>
+                        </div>
+                    </div>
+
+                    <!-- Property Description -->
+                    <div style="margin-bottom: var(--space-2xl);">
+                        <h2 style="margin-bottom: var(--space-lg);">Property Description</h2>
+                        <p style="line-height: 1.8; margin-bottom: var(--space-lg);">
+                            This modern apartment in Kinondoni offers luxurious living with 4 bedrooms and 3 bathrooms. 
+                            Featuring high-end finishes, smart home technology, and panoramic city views. 
+                            The property includes a private balcony, modern kitchen with premium appliances, 
+                            and access to building amenities including swimming pool, gym, and 24/7 security.
+                        </p>
+                        <p style="line-height: 1.8;">
+                            Located in one of Dar es Salaam's most desirable neighborhoods, this property offers 
+                            easy access to shopping centers, restaurants, schools, and major transportation routes.
+                        </p>
+                    </div>
+
+                    <!-- Features -->
+                    <div>
+                        <h2 style="margin-bottom: var(--space-lg);">Property Features</h2>
+                        <div class="features-grid">
+                            <div class="feature-item-box">
+                                <i class="fas fa-bed" style="font-size: 2rem; color: var(--primary); margin-bottom: var(--space-sm);"></i>
+                                <div style="font-weight: 600;">4 Bedrooms</div>
+                            </div>
+                            <div class="feature-item-box">
+                                <i class="fas fa-bath" style="font-size: 2rem; color: var(--primary); margin-bottom: var(--space-sm);"></i>
+                                <div style="font-weight: 600;">3 Bathrooms</div>
+                            </div>
+                            <div class="feature-item-box">
+                                <i class="fas fa-expand" style="font-size: 2rem; color: var(--primary); margin-bottom: var(--space-sm);"></i>
+                                <div style="font-weight: 600;">220 m² Area</div>
+                            </div>
+                            <div class="feature-item-box">
+                                <i class="fas fa-car" style="font-size: 2rem; color: var(--primary); margin-bottom: var(--space-sm);"></i>
+                                <div style="font-weight: 600;">2 Parking</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Amenities -->
+                    <div style="margin: var(--space-3xl) 0;">
+                        <h2 style="margin-bottom: var(--space-lg);">Amenities</h2>
+                        <div style="display: flex; flex-wrap: wrap; gap: var(--space-sm);">
+                            <span style="background: var(--light-3); padding: var(--space-sm) var(--space-md); border-radius: var(--radius);">
+                                Swimming Pool
+                            </span>
+                            <span style="background: var(--light-3); padding: var(--space-sm) var(--space-md); border-radius: var(--radius);">
+                                Gym
+                            </span>
+                            <span style="background: var(--light-3); padding: var(--space-sm) var(--space-md); border-radius: var(--radius);">
+                                24/7 Security
+                            </span>
+                            <span style="background: var(--light-3); padding: var(--space-sm) var(--space-md); border-radius: var(--radius);">
+                                Elevator
+                            </span>
+                            <span style="background: var(--light-3); padding: var(--space-sm) var(--space-md); border-radius: var(--radius);">
+                                Smart Home
+                            </span>
+                            <span style="background: var(--light-3); padding: var(--space-sm) var(--space-md); border-radius: var(--radius);">
+                                Balcony
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Map -->
+                    <div class="property-map">
+                        <!-- Map would go here -->
+                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-secondary);">
+                            <i class="fas fa-map-marked-alt" style="font-size: 3rem; margin-right: var(--space-md);"></i>
+                            <div>
+                                <h3>Property Location</h3>
+                                <p>Kinondoni, Dar es Salaam, Tanzania</p>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <!-- Sidebar -->
+                <aside class="property-sidebar">
+                    <h3 style="margin-bottom: var(--space-xl);">Schedule a Viewing</h3>
+                    
+                    <form style="display: flex; flex-direction: column; gap: var(--space-lg);">
+                        <input type="text" placeholder="Your Name" class="filter-select">
+                        <input type="email" placeholder="Email Address" class="filter-select">
+                        <input type="tel" placeholder="Phone Number" class="filter-select">
+                        <input type="date" class="filter-select">
+                        <textarea placeholder="Message" class="filter-select" rows="4"></textarea>
+                        <button type="submit" class="btn btn-primary">Request Viewing</button>
+                    </form>
+
+                    <!-- Agent Info -->
+                    <div class="agent-card">
+                        <div class="agent-avatar">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Michael">
+                        </div>
+                        <h3>John Michael</h3>
+                        <p style="color: var(--primary); margin-bottom: var(--space-md);">Sales Director</p>
+                        <p style="color: var(--text-secondary); margin-bottom: var(--space-lg);">
+                            <i class="fas fa-phone"></i> +255 712 345 678
+                        </p>
+                        <a href="mailto:john@houselink.co.tz" class="btn" style="width: 100%; background: var(--light-3);">
+                            <i class="fas fa-envelope"></i> Send Email
+                        </a>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- Similar Properties -->
+            <div class="similar-properties">
+                <h2 style="text-align: center; margin-bottom: var(--space-3xl);">Similar Properties</h2>
+                <div class="properties-grid">
+                    <!-- Similar property cards... -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- Footer content -->
+            </div>
+            <div class="footer-bottom">
+                <div>
+                    <p style="color: var(--text-light);">
+                        © 2024 HouseLink Tanzania. Built by I&G Technology.
+                    </p>
+                </div>
+                <div>
+                    <a href="privacy-policy.html" style="color: var(--text-light); margin-right: var(--space-lg);">Privacy Policy</a>
+                    <a href="terms-conditions.html" style="color: var(--text-light);">Terms & Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Gallery functionality
+        const images = [
+            'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=1200&q=80',
+            'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80',
+            'https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?auto=format&fit=crop&w=1200&q=80',
+            'https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=1200&q=80',
+            'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80'
+        ];
+
+        function changeImage(index) {
+            document.getElementById('mainImage').src = images[index];
+            
+            // Update active thumbnail
+            document.querySelectorAll('.gallery-thumb').forEach((thumb, i) => {
+                thumb.classList.toggle('active', i === index);
+            });
+        }
+
+        // Theme and mobile menu
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            themeToggle.innerHTML = document.body.classList.contains('dark-mode') 
+                ? '<i class="fas fa-moon"></i>' 
+                : '<i class="fas fa-sun"></i>';
+        });
+
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.querySelector('.main-nav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
