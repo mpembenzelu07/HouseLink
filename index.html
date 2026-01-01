@@ -5,27 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HouseLink Tanzania | #1 Real Estate Platform in Tanzania</title>
     
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Tanzania's #1 real estate platform. Find properties for sale and rent in Dar es Salaam, Arusha, Mwanza, and all major cities. Connect with certified agents.">
-    <meta name="keywords" content="real estate Tanzania, buy property Tanzania, rent house Dar es Salaam, real estate agents Tanzania">
-    <meta name="author" content="I&G Technology">
-    <meta name="robots" content="index, follow">
-    
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="HouseLink Tanzania | #1 Real Estate Platform">
-    <meta property="og:description" content="Find your dream home in Tanzania. 10,000+ properties available.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://houselink.co.tz">
-    <meta property="og:image" content="https://houselink.co.tz/images/og-home.jpg">
-    
     <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Home Page CSS -->
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Map Libraries -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
-            /* Color Palette */
+            /* Premium Color Palette */
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
             --primary-light: #60a5fa;
@@ -37,752 +41,1804 @@
             --success: #10b981;
             --warning: #f59e0b;
             
-            /* Dark Mode */
+            /* Dark Mode Colors */
             --dark-1: #0f172a;
             --dark-2: #1e293b;
             --dark-3: #334155;
             --dark-4: #475569;
             
-            /* Light Mode */
+            /* Light Mode Colors */
             --light-1: #ffffff;
             --light-2: #f8fafc;
             --light-3: #f1f5f9;
             --light-4: #e2e8f0;
             
-            /* Text Colors */
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --text-light: #94a3b8;
-            --text-dark: #0f172a;
-            
             /* Gradients */
             --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
             --gradient-accent: linear-gradient(135deg, var(--accent), var(--danger));
-            --gradient-dark: linear-gradient(135deg, var(--dark-1), var(--dark-3));
-            --gradient-light: linear-gradient(135deg, #e0f2fe, #f0f9ff);
-            --gradient-premium: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            
-            /* Shadows */
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
-            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-            --shadow-xl: 0 25px 50px -12px rgba(0,0,0,0.25);
-            
-            /* Border Radius */
-            --radius-sm: 8px;
-            --radius: 12px;
-            --radius-md: 16px;
-            --radius-lg: 20px;
-            --radius-xl: 24px;
-            --radius-full: 9999px;
-            
-            /* Transitions */
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            
-            /* Spacing */
-            --space-xs: 4px;
-            --space-sm: 8px;
-            --space-md: 16px;
-            --space-lg: 24px;
-            --space-xl: 32px;
-            --space-2xl: 48px;
-            --space-3xl: 64px;
-            --space-4xl: 80px;
             
             /* Layout */
-            --container-width: 1440px;
             --header-height: 80px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
+            --sidebar-width: 280px;
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-            line-height: 1.7;
-            color: var(--text-primary);
-            background: var(--light-1);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--dark-1);
+            color: var(--light-2);
             overflow-x: hidden;
         }
 
-        body.dark-mode {
-            background: var(--dark-1);
-            color: var(--light-2);
+        /* Utility Classes */
+        .text-swahili, .text-english {
+            display: none;
+        }
+        
+        .text-swahili.active, .text-english.active {
+            display: inline;
+        }
+        
+        .hidden {
+            display: none !important;
         }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Manrope', system-ui, -apple-system, sans-serif;
-            font-weight: 700;
-            line-height: 1.2;
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
         }
 
-        .container {
-            width: 100%;
-            max-width: var(--container-width);
-            margin: 0 auto;
-            padding: 0 var(--space-xl);
-        }
-
-        /* ====== HEADER ====== */
-        .main-header {
+        /* Sidebar */
+        .dashboard-sidebar {
+            width: var(--sidebar-width);
+            background: var(--dark-2);
+            border-right: 1px solid var(--dark-4);
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            height: 100vh;
+            overflow-y: auto;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-            height: var(--header-height);
-            transition: var(--transition);
+            transition: transform 0.3s ease;
         }
 
-        .dark-mode .main-header {
-            background: rgba(15, 23, 42, 0.95);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--dark-4);
         }
 
-        .header-container {
+        .company-logo {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            height: 100%;
+            gap: 0.75rem;
         }
 
-        /* Logo */
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: var(--space-md);
-            text-decoration: none;
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
+        .company-logo .logo-icon {
+            width: 40px;
+            height: 40px;
             background: var(--gradient-primary);
-            border-radius: var(--radius-lg);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 800;
-            font-size: 1.5rem;
         }
 
-        .logo-text h1 {
-            font-size: 1.8rem;
+        .company-info h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin: 0;
+        }
+
+        .company-info p {
+            font-size: 0.75rem;
+            color: var(--text-light);
         }
 
         /* Navigation */
-        .main-nav {
+        .sidebar-nav {
+            padding: 1.5rem 0;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1.5rem;
             display: flex;
             align-items: center;
-            gap: var(--space-xl);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: var(--space-xl);
-            list-style: none;
-        }
-
-        .nav-link {
+            gap: 0.75rem;
+            color: var(--text-light);
             text-decoration: none;
-            color: var(--text-primary);
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: var(--transition);
-            padding: var(--space-sm) 0;
-            position: relative;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
         }
 
-        .dark-mode .nav-link {
-            color: var(--light-1);
+        .nav-item:hover {
+            background: var(--dark-3);
+            color: white;
+            border-left-color: var(--primary);
         }
 
-        .nav-link:hover {
-            color: var(--primary);
+        .nav-item.active {
+            background: var(--dark-3);
+            color: white;
+            border-left-color: var(--primary);
         }
 
-        .nav-link.active {
-            color: var(--primary);
+        .nav-item i {
+            width: 20px;
+            text-align: center;
         }
 
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gradient-primary);
-            border-radius: var(--radius-full);
+        /* Main Content */
+        .dashboard-main {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
         }
 
-        /* Header Actions */
-        .header-actions {
+        /* Top Header */
+        .dashboard-header {
+            background: var(--dark-2);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--dark-4);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .header-right {
             display: flex;
             align-items: center;
-            gap: var(--space-md);
+            gap: 1rem;
         }
 
-        .action-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: var(--radius);
-            background: var(--light-3);
-            border: none;
-            color: var(--text-primary);
-            cursor: pointer;
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+        }
+
+        .stat-card {
+            background: var(--dark-2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--dark-4);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: var(--transition);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
         }
 
-        .dark-mode .action-btn {
+        .stat-icon.primary {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+        }
+
+        .stat-icon.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .stat-icon.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .stat-icon.danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            padding: 0 2rem 2rem;
+        }
+
+        .chart-container {
+            background: var(--dark-2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--dark-4);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        /* Feature Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+        }
+
+        .feature-card {
+            background: var(--dark-2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--dark-4);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-description {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .feature-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-inactive {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* Tables */
+        .table-container {
+            background: var(--dark-2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem;
+            border: 1px solid var(--dark-4);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid var(--dark-4);
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--dark-4);
+        }
+
+        .data-table tr:hover {
             background: var(--dark-3);
-            color: var(--light-1);
         }
 
-        .action-btn:hover {
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
             background: var(--primary);
             color: white;
         }
 
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Forms */
+        .form-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: var(--dark-2);
+            border-radius: 12px;
+            border: 1px solid var(--dark-4);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--dark-3);
+            border: 1px solid var(--dark-4);
+            border-radius: 8px;
+            color: white;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Map */
+        #propertyMap {
+            height: 400px;
+            border-radius: 12px;
+            margin-top: 1rem;
+            border: 1px solid var(--dark-4);
+        }
+
+        /* Mobile Menu Button */
         .mobile-menu-btn {
             display: none;
-        }
-
-        /* ====== HERO SECTION ====== */
-        .hero-section {
-            padding-top: calc(var(--header-height) + var(--space-4xl));
-            padding-bottom: var(--space-4xl);
-            background: var(--gradient-premium);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-background {
-            position: absolute;
-            inset: 0;
-            background: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1920&q=80') center/cover;
-            opacity: 0.2;
-        }
-
-        .hero-container {
-            position: relative;
-            z-index: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-4xl);
-            align-items: center;
-        }
-
-        .hero-content h1 {
-            font-size: 3.5rem;
-            color: white;
-            margin-bottom: var(--space-lg);
-        }
-
-        .hero-content p {
-            font-size: 1.25rem;
-            color: rgba(255,255,255,0.9);
-            margin-bottom: var(--space-xl);
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: var(--space-2xl);
-            margin-top: var(--space-xl);
-        }
-
-        .hero-stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: white;
-            display: block;
-        }
-
-        .hero-stat-label {
-            color: rgba(255,255,255,0.8);
-            font-size: 0.9rem;
-        }
-
-        /* Hero Search */
-        .hero-search {
-            background: rgba(255,255,255,0.95);
-            border-radius: var(--radius-xl);
-            padding: var(--space-2xl);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .search-form {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-lg);
-        }
-
-        .search-input {
-            padding: var(--space-lg);
-            border: 2px solid var(--light-4);
-            border-radius: var(--radius);
-            font-size: 1rem;
-            width: 100%;
-        }
-
-        .btn {
-            padding: var(--space-md) var(--space-xl);
-            border-radius: var(--radius);
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--space-sm);
-            cursor: pointer;
-            transition: var(--transition);
+            background: none;
             border: none;
-        }
-
-        .btn-primary {
-            background: var(--gradient-primary);
             color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        /* ====== FEATURED PROPERTIES ====== */
-        .section {
-            padding: var(--space-4xl) 0;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: var(--space-3xl);
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            margin-bottom: var(--space-lg);
-        }
-
-        .properties-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: var(--space-2xl);
-            margin-bottom: var(--space-3xl);
-        }
-
-        .property-card {
-            background: var(--light-1);
-            border-radius: var(--radius-xl);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-
-        .property-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .property-image {
-            height: 240px;
-            overflow: hidden;
-        }
-
-        .property-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .property-content {
-            padding: var(--space-xl);
-        }
-
-        .property-price {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: var(--space-sm);
-        }
-
-        /* ====== CTA SECTION ====== */
-        .cta-section {
-            background: var(--gradient-primary);
-            color: white;
-            text-align: center;
-            padding: var(--space-4xl) 0;
-        }
-
-        .cta-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: var(--space-lg);
-        }
-
-        /* ====== FOOTER ====== */
-        .main-footer {
-            background: var(--dark-1);
-            color: var(--light-1);
-            padding: var(--space-4xl) 0 0;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr repeat(4, 1fr);
-            gap: var(--space-2xl);
-            padding-bottom: var(--space-3xl);
-            border-bottom: 1px solid var(--dark-3);
-        }
-
-        .footer-links a {
-            color: var(--text-light);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-
-        .footer-bottom {
-            padding: var(--space-xl) 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* ====== RESPONSIVE ====== */
-        @media (max-width: 1200px) {
-            .hero-container {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            
-            .hero-search {
-                max-width: 600px;
-                margin: 0 auto;
-            }
-            
-            .footer-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 992px) {
-            .mobile-menu-btn {
-                display: flex;
-            }
-            
-            .main-nav {
-                position: fixed;
-                top: var(--header-height);
-                left: 0;
-                right: 0;
-                background: var(--light-1);
-                padding: var(--space-xl);
-                flex-direction: column;
-                transform: translateY(-100%);
-                opacity: 0;
-                visibility: hidden;
-                transition: var(--transition);
-            }
-            
-            .main-nav.active {
-                transform: translateY(0);
-                opacity: 1;
-                visibility: visible;
-            }
-            
-            .nav-links {
-                flex-direction: column;
-                gap: var(--space-md);
-            }
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
-            .hero-content h1 {
-                font-size: 2.5rem;
+            .dashboard-sidebar {
+                transform: translateX(-100%);
             }
             
-            .properties-grid {
+            .dashboard-sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .dashboard-main {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .charts-grid {
                 grid-template-columns: 1fr;
             }
             
-            .footer-grid {
+            .features-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            .footer-bottom {
-                flex-direction: column;
-                gap: var(--space-lg);
-                text-align: center;
             }
         }
     </style>
 </head>
-<body class="dark-mode">
-    <!-- Header -->
-    <header class="main-header">
-        <div class="container header-container">
-            <!-- Logo -->
-            <a href="index.html" class="logo">
-                <div class="logo-icon">HL</div>
-                <div class="logo-text">
-                    <h1>HouseLink</h1>
+<body>
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="company-logo">
+                    <div class="logo-icon">HL</div>
+                    <div class="company-info">
+                        <h2>HouseLink Tanzania</h2>
+                        <p>
+                            <span class="text-swahili active">Jukwaa la Mali isiyohamishika</span>
+                            <span class="text-english">Real Estate Platform</span>
+                        </p>
+                        <p style="font-size: 0.7rem; color: var(--accent); margin-top: 0.25rem;">
+                            CEO: Irene Mgimba | Director: George William<br>
+                            Built by I&G Technology
+                        </p>
+                    </div>
                 </div>
-            </a>
-
-            <!-- Navigation -->
-            <nav class="main-nav">
-                <ul class="nav-links">
-                    <li><a href="index.html" class="nav-link active">Home</a></li>
-                    <li><a href="properties.html" class="nav-link">Properties</a></li>
-                    <li><a href="agents.html" class="nav-link">Agents</a></li>
-                    <li><a href="about.html" class="nav-link">About Us</a></li>
-                    <li><a href="contact.html" class="nav-link">Contact</a></li>
-                </ul>
-            </nav>
-
-            <!-- Header Actions -->
-            <div class="header-actions">
-                <button class="action-btn" id="themeToggle">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <a href="login.html" class="btn btn-primary">Login</a>
-                <button class="mobile-menu-btn" id="mobileMenuBtn">
-                    <i class="fas fa-bars"></i>
-                </button>
             </div>
-        </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-background"></div>
-        <div class="container hero-container">
-            <div class="hero-content">
-                <h1>Find Your Dream Home in Tanzania</h1>
-                <p>10,000+ properties available. Connect with certified agents and property owners.</p>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>
+                        <span class="text-swahili active">Dashibodi</span>
+                        <span class="text-english">Dashboard</span>
+                    </span>
+                </a>
                 
-                <div class="hero-stats">
-                    <div class="hero-stat">
-                        <span class="hero-stat-number">10,000+</span>
-                        <span class="hero-stat-label">Properties</span>
+                <a href="#" class="nav-item" data-page="properties">
+                    <i class="fas fa-building"></i>
+                    <span>
+                        <span class="text-swahili active">Mali Zote</span>
+                        <span class="text-english">All Properties</span>
+                    </span>
+                </a>
+                
+                <a href="#" class="nav-item" data-page="digital-twins">
+                    <i class="fas fa-robot"></i>
+                    <span>
+                        <span class="text-swahili active">Dijitali Twin</span>
+                        <span class="text-english">Digital Twins</span>
+                    </span>
+                </a>
+                
+                <a href="#" class="nav-item" data-page="ai-procurement">
+                    <i class="fas fa-brain"></i>
+                    <span>
+                        <span class="text-swahili active">AI Nunua</span>
+                        <span class="text-english">AI Procurement</span>
+                    </span>
+                </a>
+                
+                <a href="#" class="nav-item" data-page="inventory">
+                    <i class="fas fa-warehouse"></i>
+                    <span>
+                        <span class="text-swahili active">Hifadhi</span>
+                        <span class="text-english">Inventory</span>
+                    </span>
+                </a>
+                
+                <a href="#" class="nav-item" data-page="pricing">
+                    <i class="fas fa-tag"></i>
+                    <span>
+                        <span class="text-swahili active">Bei AI</span>
+                        <span class="text-english">AI Pricing</span>
+                    </span>
+                </a>
+                
+                <a href="#" class="nav-item" data-page="shipping">
+                    <i class="fas fa-ship"></i>
+                    <span>
+                        <span class="text-swahili active">Usafirishaji</span>
+                        <span class="text-english">Shipping</span>
+                    </span>
+                </a>
+                
+                <a href="#" class="nav-item" data-page="analytics">
+                    <i class="fas fa-chart-line"></i>
+                    <span>
+                        <span class="text-swahili active">Takwimu</span>
+                        <span class="text-english">Analytics</span>
+                    </span>
+                </a>
+                
+                <a href="#" class="nav-item" data-page="reports">
+                    <i class="fas fa-file-alt"></i>
+                    <span>
+                        <span class="text-swahili active">Ripoti</span>
+                        <span class="text-english">Reports</span>
+                    </span>
+                </a>
+                
+                <a href="#" class="nav-item" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>
+                        <span class="text-swahili active">Mipangilio</span>
+                        <span class="text-english">Settings</span>
+                    </span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 id="pageTitle">
+                        <span class="text-swahili active">Dashibodi</span>
+                        <span class="text-english">Dashboard</span>
+                    </h1>
+                </div>
+                
+                <div class="header-right">
+                    <div class="language-switcher">
+                        <button class="btn btn-primary" id="languageToggle">
+                            <span class="lang-flag" id="currentLangFlag">SW</span>
+                            <span class="text-swahili active">Kiswahili</span>
+                            <span class="text-english">Swahili</span>
+                        </button>
                     </div>
-                    <div class="hero-stat">
-                        <span class="hero-stat-number">500+</span>
-                        <span class="hero-stat-label">Agents</span>
-                    </div>
-                    <div class="hero-stat">
-                        <span class="hero-stat-number">95%</span>
-                        <span class="hero-stat-label">Satisfied Clients</span>
+                    
+                    <button class="btn" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    
+                    <div class="user-profile">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-user"></i>
+                            <span>Admin</span>
+                        </button>
                     </div>
                 </div>
-            </div>
+            </header>
 
-            <div class="hero-search">
-                <form class="search-form">
-                    <input type="text" class="search-input" placeholder="Search location...">
-                    <select class="search-input">
-                        <option>Property Type</option>
-                        <option>House</option>
-                        <option>Apartment</option>
-                        <option>Land</option>
-                    </select>
-                    <select class="search-input">
-                        <option>Location</option>
-                        <option>Dar es Salaam</option>
-                        <option>Arusha</option>
-                        <option>Mwanza</option>
-                    </select>
-                    <button type="submit" class="btn btn-primary">Search Properties</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Properties -->
-    <section class="section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Featured Properties</h2>
-                <p>Discover our handpicked selection of premium properties</p>
-            </div>
-
-            <div class="properties-grid">
-                <!-- Property 1 -->
-                <div class="property-card">
-                    <div class="property-image">
-                        <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=800&q=80" alt="Modern Apartment">
-                    </div>
-                    <div class="property-content">
-                        <div class="property-price">Tsh 850,000,000</div>
-                        <h3>Modern Apartment Kinondoni</h3>
-                        <p>4 Bedrooms • 3 Bathrooms • 220 m²</p>
-                        <a href="property-detail.html" class="btn btn-primary" style="margin-top: var(--space-lg);">View Details</a>
-                    </div>
-                </div>
-
-                <!-- Property 2 -->
-                <div class="property-card">
-                    <div class="property-image">
-                        <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=800&q=80" alt="Luxury Villa">
-                    </div>
-                    <div class="property-content">
-                        <div class="property-price">Tsh 1,200,000,000</div>
-                        <h3>Luxury Villa Masaki</h3>
-                        <p>5 Bedrooms • 4 Bathrooms • 450 m²</p>
-                        <a href="property-detail.html" class="btn btn-primary" style="margin-top: var(--space-lg);">View Details</a>
-                    </div>
-                </div>
-
-                <!-- Property 3 -->
-                <div class="property-card">
-                    <div class="property-image">
-                        <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80" alt="Office Space">
-                    </div>
-                    <div class="property-content">
-                        <div class="property-price">Tsh 4,500,000/month</div>
-                        <h3>Office Space Oysterbay</h3>
-                        <p>8 Rooms • 6 Bathrooms • 320 m²</p>
-                        <a href="property-detail.html" class="btn btn-primary" style="margin-top: var(--space-lg);">View Details</a>
-                    </div>
-                </div>
-            </div>
-
-            <div style="text-align: center;">
-                <a href="properties.html" class="btn btn-primary">View All Properties</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="container">
-            <h2>Ready to Find Your Dream Property?</h2>
-            <p style="margin-bottom: var(--space-xl); font-size: 1.2rem;">
-                Join thousands of satisfied customers who found their perfect home through HouseLink
-            </p>
-            <div style="display: flex; gap: var(--space-md); justify-content: center;">
-                <a href="properties.html" class="btn" style="background: white; color: var(--primary);">Browse Properties</a>
-                <a href="contact.html" class="btn" style="background: transparent; border: 2px solid white; color: white;">Contact Agent</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="main-footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div>
-                    <div class="logo" style="margin-bottom: var(--space-lg);">
-                        <div class="logo-icon">HL</div>
-                        <div class="logo-text">
-                            <h1>HouseLink</h1>
+            <!-- Dashboard Content -->
+            <section id="dashboardContent" class="page-content">
+                <!-- Stats Overview -->
+                <div class="stats-grid">
+                    <div class="stat-card" data-aos="fade-up">
+                        <div class="stat-icon primary">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="stat-value" id="totalProperties">1,247</div>
+                        <div class="stat-label">
+                            <span class="text-swahili active">Mali Zilizosajiliwa</span>
+                            <span class="text-english">Total Properties</span>
                         </div>
                     </div>
-                    <p style="color: var(--text-light); margin-bottom: var(--space-lg);">
-                        Tanzania's #1 real estate platform connecting buyers, sellers, and agents.
-                    </p>
-                </div>
-
-                <div>
-                    <h3 style="margin-bottom: var(--space-lg);">Quick Links</h3>
-                    <ul class="footer-links" style="list-style: none;">
-                        <li style="margin-bottom: var(--space-sm);"><a href="index.html">Home</a></li>
-                        <li style="margin-bottom: var(--space-sm);"><a href="properties.html">Properties</a></li>
-                        <li style="margin-bottom: var(--space-sm);"><a href="agents.html">Agents</a></li>
-                        <li style="margin-bottom: var(--space-sm);"><a href="about.html">About Us</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 style="margin-bottom: var(--space-lg);">Property Types</h3>
-                    <ul class="footer-links" style="list-style: none;">
-                        <li style="margin-bottom: var(--space-sm);"><a href="properties.html?type=house">Houses</a></li>
-                        <li style="margin-bottom: var(--space-sm);"><a href="properties.html?type=apartment">Apartments</a></li>
-                        <li style="margin-bottom: var(--space-sm);"><a href="properties.html?type=land">Land</a></li>
-                        <li style="margin-bottom: var(--space-sm);"><a href="properties.html?type=commercial">Commercial</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 style="margin-bottom: var(--space-lg);">Contact Info</h3>
-                    <div style="color: var(--text-light);">
-                        <p style="margin-bottom: var(--space-sm);">
-                            <i class="fas fa-map-marker-alt" style="margin-right: var(--space-sm);"></i>
-                            Dar es Salaam, Tanzania
-                        </p>
-                        <p style="margin-bottom: var(--space-sm);">
-                            <i class="fas fa-phone" style="margin-right: var(--space-sm);"></i>
-                            +255 123 456 789
-                        </p>
-                        <p>
-                            <i class="fas fa-envelope" style="margin-right: var(--space-sm);"></i>
-                            info@houselink.co.tz
-                        </p>
+                    
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="stat-icon success">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="stat-value" id="activeDeals">89</div>
+                        <div class="stat-label">
+                            <span class="text-swahili active">Mikataba Inayoendelea</span>
+                            <span class="text-english">Active Deals</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-value">Tsh 12.5B</div>
+                        <div class="stat-label">
+                            <span class="text-swahili active">Thamani ya Jumla</span>
+                            <span class="text-english">Total Value</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="stat-icon danger">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">
+                            <span class="text-swahili active">Mikataba Inayokaribia</span>
+                            <span class="text-english">Urgent Deals</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="footer-bottom">
-                <div>
-                    <p style="color: var(--text-light);">
-                        © 2024 HouseLink Tanzania. Built by I&G Technology.
-                    </p>
+                <!-- Charts -->
+                <div class="charts-grid">
+                    <div class="chart-container" data-aos="fade-right">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <span class="text-swahili active">Uzalishaji wa Mali Kwa Mwezi</span>
+                                <span class="text-english">Property Listings Per Month</span>
+                            </div>
+                        </div>
+                        <canvas id="listingsChart"></canvas>
+                    </div>
+                    
+                    <div class="chart-container" data-aos="fade-left">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                <span class="text-swahili active">Aina za Mali</span>
+                                <span class="text-english">Property Types</span>
+                            </div>
+                        </div>
+                        <canvas id="propertyTypesChart"></canvas>
+                    </div>
                 </div>
-                <div>
-                    <a href="privacy-policy.html" style="color: var(--text-light); margin-right: var(--space-lg);">Privacy Policy</a>
-                    <a href="terms-conditions.html" style="color: var(--text-light);">Terms & Conditions</a>
-                </div>
-            </div>
-        </div>
-    </footer>
 
-    <!-- JavaScript -->
+                <!-- Active Features Grid -->
+                <div class="features-grid" id="featuresGrid">
+                    <!-- Features will be dynamically loaded -->
+                </div>
+            </section>
+
+            <!-- Other Pages (Hidden by default) -->
+            <section id="propertiesContent" class="page-content hidden">
+                <div class="table-container" data-aos="fade-up">
+                    <div class="chart-header">
+                        <h2 class="chart-title">
+                            <span class="text-swahili active">Mali Zote</span>
+                            <span class="text-english">All Properties</span>
+                        </h2>
+                        <button class="btn btn-primary" id="addPropertyBtn">
+                            <i class="fas fa-plus"></i>
+                            <span class="text-swahili active">Ongeza Mali Mpya</span>
+                            <span class="text-english">Add New Property</span>
+                        </button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>
+                                    <span class="text-swahili active">Jina</span>
+                                    <span class="text-english">Name</span>
+                                </th>
+                                <th>
+                                    <span class="text-swahili active">Eneo</span>
+                                    <span class="text-english">Location</span>
+                                </th>
+                                <th>
+                                    <span class="text-swahili active">Aina</span>
+                                    <span class="text-english">Type</span>
+                                </th>
+                                <th>
+                                    <span class="text-swahili active">Bei</span>
+                                    <span class="text-english">Price</span>
+                                </th>
+                                <th>
+                                    <span class="text-swahili active">Hali</span>
+                                    <span class="text-english">Status</span>
+                                </th>
+                                <th>
+                                    <span class="text-swahili active">Vitendo</span>
+                                    <span class="text-english">Actions</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="propertiesTableBody">
+                            <!-- Properties will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Digital Twins Page -->
+            <section id="digitalTwinsContent" class="page-content hidden">
+                <div class="form-container" data-aos="fade-up">
+                    <h2 style="margin-bottom: 2rem;">
+                        <span class="text-swahili active">Dijitali Twin Commerce Engine</span>
+                        <span class="text-english">Digital Twin Commerce Engine</span>
+                    </h2>
+                    
+                    <div class="feature-description" style="margin-bottom: 2rem;">
+                        <p>
+                            <span class="text-swahili active">
+                                Dijitali twin ya kweli ya kundi la bidhaa. Imeunganishwa na vipima vya shamba, ghala na usafirishaji.
+                                Inaonyesha upya, unyevu, joto kwa wakati halisi. Wanunuzi wanaweza "kusafiri" kupitia mzunguko wa maisha ya bidhaa.
+                            </span>
+                            <span class="text-english">
+                                Live digital twin of the real product batch. Connected to farm, warehouse & shipment sensors.
+                                Shows freshness, humidity, temperature in real time. Buyers can "travel through" the product lifecycle.
+                            </span>
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span class="text-swahili active">Chagua Mali</span>
+                            <span class="text-english">Select Property</span>
+                        </label>
+                        <select class="form-input" id="digitalTwinProperty">
+                            <option value="">
+                                <span class="text-swahili active">Chagua mali ya kuunda dijitali twin</span>
+                                <span class="text-english">Select property to create digital twin</span>
+                            </option>
+                        </select>
+                    </div>
+
+                    <div id="twinDataDisplay" class="hidden">
+                        <div class="stats-grid" style="padding: 0;">
+                            <div class="stat-card">
+                                <div class="stat-icon primary">
+                                    <i class="fas fa-thermometer-half"></i>
+                                </div>
+                                <div class="stat-value" id="twinTemperature">24°C</div>
+                                <div class="stat-label">
+                                    <span class="text-swahili active">Joto la Sasa</span>
+                                    <span class="text-english">Current Temperature</span>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-icon success">
+                                    <i class="fas fa-tint"></i>
+                                </div>
+                                <div class="stat-value" id="twinHumidity">65%</div>
+                                <div class="stat-label">
+                                    <span class="text-swahili active">Unyevu</span>
+                                    <span class="text-english">Humidity</span>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-icon warning">
+                                    <i class="fas fa-fresh"></i>
+                                </div>
+                                <div class="stat-value" id="twinFreshness">92%</div>
+                                <div class="stat-label">
+                                    <span class="text-swahili active">Ukomavu</span>
+                                    <span class="text-english">Freshness Score</span>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-icon danger">
+                                    <i class="fas fa-battery-three-quarters"></i>
+                                </div>
+                                <div class="stat-value" id="twinBattery">78%</div>
+                                <div class="stat-label">
+                                    <span class="text-swahili active">Betri ya Sensor</span>
+                                    <span class="text-english">Sensor Battery</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="propertyMap" style="height: 300px; margin-top: 2rem;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Procurement Page -->
+            <section id="aiProcurementContent" class="page-content hidden">
+                <div class="form-container" data-aos="fade-up">
+                    <h2 style="margin-bottom: 2rem;">
+                        <span class="text-swahili active">Akili ya Kununua ya AI</span>
+                        <span class="text-english">AI Procurement Intelligence</span>
+                    </h2>
+                    
+                    <div class="feature-description" style="margin-bottom: 2rem;">
+                        <p>
+                            <span class="text-swahili active">
+                                AI inashughulikia mazungumzo ya bei kiotomatiki. Inatabiri mahitaji ya mnunuzi kabla ya mnunuzi kujua.
+                                Inapendekeza wakati bora wa kuagiza. Inagundua wauzaji wa udanganyifu. Inajifunza kutoka na tabia ya biashara ya kimataifa.
+                            </span>
+                            <span class="text-english">
+                                AI negotiates pricing automatically. Predicts buyer demand before buyer knows.
+                                Suggests optimal order timing. Detects fraudulent suppliers. Learns from global trade behavior.
+                            </span>
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span class="text-swahili active">Bei ya Lengo</span>
+                            <span class="text-english">Target Price</span>
+                        </label>
+                        <input type="number" class="form-input" id="targetPrice" placeholder="Tsh">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span class="text-swahili active">Kiasi cha Kununua</span>
+                            <span class="text-english">Purchase Quantity</span>
+                        </label>
+                        <input type="number" class="form-input" id="purchaseQuantity" placeholder="0">
+                    </div>
+
+                    <button class="btn btn-primary btn-block" onclick="runAINegotiation()">
+                        <i class="fas fa-brain"></i>
+                        <span class="text-swahili active">Anzisha Mazungumzo ya AI</span>
+                        <span class="text-english">Start AI Negotiation</span>
+                    </button>
+
+                    <div id="aiNegotiationResults" class="hidden" style="margin-top: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">
+                            <span class="text-swahili active">Matokeo ya Mazungumzo ya AI</span>
+                            <span class="text-english">AI Negotiation Results</span>
+                        </h3>
+                        <div class="stat-card">
+                            <div class="stat-icon success">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                            <div class="stat-value" id="finalPrice">-</div>
+                            <div class="stat-label">
+                                <span class="text-swahili active">Bei ya Mwisho</span>
+                                <span class="text-english">Final Price</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- More pages would continue here... -->
+        </main>
+    </div>
+
     <script>
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            themeToggle.innerHTML = document.body.classList.contains('dark-mode') 
-                ? '<i class="fas fa-moon"></i>' 
-                : '<i class="fas fa-sun"></i>';
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true
         });
 
-        // Mobile Menu
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mainNav = document.querySelector('.main-nav');
-        
-        mobileMenuBtn.addEventListener('click', () => {
-            mainNav.classList.toggle('active');
-        });
+        // Application State
+        const AppState = {
+            language: 'swahili',
+            theme: 'dark-mode',
+            currentPage: 'dashboard',
+            properties: [],
+            features: [],
+            charts: {},
+            user: {
+                name: 'Admin',
+                role: 'administrator'
+            }
+        };
 
-        // Close mobile menu on link click
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                mainNav.classList.remove('active');
+        // Ultimate Features List (all 24 features)
+        const UltimateFeatures = [
+            {
+                id: 1,
+                title: {
+                    swahili: "Dijitali Twin Commerce Engine",
+                    english: "Digital Twin Commerce Engine"
+                },
+                description: {
+                    swahili: "Dijitali twin ya kweli ya kundi la bidhaa. Imeunganishwa na vipima vya shamba, ghala na usafirishaji.",
+                    english: "Live digital twin of the real product batch. Connected to farm, warehouse & shipment sensors."
+                },
+                status: 'active',
+                icon: 'fas fa-robot'
+            },
+            {
+                id: 2,
+                title: {
+                    swahili: "Akili ya Kununua ya AI",
+                    english: "Autonomous Procurement AI"
+                },
+                description: {
+                    swahili: "AI inashughulikia mazungumzo ya bei kiotomatiki. Inatabiri mahitaji ya mnunuzi kabla ya mnunuzi kujua.",
+                    english: "AI negotiates pricing automatically. Predicts buyer demand before buyer knows."
+                },
+                status: 'active',
+                icon: 'fas fa-brain'
+            },
+            {
+                id: 3,
+                title: {
+                    swahili: "Mfumo wa Udhibiti wa Hifadhi",
+                    english: "Global Supply Pulse System"
+                },
+                description: {
+                    swahili: "Mfumo wa neva wa ugavi na mahitaji ulimwenguni. Unatabiri upungufu miezi mbele.",
+                    english: "Live global supply-demand nervous system. Predicts shortages months ahead."
+                },
+                status: 'active',
+                icon: 'fas fa-warehouse'
+            },
+            {
+                id: 4,
+                title: {
+                    swahili: "Nguvu ya Bei ya AI",
+                    english: "AI Market-Making Engine"
+                },
+                description: {
+                    swahili: "AI inaweka bei kwa nguvu kama soko la hisa. Inajifunza tabia ya washindani.",
+                    english: "AI sets prices dynamically like stock markets. Learns competitor behavior."
+                },
+                status: 'active',
+                icon: 'fas fa-tag'
+            },
+            {
+                id: 5,
+                title: {
+                    swahili: "Zana ya Uamuzi wa Bidhaa",
+                    english: "Buyer Outcome Simulator"
+                },
+                description: {
+                    swahili: "Inasimulia faida ya baadaye ya mnunuzi. Inatabiri mafanikio ya kuuza tena.",
+                    english: "Simulates buyer's future profits. Predicts resale success."
+                },
+                status: 'active',
+                icon: 'fas fa-chart-line'
+            },
+            {
+                id: 6,
+                title: {
+                    swahili: "Akili ya Msimu",
+                    english: "Agro-Climate Forecast Brain"
+                },
+                description: {
+                    swahili: "Utabiri wa mavuno miezi 10-18. Ugunduzi wa upotofu wa hali ya hewa.",
+                    english: "10-18 month yield prediction. Climate anomaly detection."
+                },
+                status: 'active',
+                icon: 'fas fa-cloud-sun'
+            },
+            {
+                id: 7,
+                title: {
+                    swahili: "Udhibiti wa Usafirishaji",
+                    english: "Autonomous Trade Route Brain"
+                },
+                description: {
+                    swahili: "AI ya usafirishaji inayojifunza mwenyewe ulimwenguni. Inabadilisha njia za usafirishaji kiotomatiki.",
+                    english: "Self-learning global shipping AI. Re-routes shipments automatically."
+                },
+                status: 'active',
+                icon: 'fas fa-ship'
+            },
+            {
+                id: 8,
+                title: {
+                    swahili: "Mfumo wa Nyaraka",
+                    english: "Zero-Document Trade Engine"
+                },
+                description: {
+                    swahili: "Nyaraka hazipo tena. Mikataba mikuu inachukua nafasi ya karatasi.",
+                    english: "Documents don't exist anymore. Smart contracts replace paperwork."
+                },
+                status: 'active',
+                icon: 'fas fa-file-contract'
+            },
+            {
+                id: 9,
+                title: {
+                    swahili: "Akili ya Bandari",
+                    english: "Global Port Nervous System"
+                },
+                description: {
+                    swahili: "Ubahili wa satelaiti + AIS. Utabiri wa msongamano wiki mbele.",
+                    english: "Satellite + AIS intelligence. Predictive congestion weeks ahead."
+                },
+                status: 'active',
+                icon: 'fas fa-anchor'
+            },
+            {
+                id: 10,
+                title: {
+                    swahili: "Mfumo wa Kudumu",
+                    english: "Trade Sustainability Optimizer"
+                },
+                description: {
+                    swahili: "Usafirishaji wa sifuri wavu. Uboreshaji wa njia, ufungaji na muda.",
+                    english: "Net-zero shipment orchestration. Route, packaging & timing optimization."
+                },
+                status: 'active',
+                icon: 'fas fa-leaf'
+            },
+            {
+                id: 11,
+                title: {
+                    swahili: "Udhibiti wa Gharama",
+                    english: "Total Landed Cost Intelligence"
+                },
+                description: {
+                    swahili: "Inatabiri gharama halisi ya kutua kabla ya kuagiza. Inagundua ada zilizofichwa.",
+                    english: "Predicts true landed cost before ordering. Detects hidden fees."
+                },
+                status: 'active',
+                icon: 'fas fa-money-bill-wave'
+            },
+            {
+                id: 12,
+                title: {
+                    swahili: "Uwazi wa Mchakato",
+                    english: "Immutable Trade Ledger"
+                },
+                description: {
+                    swahili: "Biashara nzime imerekodiwa kwa usiobadilika. Kila hatua inathibitishwa.",
+                    english: "Entire trade recorded immutably. Every action verifiable."
+                },
+                status: 'active',
+                icon: 'fas fa-shield-alt'
+            },
+            {
+                id: 13,
+                title: {
+                    swahili: "Uthibitishaji wa Uaminifu",
+                    english: "Universal Trade Trust Engine"
+                },
+                description: {
+                    swahili: "Alama moja ya uaminifu inachukua nafasi ya vyeti vyote. Inathibitisha wauzaji mara moja.",
+                    english: "One trust score replaces all certificates. Verifies suppliers instantly."
+                },
+                status: 'active',
+                icon: 'fas fa-handshake'
+            },
+            {
+                id: 14,
+                title: {
+                    swahili: "Uzoefu wa Sifa",
+                    english: "Living Credential Vault"
+                },
+                description: {
+                    swahili: "Sifa zinabadilika kwa wakati halisi. Zimeunganishwa na utendaji wa ulimwengu halisi.",
+                    english: "Credentials evolve in real time. Linked to real-world performance."
+                },
+                status: 'active',
+                icon: 'fas fa-award'
+            },
+            {
+                id: 15,
+                title: {
+                    swahili: "Mfumo wa Kufuata",
+                    english: "Autonomous Regulatory Brain"
+                },
+                description: {
+                    swahili: "Kanuni zinajisasisha wenyewe. Utekelezaji wa kiotomatiki kabla ya usafirishaji.",
+                    english: "Self-updating regulations. Auto-enforcement before shipping."
+                },
+                status: 'active',
+                icon: 'fas fa-gavel'
+            },
+            {
+                id: 16,
+                title: {
+                    swahili: "Mfumo wa Ukaguzi",
+                    english: "Self-Explaining Trade History"
+                },
+                description: {
+                    swahili: "AI inasimulia kila uamuzi wa biashara. Minyororo ya sababu na matokeo ya kuona.",
+                    english: "AI narrates every trade decision. Visual cause-and-effect chains."
+                },
+                status: 'active',
+                icon: 'fas fa-search'
+            },
+            {
+                id: 17,
+                title: {
+                    swahili: "Akili ya Viwango",
+                    english: "Global Harmonization Engine"
+                },
+                description: {
+                    swahili: "Inatafsiri viwango kiotomatiki. Inapata njia ya haraka zaidi ya uthibitisho.",
+                    english: "Translates standards automatically. Finds fastest certification path."
+                },
+                status: 'active',
+                icon: 'fas fa-globe'
+            },
+            {
+                id: 18,
+                title: {
+                    swahili: "Usimamizi wa Uthibitisho",
+                    english: "Credential Lifecycle AI"
+                },
+                description: {
+                    swahili: "Upangaji wa utabiri wa kusasisha. Utekelezaji wa kusasisha kiotomatiki.",
+                    english: "Predictive renewal scheduling. Auto-renew execution."
+                },
+                status: 'active',
+                icon: 'fas fa-sync-alt'
+            },
+            {
+                id: 19,
+                title: {
+                    swahili: "Akili ya Mauzo",
+                    english: "Autonomous Revenue Engine"
+                },
+                description: {
+                    swahili: "Inatabiri ukaribu wa mnunuzi. Inajishughulisha na wanunuzi kiotomatiki.",
+                    english: "Predicts buyer readiness. Auto-engages buyers."
+                },
+                status: 'active',
+                icon: 'fas fa-bullhorn'
+            },
+            {
+                id: 20,
+                title: {
+                    swahili: "Mwingiliano wa Binadamu",
+                    english: "Immersive Trade Presence"
+                },
+                description: {
+                    swahili: "Ziara halisi za tovuti za wakati halisi. Vipandikizi vya mkalimani wa wakati halisi.",
+                    english: "Live virtual site visits. Real-time translator avatars."
+                },
+                status: 'active',
+                icon: 'fas fa-vr-cardboard'
+            },
+            {
+                id: 21,
+                title: {
+                    swahili: "Mfumo wa Ingizo",
+                    english: "Intent-to-Action Interface"
+                },
+                description: {
+                    swahili: "Zungumza kawaida, mfumo unaelema dhamira. Hakuna fomu zipo.",
+                    english: "Speak naturally, system understands intent. No forms exist."
+                },
+                status: 'active',
+                icon: 'fas fa-microphone'
+            },
+            {
+                id: 22,
+                title: {
+                    swahili: "Tabaka la Mawasiliano",
+                    english: "Universal Trade Language AI"
+                },
+                description: {
+                    swahili: "Tafsiri inayohifadhi maana. Ufasiri salama kisheria na biashara.",
+                    english: "Meaning-preserving translation. Legal & trade-safe phrasing."
+                },
+                status: 'active',
+                icon: 'fas fa-language'
+            },
+            {
+                id: 23,
+                title: {
+                    swahili: "Mfumo wa Uratibu",
+                    english: "Autonomous Deal Orchestrator"
+                },
+                description: {
+                    swahili: "Inaratibu wanadamu, AI na mifumo. Inatekeleza njia za kazi kiotomatiki.",
+                    english: "Coordinates humans, AI & systems. Executes workflows automatically."
+                },
+                status: 'active',
+                icon: 'fas fa-tasks'
+            },
+            {
+                id: 24,
+                title: {
+                    swahili: "Akili ya Mteja",
+                    english: "Client Digital Twin Brain"
+                },
+                description: {
+                    swahili: "Dijitali twin ya kila mnunuzi. Inatabiri mahitaji ya baadaye.",
+                    english: "Digital twin of every buyer. Predicts future needs."
+                },
+                status: 'active',
+                icon: 'fas fa-users'
+            }
+        ];
+
+        // Sample Properties Data
+        const sampleProperties = [
+            {
+                id: 1,
+                name: "Modern Apartment Kinondoni",
+                location: "Kinondoni, Dar es Salaam",
+                type: "Apartment",
+                price: "Tsh 850,000,000",
+                status: "active",
+                digitalTwin: true
+            },
+            {
+                id: 2,
+                name: "Luxury Villa Masaki",
+                location: "Masaki, Dar es Salaam",
+                type: "Villa",
+                price: "Tsh 1,200,000,000",
+                status: "active",
+                digitalTwin: true
+            },
+            {
+                id: 3,
+                name: "Commercial Space Oysterbay",
+                location: "Oysterbay, Dar es Salaam",
+                type: "Commercial",
+                price: "Tsh 450,000,000",
+                status: "pending",
+                digitalTwin: false
+            },
+            {
+                id: 4,
+                name: "Land Plot Kigamboni",
+                location: "Kigamboni, Dar es Salaam",
+                type: "Land",
+                price: "Tsh 320,000,000",
+                status: "active",
+                digitalTwin: true
+            }
+        ];
+
+        // DOM Elements
+        const elements = {
+            sidebar: document.getElementById('sidebar'),
+            mobileMenuBtn: document.getElementById('mobileMenuBtn'),
+            languageToggle: document.getElementById('languageToggle'),
+            themeToggle: document.getElementById('themeToggle'),
+            pageTitle: document.getElementById('pageTitle'),
+            featuresGrid: document.getElementById('featuresGrid'),
+            propertiesTableBody: document.getElementById('propertiesTableBody'),
+            digitalTwinProperty: document.getElementById('digitalTwinProperty'),
+            twinDataDisplay: document.getElementById('twinDataDisplay')
+        };
+
+        // Initialize Application
+        function initApp() {
+            AppState.features = UltimateFeatures;
+            AppState.properties = sampleProperties;
+            
+            loadFeatures();
+            loadProperties();
+            setupEventListeners();
+            setupCharts();
+            updateLanguageDisplay();
+            
+            console.log('HouseLink Tanzania - Complete Platform Initialized');
+        }
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Mobile Menu
+            elements.mobileMenuBtn.addEventListener('click', () => {
+                elements.sidebar.classList.toggle('active');
             });
-        });
+
+            // Language Toggle
+            elements.languageToggle.addEventListener('click', toggleLanguage);
+
+            // Theme Toggle
+            elements.themeToggle.addEventListener('click', toggleTheme);
+
+            // Navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = item.getAttribute('data-page');
+                    navigateToPage(page);
+                    
+                    // Update active nav item
+                    document.querySelectorAll('.nav-item').forEach(nav => {
+                        nav.classList.remove('active');
+                    });
+                    item.classList.add('active');
+                    
+                    // Close mobile menu on mobile
+                    if (window.innerWidth <= 768) {
+                        elements.sidebar.classList.remove('active');
+                    }
+                });
+            });
+
+            // Add Property Button
+            document.getElementById('addPropertyBtn')?.addEventListener('click', () => {
+                showAddPropertyModal();
+            });
+
+            // Digital Twin Property Selection
+            elements.digitalTwinProperty?.addEventListener('change', (e) => {
+                if (e.target.value) {
+                    elements.twinDataDisplay.classList.remove('hidden');
+                    initDigitalTwinMap();
+                    startSensorUpdates();
+                } else {
+                    elements.twinDataDisplay.classList.add('hidden');
+                }
+            });
+        }
+
+        // Language Management
+        function toggleLanguage() {
+            AppState.language = AppState.language === 'swahili' ? 'english' : 'swahili';
+            
+            // Update button
+            const flag = elements.languageToggle.querySelector('.lang-flag');
+            const textSwahili = elements.languageToggle.querySelector('.text-swahili');
+            const textEnglish = elements.languageToggle.querySelector('.text-english');
+            
+            if (AppState.language === 'swahili') {
+                flag.textContent = 'SW';
+                flag.style.background = 'linear-gradient(45deg, #43b02a, #007a33)';
+                textSwahili.classList.add('active');
+                textEnglish.classList.remove('active');
+            } else {
+                flag.textContent = 'EN';
+                flag.style.background = 'linear-gradient(45deg, #00247d, #cf142b)';
+                textSwahili.classList.remove('active');
+                textEnglish.classList.add('active');
+            }
+            
+            updateLanguageDisplay();
+            localStorage.setItem('houselink-language', AppState.language);
+        }
+
+        function updateLanguageDisplay() {
+            // Update all text elements
+            document.querySelectorAll('.text-swahili, .text-english').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            document.querySelectorAll(`.text-${AppState.language}`).forEach(el => {
+                el.classList.add('active');
+            });
+            
+            // Update page title
+            const currentPageTitle = document.querySelector(`[data-page="${AppState.currentPage}"]`);
+            if (currentPageTitle) {
+                const titleText = currentPageTitle.textContent.trim();
+                elements.pageTitle.innerHTML = titleText;
+            }
+        }
+
+        // Theme Management
+        function toggleTheme() {
+            const body = document.body;
+            const icon = elements.themeToggle.querySelector('i');
+            
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                body.style.backgroundColor = '#f8fafc';
+                body.style.color = '#1e293b';
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                body.classList.add('dark-mode');
+                body.style.backgroundColor = '#0f172a';
+                body.style.color = '#f1f5f9';
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        }
+
+        // Navigation
+        function navigateToPage(page) {
+            AppState.currentPage = page;
+            
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Show selected page
+            const targetPage = document.getElementById(`${page}Content`);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+                
+                // Update page title
+                const navItem = document.querySelector(`[data-page="${page}"]`);
+                if (navItem) {
+                    const title = navItem.querySelector('span').textContent;
+                    elements.pageTitle.innerHTML = title;
+                }
+            }
+            
+            // Initialize page-specific features
+            switch(page) {
+                case 'digital-twins':
+                    initDigitalTwinPage();
+                    break;
+                case 'ai-procurement':
+                    initAIProcurementPage();
+                    break;
+                case 'properties':
+                    loadPropertiesTable();
+                    break;
+            }
+        }
+
+        // Load Features
+        function loadFeatures() {
+            elements.featuresGrid.innerHTML = '';
+            
+            AppState.features.forEach(feature => {
+                const featureCard = document.createElement('div');
+                featureCard.className = 'feature-card';
+                featureCard.setAttribute('data-aos', 'fade-up');
+                
+                featureCard.innerHTML = `
+                    <div class="feature-icon">
+                        <i class="${feature.icon}"></i>
+                    </div>
+                    <h3 class="feature-title">${feature.title[AppState.language]}</h3>
+                    <p class="feature-description">${feature.description[AppState.language]}</p>
+                    <span class="feature-status ${feature.status === 'active' ? 'status-active' : 'status-inactive'}">
+                        ${feature.status === 'active' 
+                            ? (AppState.language === 'swahili' ? 'Inatumika' : 'Active')
+                            : (AppState.language === 'swahili' ? 'Haitumiki' : 'Inactive')}
+                    </span>
+                `;
+                
+                elements.featuresGrid.appendChild(featureCard);
+            });
+        }
+
+        // Load Properties
+        function loadProperties() {
+            // Populate digital twin property select
+            if (elements.digitalTwinProperty) {
+                elements.digitalTwinProperty.innerHTML = `
+                    <option value="">
+                        ${AppState.language === 'swahili' 
+                            ? 'Chagua mali ya kuunda dijitali twin' 
+                            : 'Select property to create digital twin'}
+                    </option>
+                    ${AppState.properties.map(prop => `
+                        <option value="${prop.id}">${prop.name} - ${prop.location}</option>
+                    `).join('')}
+                `;
+            }
+        }
+
+        function loadPropertiesTable() {
+            const tableBody = document.getElementById('propertiesTableBody');
+            tableBody.innerHTML = '';
+            
+            AppState.properties.forEach(property => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${property.id}</td>
+                    <td>${property.name}</td>
+                    <td>${property.location}</td>
+                    <td>${property.type}</td>
+                    <td>${property.price}</td>
+                    <td>
+                        <span class="feature-status ${property.status === 'active' ? 'status-active' : 'status-inactive'}">
+                            ${property.status === 'active' 
+                                ? (AppState.language === 'swahili' ? 'Inatumika' : 'Active')
+                                : (AppState.language === 'swahili' ? 'Inasubiri' : 'Pending')}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" onclick="viewProperty(${property.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-success btn-sm" onclick="editProperty(${property.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteProperty(${property.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Charts Setup
+        function setupCharts() {
+            // Listings Chart
+            const listingsCtx = document.getElementById('listingsChart').getContext('2d');
+            AppState.charts.listings = new Chart(listingsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: AppState.language === 'swahili' ? 'Mali Zilizosajiliwa' : 'Properties Listed',
+                        data: [65, 59, 80, 81, 56, 55, 40],
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#e2e8f0'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(148, 163, 184, 0.1)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(148, 163, 184, 0.1)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Property Types Chart
+            const typesCtx = document.getElementById('propertyTypesChart').getContext('2d');
+            AppState.charts.types = new Chart(typesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: [
+                        AppState.language === 'swahili' ? 'Nyumba' : 'Houses',
+                        AppState.language === 'swahili' ? 'Miraba' : 'Apartments',
+                        AppState.language === 'swahili' ? 'Biashara' : 'Commercial',
+                        AppState.language === 'swahili' ? 'Ardhi' : 'Land'
+                    ],
+                    datasets: [{
+                        data: [35, 25, 20, 20],
+                        backgroundColor: [
+                            '#2563eb',
+                            '#10b981',
+                            '#f59e0b',
+                            '#ef4444'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#e2e8f0',
+                                padding: 20
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Digital Twin Functions
+        function initDigitalTwinPage() {
+            // This would initialize the digital twin visualization
+            console.log('Initializing Digital Twin page...');
+        }
+
+        function initDigitalTwinMap() {
+            // Initialize map
+            const map = L.map('propertyMap').setView([-6.7924, 39.2083], 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            // Add marker
+            L.marker([-6.7924, 39.2083])
+                .addTo(map)
+                .bindPopup('Property Location<br>Digital Twin Active')
+                .openPopup();
+        }
+
+        function startSensorUpdates() {
+            // Simulate live sensor updates
+            setInterval(() => {
+                document.getElementById('twinTemperature').textContent = 
+                    `${Math.floor(Math.random() * 10) + 20}°C`;
+                document.getElementById('twinHumidity').textContent = 
+                    `${Math.floor(Math.random() * 20) + 50}%`;
+                document.getElementById('twinFreshness').textContent = 
+                    `${Math.floor(Math.random() * 10) + 85}%`;
+                document.getElementById('twinBattery').textContent = 
+                    `${Math.floor(Math.random() * 20) + 70}%`;
+            }, 3000);
+        }
+
+        // AI Procurement Functions
+        function initAIProcurementPage() {
+            console.log('Initializing AI Procurement page...');
+        }
+
+        function runAINegotiation() {
+            const targetPrice = document.getElementById('targetPrice').value;
+            const quantity = document.getElementById('purchaseQuantity').value;
+            
+            if (!targetPrice || !quantity) {
+                alert(AppState.language === 'swahili' 
+                    ? 'Tafadhali ingiza bei ya lengo na kiasi' 
+                    : 'Please enter target price and quantity');
+                return;
+            }
+            
+            // Simulate AI negotiation
+            document.getElementById('aiNegotiationResults').classList.remove('hidden');
+            
+            // Simulate negotiation process
+            let currentPrice = parseFloat(targetPrice) * 1.2; // Start 20% higher
+            let counter = 0;
+            
+            const negotiationInterval = setInterval(() => {
+                currentPrice *= 0.95; // 5% reduction each step
+                counter++;
+                
+                document.getElementById('finalPrice').textContent = 
+                    `Tsh ${Math.round(currentPrice * quantity).toLocaleString()}`;
+                
+                if (counter >= 5 || currentPrice <= targetPrice) {
+                    clearInterval(negotiationInterval);
+                    
+                    // Show success message
+                    setTimeout(() => {
+                        alert(AppState.language === 'swahili'
+                            ? 'Mazungumzo yamekamilika kwa mafanikio! AI imepata bei bora.'
+                            : 'Negotiation completed successfully! AI obtained the best price.');
+                    }, 500);
+                }
+            }, 1000);
+        }
+
+        // Property Management Functions
+        function showAddPropertyModal() {
+            const modalHTML = `
+                <div id="addPropertyModal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 2000;">
+                    <div style="background: var(--dark-2); padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px;">
+                        <h2 style="margin-bottom: 1.5rem;">
+                            ${AppState.language === 'swahili' ? 'Ongeza Mali Mpya' : 'Add New Property'}
+                        </h2>
+                        
+                        <div class="form-group">
+                            <label class="form-label">${AppState.language === 'swahili' ? 'Jina la Mali' : 'Property Name'}</label>
+                            <input type="text" class="form-input" id="newPropertyName">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">${AppState.language === 'swahili' ? 'Eneo' : 'Location'}</label>
+                            <input type="text" class="form-input" id="newPropertyLocation">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">${AppState.language === 'swahili' ? 'Aina' : 'Type'}</label>
+                            <select class="form-input" id="newPropertyType">
+                                <option value="house">${AppState.language === 'swahili' ? 'Nyumba' : 'House'}</option>
+                                <option value="apartment">${AppState.language === 'swahili' ? 'Mraba' : 'Apartment'}</option>
+                                <option value="commercial">${AppState.language === 'swahili' ? 'Biashara' : 'Commercial'}</option>
+                                <option value="land">${AppState.language === 'swahili' ? 'Ardhi' : 'Land'}</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">${AppState.language === 'swahili' ? 'Bei' : 'Price'}</label>
+                            <input type="number" class="form-input" id="newPropertyPrice">
+                        </div>
+                        
+                        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                            <button class="btn btn-primary" onclick="saveNewProperty()">
+                                ${AppState.language === 'swahili' ? 'Hifadhi' : 'Save'}
+                            </button>
+                            <button class="btn btn-danger" onclick="closeModal()">
+                                ${AppState.language === 'swahili' ? 'Funga' : 'Close'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function saveNewProperty() {
+            const name = document.getElementById('newPropertyName').value;
+            const location = document.getElementById('newPropertyLocation').value;
+            const type = document.getElementById('newPropertyType').value;
+            const price = document.getElementById('newPropertyPrice').value;
+            
+            if (!name || !location || !price) {
+                alert(AppState.language === 'swahili'
+                    ? 'Tafadhali jaza sehemu zote' 
+                    : 'Please fill all fields');
+                return;
+            }
+            
+            // Add to properties array
+            const newProperty = {
+                id: AppState.properties.length + 1,
+                name: name,
+                location: location,
+                type: type.charAt(0).toUpperCase() + type.slice(1),
+                price: `Tsh ${parseInt(price).toLocaleString()}`,
+                status: 'active',
+                digitalTwin: false
+            };
+            
+            AppState.properties.push(newProperty);
+            
+            // Update table
+            loadPropertiesTable();
+            
+            // Close modal
+            closeModal();
+            
+            alert(AppState.language === 'swahili'
+                ? 'Mali imeongezwa kikamilifu!' 
+                : 'Property added successfully!');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('addPropertyModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function viewProperty(id) {
+            alert(AppState.language === 'swahili'
+                ? `Inaonyesha mali ${id}` 
+                : `Viewing property ${id}`);
+        }
+
+        function editProperty(id) {
+            alert(AppState.language === 'swahili'
+                ? `Inahariri mali ${id}` 
+                : `Editing property ${id}`);
+        }
+
+        function deleteProperty(id) {
+            if (confirm(AppState.language === 'swahili'
+                ? 'Una uhakika unataka kufuta mali hii?' 
+                : 'Are you sure you want to delete this property?')) {
+                
+                AppState.properties = AppState.properties.filter(prop => prop.id !== id);
+                loadPropertiesTable();
+                
+                alert(AppState.language === 'swahili'
+                    ? 'Mali imefutwa' 
+                    : 'Property deleted');
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
