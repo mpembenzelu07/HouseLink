@@ -1,20 +1,31 @@
-
 <!DOCTYPE html>
 <html lang="sw" class="dark-mode">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HouseLink Tanzania | #1 Real Estate Platform in Tanzania</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Tanzania's #1 real estate platform. Find properties for sale and rent in Dar es Salaam, Arusha, Mwanza, and all major cities. Connect with certified agents.">
+    <meta name="keywords" content="real estate Tanzania, buy property Tanzania, rent house Dar es Salaam, real estate agents Tanzania">
+    <meta name="author" content="I&G Technology">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="HouseLink Tanzania | #1 Real Estate Platform">
+    <meta property="og:description" content="Find your dream home in Tanzania. 10,000+ properties available.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://houselink.co.tz">
+    <meta property="og:image" content="https://houselink.co.tz/images/og-home.jpg">
+    
     <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     
-    <!-- Primary Styles -->
+    <!-- Home Page CSS -->
     <style>
         :root {
-            /* Premium Color Palette */
+            /* Color Palette */
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
             --primary-light: #60a5fa;
@@ -26,13 +37,13 @@
             --success: #10b981;
             --warning: #f59e0b;
             
-            /* Dark Mode Colors */
+            /* Dark Mode */
             --dark-1: #0f172a;
             --dark-2: #1e293b;
             --dark-3: #334155;
             --dark-4: #475569;
             
-            /* Light Mode Colors */
+            /* Light Mode */
             --light-1: #ffffff;
             --light-2: #f8fafc;
             --light-3: #f1f5f9;
@@ -49,15 +60,14 @@
             --gradient-accent: linear-gradient(135deg, var(--accent), var(--danger));
             --gradient-dark: linear-gradient(135deg, var(--dark-1), var(--dark-3));
             --gradient-light: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+            --gradient-premium: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             
             /* Shadows */
-            --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
             --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
             --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
             --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
             --shadow-xl: 0 25px 50px -12px rgba(0,0,0,0.25);
-            --shadow-2xl: 0 50px 100px -20px rgba(0,0,0,0.25);
             
             /* Border Radius */
             --radius-sm: 8px;
@@ -65,14 +75,10 @@
             --radius-md: 16px;
             --radius-lg: 20px;
             --radius-xl: 24px;
-            --radius-2xl: 32px;
             --radius-full: 9999px;
             
             /* Transitions */
-            --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             
             /* Spacing */
             --space-xs: 4px;
@@ -85,7 +91,7 @@
             --space-4xl: 80px;
             
             /* Layout */
-            --container-width: 1280px;
+            --container-width: 1440px;
             --header-height: 80px;
         }
 
@@ -97,7 +103,6 @@
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 100px;
         }
 
         body {
@@ -106,7 +111,6 @@
             color: var(--text-primary);
             background: var(--light-1);
             overflow-x: hidden;
-            transition: var(--transition-slow);
         }
 
         body.dark-mode {
@@ -118,7 +122,6 @@
             font-family: 'Manrope', system-ui, -apple-system, sans-serif;
             font-weight: 700;
             line-height: 1.2;
-            letter-spacing: -0.02em;
         }
 
         .container {
@@ -128,25 +131,8 @@
             padding: 0 var(--space-xl);
         }
 
-        /* ====== UTILITY CLASSES ====== */
-        .text-swahili, .text-english {
-            display: none;
-        }
-        
-        .text-swahili.active, .text-english.active {
-            display: inline;
-        }
-        
-        .element-swahili, .element-english {
-            display: none;
-        }
-        
-        .element-swahili.active, .element-english.active {
-            display: block;
-        }
-
-        /* ====== PREMIUM HEADER ====== */
-        .premium-header {
+        /* ====== HEADER ====== */
+        .main-header {
             position: fixed;
             top: 0;
             left: 0;
@@ -155,18 +141,13 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(0,0,0,0.1);
-            transition: var(--transition);
             height: var(--header-height);
+            transition: var(--transition);
         }
 
-        .dark-mode .premium-header {
+        .dark-mode .main-header {
             background: rgba(15, 23, 42, 0.95);
             border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .premium-header.scrolled {
-            box-shadow: var(--shadow-lg);
-            transform: translateY(0);
         }
 
         .header-container {
@@ -177,7 +158,7 @@
         }
 
         /* Logo */
-        .premium-logo {
+        .logo {
             display: flex;
             align-items: center;
             gap: var(--space-md);
@@ -185,7 +166,6 @@
         }
 
         .logo-icon {
-            position: relative;
             width: 48px;
             height: 48px;
             background: var(--gradient-primary);
@@ -196,26 +176,6 @@
             color: white;
             font-weight: 800;
             font-size: 1.5rem;
-            box-shadow: var(--shadow-md);
-            overflow: hidden;
-        }
-
-        .logo-icon::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
-        }
-
-        .premium-logo:hover .logo-icon::after {
-            transform: translateX(100%);
-        }
-
-        .logo-text {
-            display: flex;
-            flex-direction: column;
         }
 
         .logo-text h1 {
@@ -223,24 +183,11 @@
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
             margin: 0;
-            line-height: 1;
-        }
-
-        .logo-tagline {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-
-        .dark-mode .logo-tagline {
-            color: var(--text-light);
         }
 
         /* Navigation */
-        .premium-nav {
+        .main-nav {
             display: flex;
             align-items: center;
             gap: var(--space-xl);
@@ -253,45 +200,36 @@
         }
 
         .nav-link {
-            position: relative;
             text-decoration: none;
             color: var(--text-primary);
             font-weight: 600;
             font-size: 0.95rem;
-            padding: var(--space-sm) 0;
             transition: var(--transition);
-            cursor: pointer;
+            padding: var(--space-sm) 0;
+            position: relative;
         }
 
         .dark-mode .nav-link {
             color: var(--light-1);
         }
 
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background: var(--gradient-primary);
-            border-radius: var(--radius-full);
-            transition: var(--transition);
+        .nav-link:hover {
+            color: var(--primary);
         }
 
-        .nav-link:hover,
         .nav-link.active {
             color: var(--primary);
         }
 
-        .nav-link:hover::before,
-        .nav-link.active::before {
-            width: 100%;
-        }
-
-        .nav-link i {
-            margin-right: var(--space-xs);
-            font-size: 0.9em;
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-full);
         }
 
         /* Header Actions */
@@ -302,7 +240,6 @@
         }
 
         .action-btn {
-            position: relative;
             width: 44px;
             height: 44px;
             border-radius: var(--radius);
@@ -322,96 +259,89 @@
         }
 
         .action-btn:hover {
-            background: var(--light-4);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .dark-mode .action-btn:hover {
-            background: var(--dark-4);
-        }
-
-        .action-btn.active {
             background: var(--primary);
             color: white;
         }
 
-        /* Language Toggle */
-        .language-switcher {
+        .mobile-menu-btn {
+            display: none;
+        }
+
+        /* ====== HERO SECTION ====== */
+        .hero-section {
+            padding-top: calc(var(--header-height) + var(--space-4xl));
+            padding-bottom: var(--space-4xl);
+            background: var(--gradient-premium);
             position: relative;
-        }
-
-        .lang-toggle {
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-            padding: var(--space-sm) var(--space-md);
-            background: var(--light-3);
-            border: none;
-            border-radius: var(--radius);
-            color: var(--text-primary);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            min-width: 110px;
-            justify-content: center;
-        }
-
-        .dark-mode .lang-toggle {
-            background: var(--dark-3);
-            color: var(--light-1);
-        }
-
-        .lang-toggle:hover {
-            background: var(--light-4);
-            transform: translateY(-2px);
-        }
-
-        .dark-mode .lang-toggle:hover {
-            background: var(--dark-4);
-        }
-
-        .lang-toggle i {
-            font-size: 0.9em;
-            transition: var(--transition);
-        }
-
-        .lang-toggle.active-swahili {
-            background: var(--primary);
-            color: white;
-        }
-
-        .lang-toggle.active-english {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .lang-flag {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
             overflow: hidden;
-            display: flex;
+        }
+
+        .hero-background {
+            position: absolute;
+            inset: 0;
+            background: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1920&q=80') center/cover;
+            opacity: 0.2;
+        }
+
+        .hero-container {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4xl);
             align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: bold;
         }
 
-        .lang-flag.swahili {
-            background: linear-gradient(45deg, #43b02a, #007a33);
+        .hero-content h1 {
+            font-size: 3.5rem;
             color: white;
+            margin-bottom: var(--space-lg);
         }
 
-        .lang-flag.english {
-            background: linear-gradient(45deg, #00247d, #cf142b);
-            color: white;
+        .hero-content p {
+            font-size: 1.25rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: var(--space-xl);
         }
 
-        /* Auth Buttons */
-        .auth-buttons {
+        .hero-stats {
             display: flex;
-            gap: var(--space-sm);
+            gap: var(--space-2xl);
+            margin-top: var(--space-xl);
+        }
+
+        .hero-stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+            display: block;
+        }
+
+        .hero-stat-label {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+        }
+
+        /* Hero Search */
+        .hero-search {
+            background: rgba(255,255,255,0.95);
+            border-radius: var(--radius-xl);
+            padding: var(--space-2xl);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .search-input {
+            padding: var(--space-lg);
+            border: 2px solid var(--light-4);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            width: 100%;
         }
 
         .btn {
@@ -425,442 +355,17 @@
             gap: var(--space-sm);
             cursor: pointer;
             transition: var(--transition);
-            border: 2px solid transparent;
-            font-size: 0.95rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .btn:hover::before {
-            width: 300px;
-            height: 300px;
+            border: none;
         }
 
         .btn-primary {
             background: var(--gradient-primary);
             color: white;
-            box-shadow: var(--shadow);
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: var(--shadow-lg);
-        }
-
-        .btn-secondary {
-            background: var(--accent);
-            color: white;
-            box-shadow: var(--shadow);
-        }
-
-        .btn-secondary:hover {
-            background: var(--accent-light);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--primary);
-            border-color: var(--primary);
-        }
-
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-3px);
-        }
-
-        .btn-dark {
-            background: var(--dark-1);
-            color: white;
-        }
-
-        .btn-dark:hover {
-            background: var(--dark-2);
-            transform: translateY(-3px);
-        }
-
-        .btn-large {
-            padding: var(--space-lg) var(--space-2xl);
-            font-size: 1.1rem;
-        }
-
-        .btn-block {
-            width: 100%;
-        }
-
-        /* Mobile Menu Button */
-        .mobile-menu-btn {
-            display: none;
-            width: 44px;
-            height: 44px;
-            border-radius: var(--radius);
-            background: var(--light-3);
-            border: none;
-            color: var(--text-primary);
-            cursor: pointer;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-
-        .dark-mode .mobile-menu-btn {
-            background: var(--dark-3);
-            color: var(--light-1);
-        }
-
-        .mobile-menu-btn:hover {
-            background: var(--light-4);
-        }
-
-        .dark-mode .mobile-menu-btn:hover {
-            background: var(--dark-4);
-        }
-
-        /* Contact Info in Header */
-        .header-contact {
-            display: flex;
-            align-items: center;
-            gap: var(--space-md);
-        }
-
-        .contact-info-small {
-            display: flex;
-            flex-direction:column;
-            align-items: flex-end;
-        }
-
-        .contact-number {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: var(--space-xs);
-        }
-
-        .dark-mode .contact-number {
-            color: var(--light-1);
-        }
-
-        .contact-number i {
-            color: var(--primary);
-            font-size: 0.9em;
-        }
-
-        .contact-label {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            margin-top: 2px;
-        }
-
-        .dark-mode .contact-label {
-            color: var(--text-light);
-        }
-
-        /* ====== HERO SECTION ====== */
-        .premium-hero {
-            position: relative;
-            padding-top: calc(var(--header-height) + var(--space-4xl));
-            padding-bottom: var(--space-4xl);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            overflow: hidden;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-        }
-
-        .hero-background {
-            position: absolute;
-            inset: 0;
-            background: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1920&q=80') center/cover;
-            opacity: 0.2;
-        }
-
-        .hero-background::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.9) 0%, rgba(16, 185, 129, 0.9) 100%);
-        }
-
-        .hero-container {
-            position: relative;
-            z-index: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-4xl);
-            align-items: center;
-        }
-
-        .hero-content {
-            max-width: 600px;
-        }
-
-        .hero-tag {
-            display: inline-block;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: var(--space-sm) var(--space-md);
-            border-radius: var(--radius-full);
-            color: white;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: var(--space-lg);
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .hero-title {
-            font-size: 3.5rem;
-            color: white;
-            margin-bottom: var(--space-lg);
-            line-height: 1.1;
-        }
-
-        .hero-title span {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-description {
-            font-size: 1.25rem;
-            color: rgba(255,255,255,0.9);
-            margin-bottom: var(--space-xl);
-            line-height: 1.6;
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: var(--space-2xl);
-            margin-top: var(--space-xl);
-        }
-
-        .hero-stat {
-            text-align: center;
-        }
-
-        .hero-stat-number {
-            display: block;
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: white;
-            line-height: 1;
-            margin-bottom: var(--space-xs);
-        }
-
-        .hero-stat-label {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.8);
-            font-weight: 500;
-        }
-
-        /* Hero Search */
-        .hero-search {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: var(--radius-xl);
-            padding: var(--space-2xl);
-            box-shadow: var(--shadow-2xl);
-            transform: translateY(0);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .dark-mode .hero-search {
-            background: rgba(30, 41, 59, 0.95);
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .search-header {
-            margin-bottom: var(--space-xl);
-        }
-
-        .search-header h3 {
-            font-size: 1.5rem;
-            margin-bottom: var(--space-sm);
-            color: var(--text-primary);
-        }
-
-        .dark-mode .search-header h3 {
-            color: var(--light-1);
-        }
-
-        .search-header p {
-            color: var(--text-secondary);
-        }
-
-        .dark-mode .search-header p {
-            color: var(--text-light);
-        }
-
-        .search-tabs {
-            display: flex;
-            gap: var(--space-sm);
-            margin-bottom: var(--space-xl);
-        }
-
-        .search-tab {
-            flex: 1;
-            padding: var(--space-md);
-            background: var(--light-3);
-            border: none;
-            border-radius: var(--radius);
-            font-weight: 600;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: var(--transition);
-            text-align: center;
-        }
-
-        .dark-mode .search-tab {
-            background: var(--dark-3);
-            color: var(--text-light);
-        }
-
-        .search-tab:hover {
-            background: var(--light-4);
-        }
-
-        .dark-mode .search-tab:hover {
-            background: var(--dark-4);
-        }
-
-        .search-tab.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        .search-form {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-lg);
-        }
-
-        .search-input-group {
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: var(--space-lg) var(--space-lg) var(--space-lg) 52px;
-            border: 2px solid var(--light-4);
-            border-radius: var(--radius);
-            font-size: 1rem;
-            font-family: inherit;
-            background: var(--light-2);
-            transition: var(--transition);
-        }
-
-        .dark-mode .search-input {
-            background: var(--dark-2);
-            border-color: var(--dark-4);
-            color: var(--light-1);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .search-input-icon {
-            position: absolute;
-            left: var(--space-lg);
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-        }
-
-        .search-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-lg);
-        }
-
-        .search-select {
-            width: 100%;
-            padding: var(--space-lg);
-            border: 2px solid var(--light-4);
-            border-radius: var(--radius);
-            font-size: 1rem;
-            font-family: inherit;
-            background: var(--light-2);
-            cursor: pointer;
-            transition: var(--transition);
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1em;
-        }
-
-        .dark-mode .search-select {
-            background-color: var(--dark-2);
-            border-color: var(--dark-4);
-            color: var(--light-1);
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-        }
-
-        .search-select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .price-range {
-            display: flex;
-            align-items: center;
-            gap: var(--space-md);
-        }
-
-        .price-input {
-            flex: 1;
-            padding: var(--space-lg);
-            border: 2px solid var(--light-4);
-            border-radius: var(--radius);
-            font-size: 1rem;
-            background: var(--light-2);
-            transition: var(--transition);
-        }
-
-        .dark-mode .price-input {
-            background: var(--dark-2);
-            border-color: var(--dark-4);
-            color: var(--light-1);
-        }
-
-        .price-input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .price-separator {
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
-
-        .search-button {
-            margin-top: var(--space-sm);
         }
 
         /* ====== FEATURED PROPERTIES ====== */
@@ -873,37 +378,11 @@
             margin-bottom: var(--space-3xl);
         }
 
-        .section-subtitle {
-            display: inline-block;
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: var(--space-md);
-        }
-
         .section-title {
             font-size: 2.5rem;
             margin-bottom: var(--space-lg);
         }
 
-        .dark-mode .section-title {
-            color: var(--light-1);
-        }
-
-        .section-description {
-            max-width: 600px;
-            margin: 0 auto;
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
-
-        .dark-mode .section-description {
-            color: var(--text-light);
-        }
-
-        /* Property Card */
         .properties-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -915,13 +394,8 @@
             background: var(--light-1);
             border-radius: var(--radius-xl);
             overflow: hidden;
-            transition: var(--transition);
             box-shadow: var(--shadow);
-            position: relative;
-        }
-
-        .dark-mode .property-card {
-            background: var(--dark-2);
+            transition: var(--transition);
         }
 
         .property-card:hover {
@@ -929,33 +403,7 @@
             box-shadow: var(--shadow-xl);
         }
 
-        .property-badge {
-            position: absolute;
-            top: var(--space-lg);
-            left: var(--space-lg);
-            background: var(--accent);
-            color: white;
-            padding: var(--space-sm) var(--space-md);
-            border-radius: var(--radius);
-            font-weight: 600;
-            font-size: 0.85rem;
-            z-index: 2;
-        }
-
-        .property-badge.featured {
-            background: var(--gradient-accent);
-        }
-
-        .property-badge.sale {
-            background: var(--danger);
-        }
-
-        .property-badge.rent {
-            background: var(--secondary);
-        }
-
         .property-image {
-            position: relative;
             height: 240px;
             overflow: hidden;
         }
@@ -964,39 +412,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .property-card:hover .property-image img {
-            transform: scale(1.05);
-        }
-
-        .property-actions {
-            position: absolute;
-            top: var(--space-lg);
-            right: var(--space-lg);
-            display: flex;
-            gap: var(--space-sm);
-            z-index: 2;
-        }
-
-        .property-action-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
-            color: var(--text-primary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-
-        .property-action-btn:hover {
-            background: white;
-            transform: scale(1.1);
         }
 
         .property-content {
@@ -1010,289 +425,27 @@
             margin-bottom: var(--space-sm);
         }
 
-        .property-title {
-            font-size: 1.3rem;
-            margin-bottom: var(--space-sm);
-        }
-
-        .property-location {
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-            color: var(--text-secondary);
-            margin-bottom: var(--space-lg);
-            font-size: 0.95rem;
-        }
-
-        .property-location i {
-            color: var(--primary);
-        }
-
-        .property-features {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--space-md);
-            padding-top: var(--space-lg);
-            border-top: 1px solid var(--light-4);
-        }
-
-        .dark-mode .property-features {
-            border-color: var(--dark-4);
-        }
-
-        .property-feature {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--light-3);
-            border-radius: var(--radius);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: var(--space-sm);
-            color: var(--primary);
-        }
-
-        .dark-mode .feature-icon {
-            background: var(--dark-3);
-        }
-
-        .feature-value {
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-
-        .feature-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        /* View All Button */
-        .view-all {
-            text-align: center;
-        }
-
-        /* ====== HOW IT WORKS ====== */
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: var(--space-2xl);
-            margin-top: var(--space-3xl);
-        }
-
-        .step {
-            text-align: center;
-            padding: var(--space-2xl);
-            background: var(--light-2);
-            border-radius: var(--radius-xl);
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .dark-mode .step {
-            background: var(--dark-2);
-        }
-
-        .step:hover {
-            transform: translateY(-5px);
-            background: var(--light-3);
-        }
-
-        .dark-mode .step:hover {
-            background: var(--dark-3);
-        }
-
-        .step-number {
-            width: 60px;
-            height: 60px;
+        /* ====== CTA SECTION ====== */
+        .cta-section {
             background: var(--gradient-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             color: white;
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin: 0 auto var(--space-xl);
-            position: relative;
-            z-index: 1;
-        }
-
-        .step-number::before {
-            content: '';
-            position: absolute;
-            inset: -5px;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            opacity: 0.3;
-            z-index: -1;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.1); opacity: 0.2; }
-        }
-
-        .step-title {
-            font-size: 1.3rem;
-            margin-bottom: var(--space-md);
-        }
-
-        .step-description {
-            color: var(--text-secondary);
-        }
-
-        /* ====== AGENTS SECTION ====== */
-        .agents-section {
-            background: var(--light-2);
-        }
-
-        .dark-mode .agents-section {
-            background: var(--dark-2);
-        }
-
-        .agents-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: var(--space-2xl);
-        }
-
-        .agent-card {
-            background: var(--light-1);
-            border-radius: var(--radius-xl);
-            overflow: hidden;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
             text-align: center;
-            padding: var(--space-xl);
+            padding: var(--space-4xl) 0;
         }
 
-        .dark-mode .agent-card {
-            background: var(--dark-3);
-        }
-
-        .agent-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .agent-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            margin: 0 auto var(--space-lg);
-            border: 4px solid var(--primary);
-            overflow: hidden;
-        }
-
-        .agent-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .agent-name {
-            font-size: 1.3rem;
-            margin-bottom: var(--space-sm);
-        }
-
-        .agent-title {
-            color: var(--primary);
-            font-weight: 600;
+        .cta-section h2 {
+            font-size: 2.5rem;
             margin-bottom: var(--space-lg);
         }
 
-        .agent-contact {
-            display: flex;
-            justify-content: center;
-            gap: var(--space-md);
-            margin-top: var(--space-lg);
-        }
-
-        /* ====== CONTACT SECTION ====== */
-        .contact-section {
-            background: var(--gradient-light);
-        }
-
-        .dark-mode .contact-section {
-            background: var(--gradient-dark);
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-4xl);
-        }
-
-        .contact-form {
-            background: var(--light-1);
-            padding: var(--space-2xl);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .dark-mode .contact-form {
-            background: var(--dark-2);
-        }
-
-        .form-group {
-            margin-bottom: var(--space-lg);
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: var(--space-sm);
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .dark-mode .form-label {
-            color: var(--light-1);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: var(--space-md);
-            border: 2px solid var(--light-4);
-            border-radius: var(--radius);
-            font-size: 1rem;
-            font-family: inherit;
-            background: var(--light-2);
-            transition: var(--transition);
-        }
-
-        .dark-mode .form-input {
-            background: var(--dark-3);
-            border-color: var(--dark-4);
-            color: var(--light-1);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        textarea.form-input {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        /* ====== PREMIUM FOOTER ====== */
-        .premium-footer {
+        /* ====== FOOTER ====== */
+        .main-footer {
             background: var(--dark-1);
             color: var(--light-1);
             padding: var(--space-4xl) 0 0;
         }
 
-        .footer-top {
+        .footer-grid {
             display: grid;
             grid-template-columns: 2fr repeat(4, 1fr);
             gap: var(--space-2xl);
@@ -1300,106 +453,14 @@
             border-bottom: 1px solid var(--dark-3);
         }
 
-        .footer-logo {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-md);
-        }
-
-        .footer-logo img {
-            width: 60px;
-        }
-
-        .footer-logo h3 {
-            font-size: 1.5rem;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .footer-description {
-            color: var(--text-light);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        .social-links {
-            display: flex;
-            gap: var(--space-md);
-            margin-top: var(--space-lg);
-        }
-
-        .social-link {
-            width: 44px;
-            height: 44px;
-            border-radius: var(--radius);
-            background: var(--dark-3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--light-1);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .social-link:hover {
-            background: var(--primary);
-            transform: translateY(-3px);
-        }
-
-        .footer-column h4 {
-            font-size: 1.1rem;
-            margin-bottom: var(--space-xl);
-            color: white;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: var(--space-md);
-        }
-
         .footer-links a {
             color: var(--text-light);
             text-decoration: none;
             transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
         }
 
         .footer-links a:hover {
             color: var(--primary);
-            padding-left: var(--space-sm);
-        }
-
-        .footer-links i {
-            font-size: 0.8em;
-            width: 20px;
-        }
-
-        .footer-contact {
-            list-style: none;
-        }
-
-        .footer-contact li {
-            display: flex;
-            align-items: flex-start;
-            gap: var(--space-md);
-            margin-bottom: var(--space-lg);
-        }
-
-        .footer-contact i {
-            color: var(--primary);
-            margin-top: 4px;
-        }
-
-        .contact-text {
-            font-size: 0.9rem;
-            line-height: 1.5;
         }
 
         .footer-bottom {
@@ -1409,104 +470,7 @@
             align-items: center;
         }
 
-        .copyright {
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-
-        .footer-legal {
-            display: flex;
-            gap: var(--space-2xl);
-        }
-
-        .footer-legal a {
-            color: var(--text-light);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-legal a:hover {
-            color: var(--primary);
-        }
-
-        /* ====== TAB CONTENT ====== */
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ====== PROPERTY MODAL ====== */
-        .property-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: var(--space-xl);
-        }
-
-        .property-modal.active {
-            display: flex;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-content {
-            background: var(--light-1);
-            border-radius: var(--radius-xl);
-            max-width: 900px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .dark-mode .modal-content {
-            background: var(--dark-2);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: var(--space-lg);
-            right: var(--space-lg);
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--light-1);
-            border: none;
-            color: var(--text-primary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            transition: var(--transition);
-        }
-
-        .dark-mode .modal-close {
-            background: var(--dark-3);
-            color: var(--light-1);
-        }
-
-        .modal-close:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* ====== RESPONSIVE DESIGN ====== */
+        /* ====== RESPONSIVE ====== */
         @media (max-width: 1200px) {
             .hero-container {
                 grid-template-columns: 1fr;
@@ -1518,40 +482,31 @@
                 margin: 0 auto;
             }
             
-            .footer-top {
+            .footer-grid {
                 grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .contact-grid {
-                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 992px) {
-            .premium-nav {
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .main-nav {
                 position: fixed;
                 top: var(--header-height);
                 left: 0;
                 right: 0;
                 background: var(--light-1);
                 padding: var(--space-xl);
-                border-top: 1px solid var(--light-4);
-                box-shadow: var(--shadow-xl);
+                flex-direction: column;
                 transform: translateY(-100%);
                 opacity: 0;
                 visibility: hidden;
                 transition: var(--transition);
-                flex-direction: column;
-                align-items: stretch;
-                z-index: 999;
             }
             
-            .dark-mode .premium-nav {
-                background: var(--dark-2);
-                border-color: var(--dark-4);
-            }
-            
-            .premium-nav.active {
+            .main-nav.active {
                 transform: translateY(0);
                 opacity: 1;
                 visibility: visible;
@@ -1561,55 +516,18 @@
                 flex-direction: column;
                 gap: var(--space-md);
             }
-            
-            .nav-link {
-                padding: var(--space-md);
-                border-radius: var(--radius);
-            }
-            
-            .nav-link:hover {
-                background: var(--light-3);
-            }
-            
-            .dark-mode .nav-link:hover {
-                background: var(--dark-3);
-            }
-            
-            .mobile-menu-btn {
-                display: flex;
-            }
-            
-            .header-contact {
-                display: none;
-            }
-            
-            .properties-grid {
-                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            }
         }
 
         @media (max-width: 768px) {
-            :root {
-                --header-height: 70px;
-            }
-            
-            .container {
-                padding: 0 var(--space-lg);
-            }
-            
-            .hero-title {
+            .hero-content h1 {
                 font-size: 2.5rem;
-            }
-            
-            .search-row {
-                grid-template-columns: 1fr;
             }
             
             .properties-grid {
                 grid-template-columns: 1fr;
             }
             
-            .footer-top {
+            .footer-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -1618,1351 +536,253 @@
                 gap: var(--space-lg);
                 text-align: center;
             }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-stats {
-                flex-direction: column;
-                gap: var(--space-lg);
-            }
-            
-            .search-tabs {
-                flex-direction: column;
-            }
-            
-            .btn {
-                padding: var(--space-md) var(--space-lg);
-            }
-            
-            .auth-buttons {
-                display: none;
-            }
-            
-            .lang-toggle {
-                min-width: 90px;
-                padding: var(--space-sm);
-            }
-            
-            .lang-toggle span {
-                display: none;
-            }
         }
     </style>
 </head>
 <body class="dark-mode">
-    <!-- Premium Header -->
-    <header class="premium-header">
+    <!-- Header -->
+    <header class="main-header">
         <div class="container header-container">
             <!-- Logo -->
-            <a href="#" class="premium-logo">
+            <a href="index.html" class="logo">
                 <div class="logo-icon">HL</div>
                 <div class="logo-text">
                     <h1>HouseLink</h1>
-                    <span class="logo-tagline">
-                        <span class="text-swahili active">Jukwaa la Mali isiyohamishika Nambari 1 Tanzania</span>
-                        <span class="text-english">Tanzania's #1 Real Estate Platform</span>
-                    </span>
                 </div>
             </a>
 
             <!-- Navigation -->
-            <nav class="premium-nav">
+            <nav class="main-nav">
                 <ul class="nav-links">
-                    <li><a href="#home" class="nav-link active" data-section="home">
-                        <i class="fas fa-home"></i>
-                        <span class="text-swahili active">Nyumbani</span>
-                        <span class="text-english">Home</span>
-                    </a></li>
-                    <li><a href="#properties" class="nav-link" data-section="properties">
-                        <i class="fas fa-building"></i>
-                        <span class="text-swahili active">Mali</span>
-                        <span class="text-english">Properties</span>
-                    </a></li>
-                    <li><a href="#how-it-works" class="nav-link" data-section="how-it-works">
-                        <i class="fas fa-play-circle"></i>
-                        <span class="text-swahili active">Jinsi Inavyofanya Kazi</span>
-                        <span class="text-english">How It Works</span>
-                    </a></li>
-                    <li><a href="#agents" class="nav-link" data-section="agents">
-                        <i class="fas fa-user-tie"></i>
-                        <span class="text-swahili active">Mawakala</span>
-                        <span class="text-english">Agents</span>
-                    </a></li>
-                    <li><a href="#contact" class="nav-link" data-section="contact">
-                        <i class="fas fa-phone-alt"></i>
-                        <span class="text-swahili active">Mawasiliano</span>
-                        <span class="text-english">Contact</span>
-                    </a></li>
+                    <li><a href="index.html" class="nav-link active">Home</a></li>
+                    <li><a href="properties.html" class="nav-link">Properties</a></li>
+                    <li><a href="agents.html" class="nav-link">Agents</a></li>
+                    <li><a href="about.html" class="nav-link">About Us</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
                 </ul>
-
-                <!-- Contact Info -->
-                <div class="header-contact">
-                    <div class="contact-info-small">
-                        <div class="contact-number">
-                            <i class="fas fa-phone-alt"></i>
-                            +255 123 456 789
-                        </div>
-                        <div class="contact-label">
-                            <span class="text-swahili active">Inapatikana 24/7</span>
-                            <span class="text-english">Available 24/7</span>
-                        </div>
-                    </div>
-                </div>
             </nav>
 
             <!-- Header Actions -->
             <div class="header-actions">
-                <!-- Language Toggle -->
-                <div class="language-switcher">
-                    <button class="lang-toggle active-swahili" id="languageToggle">
-                        <div class="lang-flag swahili">SW</div>
-                        <span class="text-swahili active">Kiswahili</span>
-                        <span class="text-english">Swahili</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                </div>
-
-                <!-- Theme Toggle -->
                 <button class="action-btn" id="themeToggle">
                     <i class="fas fa-moon"></i>
                 </button>
-
-                <!-- Mobile Menu Button -->
+                <a href="login.html" class="btn btn-primary">Login</a>
                 <button class="mobile-menu-btn" id="mobileMenuBtn">
                     <i class="fas fa-bars"></i>
                 </button>
-
-                <!-- Auth Buttons -->
-                <div class="auth-buttons">
-                    <a href="#" class="btn btn-outline" id="loginBtn">
-                        <span class="text-swahili active">Ingia</span>
-                        <span class="text-english">Login</span>
-                    </a>
-                    <a href="#" class="btn btn-primary" id="registerBtn">
-                        <span class="text-swahili active">Jisajili</span>
-                        <span class="text-english">Register</span>
-                    </a>
-                </div>
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="premium-hero" id="home">
+    <section class="hero-section">
         <div class="hero-background"></div>
         <div class="container hero-container">
             <div class="hero-content">
-                <span class="hero-tag">
-                    <span class="text-swahili active">#1 Jukwaa la Mali isiyohamishika Tanzania</span>
-                    <span class="text-english">#1 Real Estate Platform in Tanzania</span>
-                </span>
-                <h1 class="hero-title">
-                    <span class="text-swahili active">Tafuta Nyumba Bora <span>Inayokufaa</span> na Bei Nzuri</span>
-                    <span class="text-english">Find Your Perfect Home <span>at the Best</span> Price</span>
-                </h1>
-                <p class="hero-description">
-                    <span class="text-swahili active">
-                        Ungana na wamiliki wa mali, wakala na wauzaji wetu kupata nyumba ya ndoto yako. 
-                        Zaidi ya mali 10,000 ziko tayari kukufikia.
-                    </span>
-                    <span class="text-english">
-                        Connect with property owners, agents, and sellers to find your dream home. 
-                        Over 10,000 properties ready for you.
-                    </span>
-                </p>
+                <h1>Find Your Dream Home in Tanzania</h1>
+                <p>10,000+ properties available. Connect with certified agents and property owners.</p>
                 
                 <div class="hero-stats">
                     <div class="hero-stat">
                         <span class="hero-stat-number">10,000+</span>
-                        <span class="hero-stat-label">
-                            <span class="text-swahili active">Mali Zilizosajiliwa</span>
-                            <span class="text-english">Listed Properties</span>
-                        </span>
+                        <span class="hero-stat-label">Properties</span>
                     </div>
                     <div class="hero-stat">
                         <span class="hero-stat-number">500+</span>
-                        <span class="hero-stat-label">
-                            <span class="text-swahili active">Mawakala wa Kiamali</span>
-                            <span class="text-english">Certified Agents</span>
-                        </span>
+                        <span class="hero-stat-label">Agents</span>
                     </div>
                     <div class="hero-stat">
                         <span class="hero-stat-number">95%</span>
-                        <span class="hero-stat-label">
-                            <span class="text-swahili active">Wateja Walioridhika</span>
-                            <span class="text-english">Satisfied Clients</span>
-                        </span>
+                        <span class="hero-stat-label">Satisfied Clients</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Search Form -->
             <div class="hero-search">
-                <div class="search-header">
-                    <h3>
-                        <span class="text-swahili active">Tafuta Mali</span>
-                        <span class="text-english">Find Properties</span>
-                    </h3>
-                    <p>
-                        <span class="text-swahili active">Chagua eneo na aina ya mali unayotaka</span>
-                        <span class="text-english">Choose location and property type you want</span>
-                    </p>
-                </div>
-
-                <div class="search-tabs" id="propertyTypeTabs">
-                    <button class="search-tab active" data-type="rent">
-                        <span class="text-swahili active">Kukodisha</span>
-                        <span class="text-english">Rent</span>
-                    </button>
-                    <button class="search-tab" data-type="buy">
-                        <span class="text-swahili active">Kununua</span>
-                        <span class="text-english">Buy</span>
-                    </button>
-                    <button class="search-tab" data-type="projects">
-                        <span class="text-swahili active">Miradi</span>
-                        <span class="text-english">Projects</span>
-                    </button>
-                </div>
-
-                <form class="search-form" id="propertySearchForm">
-                    <div class="search-input-group">
-                        <i class="fas fa-search search-input-icon"></i>
-                        <input type="text" class="search-input" id="searchLocation" 
-                               placeholder="Tafuta mji, eneo au kata...">
-                    </div>
-
-                    <div class="search-row">
-                        <select class="search-select" id="propertyType">
-                            <option value="">
-                                <span class="text-swahili active">Chagua Aina ya Mali</span>
-                                <span class="text-english">Select Property Type</span>
-                            </option>
-                            <option value="apartment">Apartment</option>
-                            <option value="house">
-                                <span class="text-swahili active">Nyumba</span>
-                                <span class="text-english">House</span>
-                            </option>
-                            <option value="commercial">
-                                <span class="text-swahili active">Biashara</span>
-                                <span class="text-english">Commercial</option>
-                            <option value="land">
-                                <span class="text-swahili active">Ardhi</span>
-                                <span class="text-english">Land</span>
-                            </option>
-                        </select>
-
-                        <select class="search-select" id="propertyLocation">
-                            <option value="">
-                                <span class="text-swahili active">Chagua Eneo</span>
-                                <span class="text-english">Select Location</span>
-                            </option>
-                            <option value="dar-es-salaam">Dar es Salaam</option>
-                            <option value="dodoma">Dodoma</option>
-                            <option value="arusha">Arusha</option>
-                            <option value="mwanza">Mwanza</option>
-                        </select>
-                    </div>
-
-                    <div class="search-row">
-                        <div class="price-range">
-                            <input type="number" class="price-input" id="minPrice" 
-                                   placeholder="Tsh Kuanzia">
-                            <span class="price-separator">-</span>
-                            <input type="number" class="price-input" id="maxPrice" 
-                                   placeholder="Tsh Mpaka">
-                        </div>
-
-                        <button type="submit" class="btn btn-primary search-button">
-                            <i class="fas fa-search"></i>
-                            <span class="text-swahili active">Tafuta Sasa</span>
-                            <span class="text-english">Search Now</span>
-                        </button>
-                    </div>
+                <form class="search-form">
+                    <input type="text" class="search-input" placeholder="Search location...">
+                    <select class="search-input">
+                        <option>Property Type</option>
+                        <option>House</option>
+                        <option>Apartment</option>
+                        <option>Land</option>
+                    </select>
+                    <select class="search-input">
+                        <option>Location</option>
+                        <option>Dar es Salaam</option>
+                        <option>Arusha</option>
+                        <option>Mwanza</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Search Properties</button>
                 </form>
             </div>
         </div>
     </section>
 
     <!-- Featured Properties -->
-    <section class="section" id="properties">
+    <section class="section">
         <div class="container">
             <div class="section-header">
-                <span class="section-subtitle">
-                    <span class="text-swahili active">Mali Zilizochaguliwa</span>
-                    <span class="text-english">Featured Properties</span>
-                </span>
-                <h2 class="section-title">
-                    <span class="text-swahili active">Mali Bora Zinazouzwa Sasa</span>
-                    <span class="text-english">Top Properties Available Now</span>
-                </h2>
-                <p class="section-description">
-                    <span class="text-swahili active">
-                        Tazama mali zetu bora zaidi zilizochaguliwa kwa uangalifu na wataalamu wetu wa mali isiyohamishika
-                    </span>
-                    <span class="text-english">
-                        View our best properties carefully selected by our real estate experts
-                    </span>
-                </p>
+                <h2 class="section-title">Featured Properties</h2>
+                <p>Discover our handpicked selection of premium properties</p>
             </div>
 
-            <div class="properties-grid" id="propertiesContainer">
-                <!-- Properties will be loaded here by JavaScript -->
+            <div class="properties-grid">
+                <!-- Property 1 -->
+                <div class="property-card">
+                    <div class="property-image">
+                        <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=800&q=80" alt="Modern Apartment">
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">Tsh 850,000,000</div>
+                        <h3>Modern Apartment Kinondoni</h3>
+                        <p>4 Bedrooms • 3 Bathrooms • 220 m²</p>
+                        <a href="property-detail.html" class="btn btn-primary" style="margin-top: var(--space-lg);">View Details</a>
+                    </div>
+                </div>
+
+                <!-- Property 2 -->
+                <div class="property-card">
+                    <div class="property-image">
+                        <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=800&q=80" alt="Luxury Villa">
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">Tsh 1,200,000,000</div>
+                        <h3>Luxury Villa Masaki</h3>
+                        <p>5 Bedrooms • 4 Bathrooms • 450 m²</p>
+                        <a href="property-detail.html" class="btn btn-primary" style="margin-top: var(--space-lg);">View Details</a>
+                    </div>
+                </div>
+
+                <!-- Property 3 -->
+                <div class="property-card">
+                    <div class="property-image">
+                        <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80" alt="Office Space">
+                    </div>
+                    <div class="property-content">
+                        <div class="property-price">Tsh 4,500,000/month</div>
+                        <h3>Office Space Oysterbay</h3>
+                        <p>8 Rooms • 6 Bathrooms • 320 m²</p>
+                        <a href="property-detail.html" class="btn btn-primary" style="margin-top: var(--space-lg);">View Details</a>
+                    </div>
+                </div>
             </div>
 
-            <div class="view-all">
-                <a href="#properties" class="btn btn-outline btn-large" id="viewAllProperties">
-                    <span class="text-swahili active">Tazama Mali Zote</span>
-                    <span class="text-english">View All Properties</span>
-                    <i class="fas fa-arrow-right"></i>
-                </a>
+            <div style="text-align: center;">
+                <a href="properties.html" class="btn btn-primary">View All Properties</a>
             </div>
         </div>
     </section>
 
-    <!-- How It Works -->
-    <section class="section" id="how-it-works" style="background: var(--light-2);">
+    <!-- CTA Section -->
+    <section class="cta-section">
         <div class="container">
-            <div class="section-header">
-                <span class="section-subtitle">
-                    <span class="text-swahili active">Jinsi Inavyofanya Kazi</span>
-                    <span class="text-english">How It Works</span>
-                </span>
-                <h2 class="section-title">
-                    <span class="text-swahili active">Pata Nyumba Yako kwa Hatua 4 Rahisi</span>
-                    <span class="text-english">Get Your Home in 4 Easy Steps</span>
-                </h2>
-                <p class="section-description">
-                    <span class="text-swahili active">
-                        Mchakato wetu wa kupata mali ya ndoto yako umerahisishwa kwa hatua 4 tu
-                    </span>
-                    <span class="text-english">
-                        Our process of finding your dream property is simplified into just 4 steps
-                    </span>
-                </p>
-            </div>
-
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3 class="step-title">
-                        <span class="text-swahili active">Tafuta Mali</span>
-                        <span class="text-english">Search Properties</span>
-                    </h3>
-                    <p class="step-description">
-                        <span class="text-swahili active">
-                            Tumia filta zetu za hali ya juu kupata mali unayotaka kulingana na mahitaji yako
-                        </span>
-                        <span class="text-english">
-                            Use our advanced filters to find properties that match your requirements
-                        </span>
-                    </p>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3 class="step-title">
-                        <span class="text-swahili active">Piga Simu</span>
-                        <span class="text-english">Make a Call</span>
-                    </h3>
-                    <p class="step-description">
-                        <span class="text-swahili active">
-                            Wasiliana na mwakala wetu kupitia namba zilizo wazi kwa kila mali
-                        </span>
-                        <span class="text-english">
-                            Contact our agent through the provided numbers for each property
-                        </span>
-                    </p>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3 class="step-title">
-                        <span class="text-swahili active">Panga Ziara</span>
-                        <span class="text-english">Schedule a Visit</span>
-                    </h3>
-                    <p class="step-description">
-                        <span class="text-swahili active">
-                            Panga ziara ya kuona mali kwa kweli pamoja na mwakala wetu
-                        </span>
-                        <span class="text-english">
-                            Schedule a property viewing with our certified agent
-                        </span>
-                    </p>
-                </div>
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3 class="step-title">
-                        <span class="text-swahili active">Maliza Mkataba</span>
-                        <span class="text-english">Complete Agreement</span>
-                    </h3>
-                    <p class="step-description">
-                        <span class="text-swahili active">
-                            Maliza mkataba kwa usaidizi wa wataalamu wetu wa kisheria
-                        </span>
-                        <span class="text-english">
-                            Complete the agreement with assistance from our legal experts
-                        </span>
-                    </p>
-                </div>
+            <h2>Ready to Find Your Dream Property?</h2>
+            <p style="margin-bottom: var(--space-xl); font-size: 1.2rem;">
+                Join thousands of satisfied customers who found their perfect home through HouseLink
+            </p>
+            <div style="display: flex; gap: var(--space-md); justify-content: center;">
+                <a href="properties.html" class="btn" style="background: white; color: var(--primary);">Browse Properties</a>
+                <a href="contact.html" class="btn" style="background: transparent; border: 2px solid white; color: white;">Contact Agent</a>
             </div>
         </div>
     </section>
 
-    <!-- Agents Section -->
-    <section class="section agents-section" id="agents">
+    <!-- Footer -->
+    <footer class="main-footer">
         <div class="container">
-            <div class="section-header">
-                <span class="section-subtitle">
-                    <span class="text-swahili active">Timu Yetu</span>
-                    <span class="text-english">Our Team</span>
-                </span>
-                <h2 class="section-title">
-                    <span class="text-swahili active">Wakala Wetu Wa Kiamali</span>
-                    <span class="text-english">Our Certified Agents</span>
-                </h2>
-                <p class="section-description">
-                    <span class="text-swahili active">
-                        Wasiliana na wakala wetu waliokamilika kwa usaidizi bora wa mali isiyohamishika
-                    </span>
-                    <span class="text-english">
-                        Contact our experienced agents for the best real estate assistance
-                    </span>
-                </p>
-            </div>
-
-            <div class="agents-grid" id="agentsContainer">
-                <!-- Agents will be loaded here by JavaScript -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="section contact-section" id="contact">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-subtitle">
-                    <span class="text-swahili active">Wasiliana Nasi</span>
-                    <span class="text-english">Contact Us</span>
-                </span>
-                <h2 class="section-title">
-                    <span class="text-swahili active">Tupatie Ujumbe Wako</span>
-                    <span class="text-english">Send Us Your Message</span>
-                </h2>
-                <p class="section-description">
-                    <span class="text-swahili active">
-                        Tuna wasikiliza maswali yako na kukupa ushauri bora wa mali isiyohamishika
-                    </span>
-                    <span class="text-english">
-                        We listen to your questions and provide the best real estate advice
-                    </span>
-                </p>
-            </div>
-
-            <div class="contact-grid">
-                <div class="contact-info">
-                    <h3>
-                        <span class="text-swahili active">Taarifa za Mawasiliano</span>
-                        <span class="text-english">Contact Information</span>
-                    </h3>
-                    <ul class="footer-contact">
-                        <li>
-                            <i class="fas fa-map-marker-alt"></i>
-                            <div class="contact-text">
-                                <strong>
-                                    <span class="text-swahili active">Makao Makuu</span>
-                                    <span class="text-english">Headquarters</span>
-                                </strong><br>
-                                Samora Avenue, Dar es Salaam<br>
-                                Tanzania
-                            </div>
-                        </li>
-                        <li>
-                            <i class="fas fa-phone-alt"></i>
-                            <div class="contact-text">
-                                <strong>
-                                    <span class="text-swahili active">Simu</span>
-                                    <span class="text-english">Phone</span>
-                                </strong><br>
-                                +255 123 456 789<br>
-                                +255 987 654 321
-                            </div>
-                        </li>
-                        <li>
-                            <i class="fas fa-envelope"></i>
-                            <div class="contact-text">
-                                <strong>
-                                    <span class="text-swahili active">Barua Pepe</span>
-                                    <span class="text-english">Email</span>
-                                </strong><br>
-                                info@houselink.co.tz<br>
-                                support@houselink.co.tz
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-                <form class="contact-form" id="contactForm">
-                    <div class="form-group">
-                        <label class="form-label" for="contactName">
-                            <span class="text-swahili active">Jina Kamili</span>
-                            <span class="text-english">Full Name</span>
-                        </label>
-                        <input type="text" class="form-input" id="contactName" required>
+            <div class="footer-grid">
+                <div>
+                    <div class="logo" style="margin-bottom: var(--space-lg);">
+                        <div class="logo-icon">HL</div>
+                        <div class="logo-text">
+                            <h1>HouseLink</h1>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="contactEmail">
-                            <span class="text-swahili active">Barua Pepe</span>
-                            <span class="text-english">Email Address</span>
-                        </label>
-                        <input type="email" class="form-input" id="contactEmail" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="contactPhone">
-                            <span class="text-swahili active">Namba ya Simu</span>
-                            <span class="text-english">Phone Number</span>
-                        </label>
-                        <input type="tel" class="form-input" id="contactPhone" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="contactMessage">
-                            <span class="text-swahili active">Ujumbe Wako</span>
-                            <span class="text-english">Your Message</span>
-                        </label>
-                        <textarea class="form-input" id="contactMessage" required></textarea>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary btn-block">
-                        <span class="text-swahili active">Tuma Ujumbe</span>
-                        <span class="text-english">Send Message</span>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Premium Footer -->
-    <footer class="premium-footer">
-        <div class="container">
-            <div class="footer-top">
-                <div class="footer-logo">
-                    <div class="logo-icon">HL</div>
-                    <h3>HouseLink Tanzania</h3>
-                    <p class="footer-description">
-                        <span class="text-swahili active">
-                            Jukwaa la kielektroniki la mali isiyohamishika la kwanza nchini Tanzania. 
-                            Tunaunganisha wamiliki wa mali, wakala na wateja kwa urahisi na usalama.
-                        </span>
-                        <span class="text-english">
-                            Tanzania's first electronic real estate platform. We connect property owners, 
-                            agents, and clients with ease and security.
-                        </span>
+                    <p style="color: var(--text-light); margin-bottom: var(--space-lg);">
+                        Tanzania's #1 real estate platform connecting buyers, sellers, and agents.
                     </p>
-                    <div class="social-links">
-                        <a href="#" class="social-link">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="social-link">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="social-link">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="social-link">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="social-link">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
+                </div>
+
+                <div>
+                    <h3 style="margin-bottom: var(--space-lg);">Quick Links</h3>
+                    <ul class="footer-links" style="list-style: none;">
+                        <li style="margin-bottom: var(--space-sm);"><a href="index.html">Home</a></li>
+                        <li style="margin-bottom: var(--space-sm);"><a href="properties.html">Properties</a></li>
+                        <li style="margin-bottom: var(--space-sm);"><a href="agents.html">Agents</a></li>
+                        <li style="margin-bottom: var(--space-sm);"><a href="about.html">About Us</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 style="margin-bottom: var(--space-lg);">Property Types</h3>
+                    <ul class="footer-links" style="list-style: none;">
+                        <li style="margin-bottom: var(--space-sm);"><a href="properties.html?type=house">Houses</a></li>
+                        <li style="margin-bottom: var(--space-sm);"><a href="properties.html?type=apartment">Apartments</a></li>
+                        <li style="margin-bottom: var(--space-sm);"><a href="properties.html?type=land">Land</a></li>
+                        <li style="margin-bottom: var(--space-sm);"><a href="properties.html?type=commercial">Commercial</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 style="margin-bottom: var(--space-lg);">Contact Info</h3>
+                    <div style="color: var(--text-light);">
+                        <p style="margin-bottom: var(--space-sm);">
+                            <i class="fas fa-map-marker-alt" style="margin-right: var(--space-sm);"></i>
+                            Dar es Salaam, Tanzania
+                        </p>
+                        <p style="margin-bottom: var(--space-sm);">
+                            <i class="fas fa-phone" style="margin-right: var(--space-sm);"></i>
+                            +255 123 456 789
+                        </p>
+                        <p>
+                            <i class="fas fa-envelope" style="margin-right: var(--space-sm);"></i>
+                            info@houselink.co.tz
+                        </p>
                     </div>
-                </div>
-
-                <div class="footer-column">
-                    <h4>
-                        <span class="text-swahili active">Haraka Linki</span>
-                        <span class="text-english">Quick Links</span>
-                    </h4>
-                    <ul class="footer-links">
-                        <li><a href="#home"><i class="fas fa-chevron-right"></i> 
-                            <span class="text-swahili active">Nyumbani</span>
-                            <span class="text-english">Home</span>
-                        </a></li>
-                        <li><a href="#about"><i class="fas fa-chevron-right"></i> 
-                            <span class="text-swahili active">Kuhusu Sisi</span>
-                            <span class="text-english">About Us</span>
-                        </a></li>
-                        <li><a href="#properties"><i class="fas fa-chevron-right"></i> 
-                            <span class="text-swahili active">Mali Zetu</span>
-                            <span class="text-english">Our Properties</span>
-                        </a></li>
-                        <li><a href="#agents"><i class="fas fa-chevron-right"></i> 
-                            <span class="text-swahili active">Mawakala</span>
-                            <span class="text-english">Agents</span>
-                        </a></li>
-                        <li><a href="#blog"><i class="fas fa-chevron-right"></i> 
-                            <span class="text-swahili active">Blog</span>
-                            <span class="text-english">Blog</span>
-                        </a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-column">
-                    <h4>
-                        <span class="text-swahili active">Aina za Mali</span>
-                        <span class="text-english">Property Types</span>
-                    </h4>
-                    <ul class="footer-links">
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> 
-                            <span class="text-swahili active">Nyumba za Kukodisha</span>
-                            <span class="text-english">Rental Houses</span>
-                        </a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> 
-                            <span class="text-swahili active">Nyumba za Kuuza</span>
-                            <span class="text-english">Houses for Sale</span>
-                        </a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> 
-                            <span class="text-swahili active">Ofisi na Biashara</span>
-                            <span class="text-english">Offices & Commercial</span>
-                        </a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> 
-                            <span class="text-swahili active">Viwanja na Ardhi</span>
-                            <span class="text-english">Plots & Land</span>
-                        </a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> 
-                            <span class="text-swahili active">Hotel na Resort</span>
-                            <span class="text-english">Hotels & Resorts</span>
-                        </a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-column">
-                    <h4>
-                        <span class="text-swahili active">Mikono Yetu</span>
-                        <span class="text-english">Reach Us</span>
-                    </h4>
-                    <ul class="footer-contact">
-                        <li>
-                            <i class="fas fa-clock"></i>
-                            <div class="contact-text">
-                                <strong>
-                                    <span class="text-swahili active">Masaa ya Kazi</span>
-                                    <span class="text-english">Working Hours</span>
-                                </strong><br>
-                                <span class="text-swahili active">Jumapili - Ijumaa: 8:00 asubuhi - 10:00 jioni</span>
-                                <span class="text-english">Monday - Friday: 8:00 AM - 10:00 PM</span><br>
-                                <span class="text-swahili active">Jumamosi: 9:00 asubuhi - 6:00 jioni</span>
-                                <span class="text-english">Saturday: 9:00 AM - 6:00 PM</span>
-                            </div>
-                        </li>
-                    </ul>
                 </div>
             </div>
 
             <div class="footer-bottom">
-                <div class="copyright">
-                    © 2024 HouseLink Tanzania. 
-                    <span class="text-swahili active">Haki zote zimehifadhiwa.</span>
-                    <span class="text-english">All rights reserved.</span>
+                <div>
+                    <p style="color: var(--text-light);">
+                        © 2024 HouseLink Tanzania. Built by I&G Technology.
+                    </p>
                 </div>
-                <div class="footer-legal">
-                    <a href="#">
-                        <span class="text-swahili active">Sera ya Faragha</span>
-                        <span class="text-english">Privacy Policy</span>
-                    </a>
-                    <a href="#">
-                        <span class="text-swahili active">Vigezo na Masharti</span>
-                        <span class="text-english">Terms & Conditions</span>
-                    </a>
-                    <a href="#">
-                        <span class="text-swahili active">Mapendekezo ya Usalama</span>
-                        <span class="text-english">Security Tips</span>
-                    </a>
+                <div>
+                    <a href="privacy-policy.html" style="color: var(--text-light); margin-right: var(--space-lg);">Privacy Policy</a>
+                    <a href="terms-conditions.html" style="color: var(--text-light);">Terms & Conditions</a>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Property Modal -->
-    <div class="property-modal" id="propertyModal">
-        <div class="modal-content">
-            <button class="modal-close" id="modalClose">
-                <i class="fas fa-times"></i>
-            </button>
-            <div id="modalContent">
-                <!-- Modal content will be loaded here -->
-            </div>
-        </div>
-    </div>
-
     <!-- JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script>
-        // Application State
-        const AppState = {
-            language: 'swahili',
-            theme: 'dark-mode',
-            currentSection: 'home',
-            properties: [],
-            agents: [],
-            searchResults: []
-        };
-
-        // Sample Data
-        const sampleProperties = [
-            {
-                id: 1,
-                title: {
-                    swahili: "Modern Apartment Kinondoni",
-                    english: "Modern Apartment Kinondoni"
-                },
-                description: {
-                    swahili: "Apartment ya kisasa yenye vyumba 4 na bafu 3. Iko karibu na huduma zote muhimu.",
-                    english: "Modern apartment with 4 bedrooms and 3 bathrooms. Located near all essential services."
-                },
-                price: 850000000,
-                type: 'sale',
-                location: {
-                    swahili: "Kinondoni, Dar es Salaam",
-                    english: "Kinondoni, Dar es Salaam"
-                },
-                features: {
-                    bedrooms: 4,
-                    bathrooms: 3,
-                    area: 220,
-                    parking: 2
-                },
-                image: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=800&q=80",
-                badge: "featured"
-            },
-            {
-                id: 2,
-                title: {
-                    swahili: "Luxury Villa Masaki",
-                    english: "Luxury Villa Masaki"
-                },
-                description: {
-                    swahili: "Villa ya kifahari yenye vyumba 5 na bafu 4. Ina bustani na ua la gari.",
-                    english: "Luxury villa with 5 bedrooms and 4 bathrooms. Features garden and car yard."
-                },
-                price: 1200000000,
-                type: 'sale',
-                location: {
-                    swahili: "Masaki, Dar es Salaam",
-                    english: "Masaki, Dar es Salaam"
-                },
-                features: {
-                    bedrooms: 5,
-                    bathrooms: 4,
-                    area: 450,
-                    parking: 4
-                },
-                image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=800&q=80",
-                badge: "sale"
-            },
-            {
-                id: 3,
-                title: {
-                    swahili: "Office Space Oysterbay",
-                    english: "Office Space Oysterbay"
-                },
-                description: {
-                    swahili: "Nafasi ya ofisi yenye vyumba 8 na maegesho ya gari 10. Ipo karibu na mikutano.",
-                    english: "Office space with 8 rooms and parking for 10 cars. Located near business centers."
-                },
-                price: 4500000,
-                type: 'rent',
-                location: {
-                    swahili: "Oysterbay, Dar es Salaam",
-                    english: "Oysterbay, Dar es Salaam"
-                },
-                features: {
-                    bedrooms: 8,
-                    bathrooms: 6,
-                    area: 320,
-                    parking: 10
-                },
-                image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80",
-                badge: "rent"
-            }
-        ];
-
-        const sampleAgents = [
-            {
-                id: 1,
-                name: "John Michael",
-                title: {
-                    swahili: "Mkurugenzi wa Uuzaji",
-                    english: "Sales Director"
-                },
-                phone: "+255 712 345 678",
-                email: "john@houselink.co.tz",
-                experience: "10+ years",
-                image: "https://randomuser.me/api/portraits/men/32.jpg"
-            },
-            {
-                id: 2,
-                name: "Sarah Johnson",
-                title: {
-                    swahili: "Mwakala Mkuu wa Mali",
-                    english: "Chief Property Agent"
-                },
-                phone: "+255 713 456 789",
-                email: "sarah@houselink.co.tz",
-                experience: "8+ years",
-                image: "https://randomuser.me/api/portraits/women/44.jpg"
-            },
-            {
-                id: 3,
-                name: "David Wilson",
-                title: {
-                    swahili: "Mtaalamu wa Bei",
-                    english: "Pricing Specialist"
-                },
-                phone: "+255 714 567 890",
-                email: "david@houselink.co.tz",
-                experience: "6+ years",
-                image: "https://randomuser.me/api/portraits/men/67.jpg"
-            }
-        ];
-
-        // DOM Elements
-        const elements = {
-            body: document.body,
-            themeToggle: document.getElementById('themeToggle'),
-            languageToggle: document.getElementById('languageToggle'),
-            mobileMenuBtn: document.getElementById('mobileMenuBtn'),
-            premiumNav: document.querySelector('.premium-nav'),
-            premiumHeader: document.querySelector('.premium-header'),
-            propertyTypeTabs: document.getElementById('propertyTypeTabs'),
-            propertySearchForm: document.getElementById('propertySearchForm'),
-            propertiesContainer: document.getElementById('propertiesContainer'),
-            agentsContainer: document.getElementById('agentsContainer'),
-            contactForm: document.getElementById('contactForm'),
-            propertyModal: document.getElementById('propertyModal'),
-            modalClose: document.getElementById('modalClose'),
-            modalContent: document.getElementById('modalContent'),
-            navLinks: document.querySelectorAll('.nav-link'),
-            searchTabs: document.querySelectorAll('.search-tab')
-        };
-
-        // Initialize Application
-        function initApp() {
-            AppState.properties = sampleProperties;
-            AppState.agents = sampleAgents;
-            
-            loadProperties();
-            loadAgents();
-            setupEventListeners();
-            updateLanguageDisplay();
-            
-            // Add scroll event listener for header
-            window.addEventListener('scroll', handleScroll);
-            
-            console.log('HouseLink Tanzania - Premium Real Estate Platform Initialized');
-        }
-
-        // Event Listeners Setup
-        function setupEventListeners() {
-            // Theme Toggle
-            elements.themeToggle.addEventListener('click', toggleTheme);
-            
-            // Language Toggle
-            elements.languageToggle.addEventListener('click', toggleLanguage);
-            
-            // Mobile Menu
-            elements.mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-            
-            // Navigation
-            elements.navLinks.forEach(link => {
-                link.addEventListener('click', handleNavigation);
-            });
-            
-            // Search Tabs
-            elements.searchTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    elements.searchTabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    // In a real app, you would filter properties here
-                });
-            });
-            
-            // Property Search Form
-            elements.propertySearchForm.addEventListener('submit', handlePropertySearch);
-            
-            // Contact Form
-            elements.contactForm.addEventListener('submit', handleContactSubmit);
-            
-            // Modal Close
-            elements.modalClose.addEventListener('click', () => {
-                elements.propertyModal.classList.remove('active');
-            });
-            
-            // Close modal on outside click
-            elements.propertyModal.addEventListener('click', (e) => {
-                if (e.target === elements.propertyModal) {
-                    elements.propertyModal.classList.remove('active');
-                }
-            });
-            
-            // Login/Register buttons
-            document.getElementById('loginBtn')?.addEventListener('click', showLoginModal);
-            document.getElementById('registerBtn')?.addEventListener('click', showRegisterModal);
-        }
-
-        // Theme Management
-        function toggleTheme() {
-            if (AppState.theme === 'dark-mode') {
-                AppState.theme = 'light-mode';
-                elements.body.classList.remove('dark-mode');
-                elements.themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                AppState.theme = 'dark-mode';
-                elements.body.classList.add('dark-mode');
-                elements.themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            }
-            localStorage.setItem('houselink-theme', AppState.theme);
-        }
-
-        // Language Management
-        function toggleLanguage() {
-            if (AppState.language === 'swahili') {
-                AppState.language = 'english';
-                elements.languageToggle.classList.remove('active-swahili');
-                elements.languageToggle.classList.add('active-english');
-                elements.languageToggle.querySelector('.lang-flag').textContent = 'EN';
-                elements.languageToggle.querySelector('.lang-flag').className = 'lang-flag english';
-            } else {
-                AppState.language = 'swahili';
-                elements.languageToggle.classList.remove('active-english');
-                elements.languageToggle.classList.add('active-swahili');
-                elements.languageToggle.querySelector('.lang-flag').textContent = 'SW';
-                elements.languageToggle.querySelector('.lang-flag').className = 'lang-flag swahili';
-            }
-            updateLanguageDisplay();
-            localStorage.setItem('houselink-language', AppState.language);
-        }
-
-        function updateLanguageDisplay() {
-            // Update all text elements
-            document.querySelectorAll('.text-swahili, .text-english').forEach(el => {
-                el.classList.remove('active');
-            });
-            
-            document.querySelectorAll(`.text-${AppState.language}`).forEach(el => {
-                el.classList.add('active');
-            });
-            
-            // Update placeholders
-            const searchInput = document.getElementById('searchLocation');
-            if (searchInput) {
-                searchInput.placeholder = AppState.language === 'swahili' 
-                    ? 'Tafuta mji, eneo au kata...' 
-                    : 'Search city, area or ward...';
-            }
-            
-            const minPrice = document.getElementById('minPrice');
-            const maxPrice = document.getElementById('maxPrice');
-            if (minPrice && maxPrice) {
-                minPrice.placeholder = AppState.language === 'swahili' ? 'Tsh Kuanzia' : 'Tsh From';
-                maxPrice.placeholder = AppState.language === 'swahili' ? 'Tsh Mpaka' : 'Tsh To';
-            }
-        }
-
-        // Mobile Menu
-        function toggleMobileMenu() {
-            elements.premiumNav.classList.toggle('active');
-            elements.mobileMenuBtn.innerHTML = elements.premiumNav.classList.contains('active') 
-                ? '<i class="fas fa-times"></i>' 
-                : '<i class="fas fa-bars"></i>';
-        }
-
-        // Navigation
-        function handleNavigation(e) {
-            e.preventDefault();
-            const section = this.getAttribute('data-section');
-            AppState.currentSection = section;
-            
-            // Update active nav link
-            elements.navLinks.forEach(link => link.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Scroll to section
-            const targetElement = document.getElementById(section);
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80,
-                    behavior: 'smooth'
-                });
-            }
-            
-            // Close mobile menu if open
-            if (elements.premiumNav.classList.contains('active')) {
-                toggleMobileMenu();
-            }
-        }
-
-        // Scroll Handler
-        function handleScroll() {
-            if (window.scrollY > 50) {
-                elements.premiumHeader.classList.add('scrolled');
-            } else {
-                elements.premiumHeader.classList.remove('scrolled');
-            }
-        }
-
-        // Property Management
-        function loadProperties() {
-            elements.propertiesContainer.innerHTML = '';
-            AppState.properties.forEach(property => {
-                const propertyCard = createPropertyCard(property);
-                elements.propertiesContainer.appendChild(propertyCard);
-            });
-        }
-
-        function createPropertyCard(property) {
-            const div = document.createElement('div');
-            div.className = 'property-card';
-            div.dataset.id = property.id;
-            
-            const price = property.price.toLocaleString('en-US');
-            const isRent = property.type === 'rent';
-            const priceText = isRent 
-                ? `Tsh ${price} / ${AppState.language === 'swahili' ? 'mwezi' : 'month'}` 
-                : `Tsh ${price}`;
-            
-            div.innerHTML = `
-                <div class="property-badge ${property.badge}">
-                    ${AppState.language === 'swahili' 
-                        ? (property.badge === 'featured' ? 'Imebeba' : 
-                           property.badge === 'sale' ? 'Inauzwa' : 'Inakodishwa')
-                        : (property.badge === 'featured' ? 'Featured' : 
-                           property.badge === 'sale' ? 'For Sale' : 'For Rent')}
-                </div>
-                <div class="property-image">
-                    <img src="${property.image}" alt="${property.title[AppState.language]}">
-                    <div class="property-actions">
-                        <button class="property-action-btn favorite-btn" data-id="${property.id}">
-                            <i class="far fa-heart"></i>
-                        </button>
-                        <button class="property-action-btn view-btn" data-id="${property.id}">
-                            <i class="far fa-image"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="property-content">
-                    <div class="property-price">${priceText}</div>
-                    <h3 class="property-title">${property.title[AppState.language]}</h3>
-                    <div class="property-location">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>${property.location[AppState.language]}</span>
-                    </div>
-                    <div class="property-features">
-                        <div class="property-feature">
-                            <div class="feature-icon">
-                                <i class="fas fa-bed"></i>
-                            </div>
-                            <div class="feature-value">${property.features.bedrooms}</div>
-                            <div class="feature-label">
-                                ${AppState.language === 'swahili' ? 'Vyumba' : 'Bedrooms'}
-                            </div>
-                        </div>
-                        <div class="property-feature">
-                            <div class="feature-icon">
-                                <i class="fas fa-bath"></i>
-                            </div>
-                            <div class="feature-value">${property.features.bathrooms}</div>
-                            <div class="feature-label">
-                                ${AppState.language === 'swahili' ? 'Mabafu' : 'Bathrooms'}
-                            </div>
-                        </div>
-                        <div class="property-feature">
-                            <div class="feature-icon">
-                                <i class="fas fa-expand"></i>
-                            </div>
-                            <div class="feature-value">${property.features.area} m²</div>
-                            <div class="feature-label">
-                                ${AppState.language === 'swahili' ? 'Eneo' : 'Area'}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Add event listeners to buttons
-            div.querySelector('.favorite-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleFavorite(property.id);
-            });
-            
-            div.querySelector('.view-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                viewPropertyDetails(property.id);
-            });
-            
-            div.addEventListener('click', () => {
-                viewPropertyDetails(property.id);
-            });
-            
-            return div;
-        }
-
-        function toggleFavorite(propertyId) {
-            const property = AppState.properties.find(p => p.id === propertyId);
-            if (property) {
-                // In a real app, you would save to backend
-                alert(`${AppState.language === 'swahili' ? 'Imebakia kwenye vipendwa!' : 'Added to favorites!'}`);
-            }
-        }
-
-        function viewPropertyDetails(propertyId) {
-            const property = AppState.properties.find(p => p.id === propertyId);
-            if (!property) return;
-            
-            const isRent = property.type === 'rent';
-            const priceText = isRent 
-                ? `Tsh ${property.price.toLocaleString('en-US')} / ${AppState.language === 'swahili' ? 'kwa mwezi' : 'per month'}` 
-                : `Tsh ${property.price.toLocaleString('en-US')}`;
-            
-            elements.modalContent.innerHTML = `
-                <div class="property-modal-content">
-                    <div class="property-modal-image" style="height: 400px; overflow: hidden;">
-                        <img src="${property.image}" alt="${property.title[AppState.language]}" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div style="padding: var(--space-2xl);">
-                        <div class="property-badge ${property.badge}" style="display: inline-block; margin-bottom: var(--space-lg);">
-                            ${AppState.language === 'swahili' 
-                                ? (property.badge === 'featured' ? 'Imebeba' : 
-                                   property.badge === 'sale' ? 'Inauzwa' : 'Inakodishwa')
-                                : (property.badge === 'featured' ? 'Featured' : 
-                                   property.badge === 'sale' ? 'For Sale' : 'For Rent')}
-                        </div>
-                        <h2 style="font-size: 2rem; margin-bottom: var(--space-md);">${property.title[AppState.language]}</h2>
-                        <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: var(--space-lg);">
-                            ${priceText}
-                        </div>
-                        <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-xl); color: var(--text-secondary);">
-                            <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>
-                            <span>${property.location[AppState.language]}</span>
-                        </div>
-                        <p style="margin-bottom: var(--space-xl); line-height: 1.8; color: var(--text-secondary);">
-                            ${property.description[AppState.language]}
-                        </p>
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-xl); margin-bottom: var(--space-xl);">
-                            <div>
-                                <h4 style="margin-bottom: var(--space-md); color: var(--text-primary);">
-                                    ${AppState.language === 'swahili' ? 'Vipengele vya Mali' : 'Property Features'}
-                                </h4>
-                                <div style="display: grid; gap: var(--space-sm);">
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span>${AppState.language === 'swahili' ? 'Idadi ya Vyumba' : 'Number of Bedrooms'}</span>
-                                        <strong>${property.features.bedrooms}</strong>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span>${AppState.language === 'swahili' ? 'Idadi ya Mabafu' : 'Number of Bathrooms'}</span>
-                                        <strong>${property.features.bathrooms}</strong>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span>${AppState.language === 'swahili' ? 'Eneo la Jumla' : 'Total Area'}</span>
-                                        <strong>${property.features.area} m²</strong>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span>${AppState.language === 'swahili' ? 'Eneo la Gari' : 'Parking Space'}</span>
-                                        <strong>${property.features.parking}</strong>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <h4 style="margin-bottom: var(--space-md); color: var(--text-primary);">
-                                    ${AppState.language === 'swahili' ? 'Maelezo ya Ziada' : 'Additional Information'}
-                                </h4>
-                                <div style="display: grid; gap: var(--space-sm);">
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span>${AppState.language === 'swahili' ? 'Aina ya Mali' : 'Property Type'}</span>
-                                        <strong>${property.type === 'rent' ? (AppState.language === 'swahili' ? 'Inakodishwa' : 'For Rent') : (AppState.language === 'swahili' ? 'Inauzwa' : 'For Sale')}</strong>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span>${AppState.language === 'swahili' ? 'Hali ya Mali' : 'Property Status'}</span>
-                                        <strong>${AppState.language === 'swahili' ? 'Inapatikana' : 'Available'}</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary btn-block btn-large" onclick="contactAgent(${propertyId})">
-                            <i class="fas fa-phone-alt"></i>
-                            ${AppState.language === 'swahili' ? 'Wasiliana na Mwakala' : 'Contact Agent'}
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            elements.propertyModal.classList.add('active');
-        }
-
-        // Agent Management
-        function loadAgents() {
-            elements.agentsContainer.innerHTML = '';
-            AppState.agents.forEach(agent => {
-                const agentCard = createAgentCard(agent);
-                elements.agentsContainer.appendChild(agentCard);
-            });
-        }
-
-        function createAgentCard(agent) {
-            const div = document.createElement('div');
-            div.className = 'agent-card';
-            
-            div.innerHTML = `
-                <div class="agent-avatar">
-                    <img src="${agent.image}" alt="${agent.name}">
-                </div>
-                <h3 class="agent-name">${agent.name}</h3>
-                <div class="agent-title">${agent.title[AppState.language]}</div>
-                <p style="color: var(--text-secondary); margin-bottom: var(--space-lg);">
-                    ${AppState.language === 'swahili' ? 'Uzoefu:' : 'Experience:'} ${agent.experience}
-                </p>
-                <div style="margin-bottom: var(--space-lg);">
-                    <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-sm);">
-                        <i class="fas fa-phone" style="color: var(--primary);"></i>
-                        <span>${agent.phone}</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: var(--space-sm);">
-                        <i class="fas fa-envelope" style="color: var(--primary);"></i>
-                        <span>${agent.email}</span>
-                    </div>
-                </div>
-                <div class="agent-contact">
-                    <button class="btn btn-outline" onclick="contactAgentDirect('${agent.name}', '${agent.phone}')">
-                        <i class="fas fa-phone"></i>
-                        ${AppState.language === 'swahili' ? 'Piga Simu' : 'Call Now'}
-                    </button>
-                    <button class="btn btn-primary" onclick="emailAgent('${agent.name}', '${agent.email}')">
-                        <i class="fas fa-envelope"></i>
-                        ${AppState.language === 'swahili' ? 'Tuma Barua' : 'Email'}
-                    </button>
-                </div>
-            `;
-            
-            return div;
-        }
-
-        // Form Handlers
-        function handlePropertySearch(e) {
-            e.preventDefault();
-            
-            const searchData = {
-                location: document.getElementById('searchLocation').value,
-                type: document.getElementById('propertyType').value,
-                locationSelect: document.getElementById('propertyLocation').value,
-                minPrice: document.getElementById('minPrice').value,
-                maxPrice: document.getElementById('maxPrice').value
-            };
-            
-            // In a real app, you would make an API call here
-            console.log('Searching properties with:', searchData);
-            
-            // Show success message
-            alert(`${AppState.language === 'swahili' 
-                ? 'Tunatafuta mali zilizo na vigezo vyako...' 
-                : 'Searching properties with your criteria...'}`);
-        }
-
-        function handleContactSubmit(e) {
-            e.preventDefault();
-            
-            const contactData = {
-                name: document.getElementById('contactName').value,
-                email: document.getElementById('contactEmail').value,
-                phone: document.getElementById('contactPhone').value,
-                message: document.getElementById('contactMessage').value
-            };
-            
-            // In a real app, you would send this to a backend
-            console.log('Contact form submitted:', contactData);
-            
-            // Show success message
-            alert(`${AppState.language === 'swahili' 
-                ? 'Asante kwa ujumbe wako! Tutawasiliana nawe hivi karibuni.' 
-                : 'Thank you for your message! We will contact you soon.'}`);
-            
-            // Reset form
-            elements.contactForm.reset();
-        }
-
-        // Contact Functions (exposed globally for onclick events)
-        window.contactAgent = function(propertyId) {
-            const property = AppState.properties.find(p => p.id === propertyId);
-            if (property) {
-                alert(`${AppState.language === 'swahili' 
-                    ? `Piga simu kwa maelezo zaidi ya: ${property.title[AppState.language]}` 
-                    : `Call for more details about: ${property.title[AppState.language]}`}`);
-            }
-        };
-
-        window.contactAgentDirect = function(agentName, phoneNumber) {
-            alert(`${AppState.language === 'swahili' 
-                ? `Piga simu kwa ${agentName}: ${phoneNumber}` 
-                : `Call ${agentName}: ${phoneNumber}`}`);
-        };
-
-        window.emailAgent = function(agentName, email) {
-            alert(`${AppState.language === 'swahili' 
-                ? `Tuma barua kwa ${agentName}: ${email}` 
-                : `Email ${agentName}: ${email}`}`);
-        };
-
-        // Modal Functions
-        window.showLoginModal = function(e) {
-            e.preventDefault();
-            alert(`${AppState.language === 'swahili' 
-                ? 'Fungua kidirisha cha kuingia (ingiza API halisi kwa kazi kamili)' 
-                : 'Login window (implement real API for full functionality)'}`);
-        };
-
-        window.showRegisterModal = function(e) {
-            e.preventDefault();
-            alert(`${AppState.language === 'swahili' 
-                ? 'Fungua kidirisha cha usajili (ingiza API halisi kwa kazi kamili)' 
-                : 'Registration window (implement real API for full functionality)'}`);
-        };
-
-        // Load saved preferences
-        function loadPreferences() {
-            const savedTheme = localStorage.getItem('houselink-theme');
-            const savedLanguage = localStorage.getItem('houselink-language');
-            
-            if (savedTheme) {
-                AppState.theme = savedTheme;
-                elements.body.className = savedTheme;
-                elements.themeToggle.innerHTML = savedTheme === 'dark-mode' 
-                    ? '<i class="fas fa-moon"></i>' 
-                    : '<i class="fas fa-sun"></i>';
-            }
-            
-            if (savedLanguage) {
-                AppState.language = savedLanguage;
-                if (savedLanguage === 'english') {
-                    elements.languageToggle.classList.remove('active-swahili');
-                    elements.languageToggle.classList.add('active-english');
-                    elements.languageToggle.querySelector('.lang-flag').textContent = 'EN';
-                    elements.languageToggle.querySelector('.lang-flag').className = 'lang-flag english';
-                }
-            }
-        }
-
-        // Initialize when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            loadPreferences();
-            initApp();
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            themeToggle.innerHTML = document.body.classList.contains('dark-mode') 
+                ? '<i class="fas fa-moon"></i>' 
+                : '<i class="fas fa-sun"></i>';
         });
 
-        // Expose necessary functions to window
-        window.AppState = AppState;
-        window.loadProperties = loadProperties;
-        window.loadAgents = loadAgents;
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.querySelector('.main-nav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('active');
+            });
+        });
     </script>
 </body>
-    </html>
+</html>
