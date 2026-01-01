@@ -1,277 +1,646 @@
 <!DOCTYPE html>
-<html lang="sw">
+<html lang="sw" class="dark-mode">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuhusu Sisi - HouseLink Tanzania</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>About HouseLink Tanzania | #1 Real Estate Platform</title>
+    
+    <!-- About Page CSS -->
+    <style>
+        /* About Hero */
+        .about-hero {
+            background: var(--gradient-light);
+            padding: var(--space-5xl) 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dark-mode .about-hero {
+            background: var(--gradient-dark);
+        }
+        
+        .about-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: var(--space-lg);
+        }
+        
+        /* Mission Vision */
+        .mission-vision {
+            padding: var(--space-4xl) 0;
+        }
+        
+        .mv-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-2xl);
+            margin-top: var(--space-3xl);
+        }
+        
+        .mv-card {
+            background: var(--light-1);
+            padding: var(--space-2xl);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .dark-mode .mv-card {
+            background: var(--dark-2);
+        }
+        
+        .mv-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-xl);
+            color: white;
+            font-size: 2rem;
+        }
+        
+        /* Team Section */
+        .team-section {
+            background: var(--light-2);
+            padding: var(--space-4xl) 0;
+        }
+        
+        .dark-mode .team-section {
+            background: var(--dark-2);
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-2xl);
+            margin-top: var(--space-3xl);
+        }
+        
+        .team-card {
+            background: var(--light-1);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            text-align: center;
+            padding: var(--space-2xl);
+        }
+        
+        .dark-mode .team-card {
+            background: var(--dark-3);
+        }
+        
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto var(--space-lg);
+            border: 4px solid var(--primary);
+            overflow: hidden;
+        }
+        
+        .team-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Stats Counter */
+        .stats-section {
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--space-4xl) 0;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-2xl);
+            margin-top: var(--space-3xl);
+        }
+        
+        .stat-counter {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: var(--space-sm);
+        }
+        
+        /* Timeline */
+        .timeline-section {
+            padding: var(--space-4xl) 0;
+        }
+        
+        .timeline {
+            max-width: 800px;
+            margin: var(--space-3xl) auto 0;
+            position: relative;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+        }
+        
+        .timeline-item {
+            margin-bottom: var(--space-2xl);
+            position: relative;
+            width: 50%;
+            padding-right: var(--space-2xl);
+        }
+        
+        .timeline-item:nth-child(even) {
+            margin-left: 50%;
+            padding-left: var(--space-2xl);
+            padding-right: 0;
+        }
+        
+        .timeline-content {
+            background: var(--light-1);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+        
+        .dark-mode .timeline-content {
+            background: var(--dark-3);
+        }
+        
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -10px;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            transform: rotate(45deg);
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content::before {
+            right: auto;
+            left: -10px;
+        }
+        
+        /* Values */
+        .values-section {
+            background: var(--light-2);
+            padding: var(--space-4xl) 0;
+        }
+        
+        .dark-mode .values-section {
+            background: var(--dark-2);
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-2xl);
+            margin-top: var(--space-3xl);
+        }
+        
+        .value-card {
+            text-align: center;
+            padding: var(--space-xl);
+        }
+        
+        .value-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-lg);
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 60px;
+                padding-right: 0;
+            }
+            
+            .timeline-item:nth-child(even) {
+                margin-left: 0;
+                padding-left: 60px;
+            }
+            
+            .timeline-content::before {
+                left: -10px;
+                right: auto;
+            }
+        }
+    </style>
 </head>
-<body>
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="container">
-            <div class="top-bar-content">
-                <div class="contact-info">
-                    <span><i class="fas fa-phone"></i> +255 712 345 678</span>
-                    <span><i class="fas fa-envelope"></i> info@houselink.co.tz</span>
+<body class="dark-mode">
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">HL</div>
+                <div class="logo-text">
+                    <h1>HouseLink</h1>
                 </div>
-                <div class="top-bar-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <select id="language-switcher">
-                        <option value="sw">Swahili</option>
-                        <option value="en">English</option>
-                    </select>
-                    <button id="dark-mode-toggle"><i class="fas fa-moon"></i></button>
-                </div>
-            </div>
-        </div>
-    </div>
+            </a>
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-content">
-                <a href="index.html" class="logo">
-                    <div class="logo-icon">HL</div>
-                    <h1>HouseLink<span>Tanzania</span></h1>
-                </a>
-                
-                <div class="nav-links">
-                    <a href="index.html">Nyumbani</a>
-                    <a href="properties.html">Nyumba</a>
-                    <a href="upload.html">Weka Tangazo</a>
-                    <a href="about.html" class="active">Kuhusu Sisi</a>
-                    <a href="contact.html">Wasiliana</a>
-                </div>
-                
-                <div class="nav-auth">
-                    <a href="login.html" class="btn btn-outline">Ingia</a>
-                    <a href="signup.html" class="btn btn-primary">Jisajili</a>
-                </div>
-                
-                <button class="mobile-menu-btn">
+            <nav class="main-nav">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="properties.html" class="nav-link">Properties</a></li>
+                    <li><a href="agents.html" class="nav-link">Agents</a></li>
+                    <li><a href="about.html" class="nav-link active">About Us</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <button class="action-btn" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="login.html" class="btn btn-primary">Login</a>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
         </div>
-    </nav>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-links">
+                <a href="index.html">Home</a>
+                <span>/</span>
+                <span>About Us</span>
+            </div>
+        </div>
+    </div>
 
     <!-- About Hero -->
-    <section class="hero">
+    <section class="about-hero">
         <div class="container">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <h1>Kuhusu HouseLink Tanzania</h1>
-                    <p>Jukwaa la kuuza na kupanga nyumba bora nchini Tanzania. Tunaunganisha wamiliki wa nyumba na watafutaji kwa urahisi na uhakika.</p>
-                </div>
-                <div class="hero-image">
-                    <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Modern House">
-                </div>
-            </div>
+            <h1>About HouseLink Tanzania</h1>
+            <p style="font-size: 1.2rem; max-width: 700px; margin: 0 auto;">
+                Tanzania's first and leading electronic real estate platform, connecting property owners, 
+                agents, and clients with transparency, security, and innovation.
+            </p>
         </div>
     </section>
 
     <!-- Mission & Vision -->
-    <section class="how-it-works">
+    <section class="mission-vision">
         <div class="container">
-            <div class="section-title">
-                <h2>Dhamira na Maono Yetu</h2>
-                <p>Tunaamini katika kurahisisha upatikanaji wa makao bora Tanzania</p>
+            <div class="section-header">
+                <h2 class="section-title">Our Mission & Vision</h2>
+                <p>Driving Tanzania's real estate market into the digital future</p>
             </div>
-            
-            <div class="steps-grid">
-                <div class="step">
-                    <div class="step-icon">
+
+            <div class="mv-grid">
+                <div class="mv-card">
+                    <div class="mv-icon">
                         <i class="fas fa-bullseye"></i>
                     </div>
-                    <h3>Dhamira Yetu</h3>
-                    <p>Kutoa jukwaa salama na rahisi kwa wamiliki wa nyumba kuziweka na watafutaji kupata makao bora kwa bei nafuu.</p>
+                    <h3>Our Mission</h3>
+                    <p>
+                        To revolutionize Tanzania's real estate industry by providing a transparent, 
+                        secure, and efficient platform that connects property seekers with their 
+                        dream homes and investment opportunities.
+                    </p>
                 </div>
-                
-                <div class="step">
-                    <div class="step-icon">
+
+                <div class="mv-card">
+                    <div class="mv-icon">
                         <i class="fas fa-eye"></i>
                     </div>
-                    <h3>Maono Yetu</h3>
-                    <p>Kuwa jukwaa la kwanza la mawasiliano kuhusu nyumba nchini Tanzania, likiunganisha watu katika maeneo yote.</p>
+                    <h3>Our Vision</h3>
+                    <p>
+                        To become Tanzania's most trusted real estate platform, recognized for 
+                        innovation, reliability, and exceptional service in connecting people 
+                        with properties that transform lives.
+                    </p>
                 </div>
-                
-                <div class="step">
-                    <div class="step-icon">
+
+                <div class="mv-card">
+                    <div class="mv-icon">
                         <i class="fas fa-handshake"></i>
                     </div>
-                    <h3>Thamani Zetu</h3>
-                    <p>Uaminifu, uwazi, na ubora ni thamani zetu kuu. Tunaaminika na maelfu ya wateja nchini.</p>
+                    <h3>Our Values</h3>
+                    <p>
+                        Integrity, Innovation, Customer Focus, Transparency, and Excellence 
+                        guide every aspect of our operations and interactions.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Team Section -->
-    <section class="featured-properties">
+    <!-- Stats -->
+    <section class="stats-section">
         <div class="container">
-            <div class="section-title">
-                <h2>Timu Yetu</h2>
-                <p>Watendaji wetu wenye uzoefu na hamu ya kukusaidia</p>
-            </div>
+            <h2 style="font-size: 2.5rem; margin-bottom: var(--space-lg);">Our Impact in Numbers</h2>
             
-            <div class="properties-grid">
-                <div class="property-card">
-                    <div class="property-image">
-                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="CEO">
-                    </div>
-                    <div class="property-info">
-                        <h3>Jamal Ali</h3>
-                        <p class="property-location"><i class="fas fa-briefcase"></i> Mkurugenzi Mtendaji</p>
-                        <p class="property-description">Mwenye uzoefu wa miaka 10 katika sekta ya mali isiyohamishika, ameweza kuunda jukwaa hili kwa ajili ya Watanzania.</p>
-                        <div class="property-features">
-                            <span><i class="fas fa-envelope"></i> jamal@houselink.co.tz</span>
-                        </div>
+            <div class="stats-grid">
+                <div>
+                    <div class="stat-counter">10,000+</div>
+                    <div>Properties Listed</div>
+                </div>
+                <div>
+                    <div class="stat-counter">500+</div>
+                    <div>Certified Agents</div>
+                </div>
+                <div>
+                    <div class="stat-counter">50,000+</div>
+                    <div>Happy Customers</div>
+                </div>
+                <div>
+                    <div class="stat-counter">25+</div>
+                    <div>Cities Covered</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Story -->
+    <section class="timeline-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our Journey</h2>
+                <p>From vision to Tanzania's #1 real estate platform</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2020 - The Vision</h3>
+                        <p>
+                            CEO Irene Mgimba and Director George William identified the need for 
+                            a digital real estate platform in Tanzania's growing market.
+                        </p>
                     </div>
                 </div>
-                
-                <div class="property-card">
-                    <div class="property-image">
-                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Marketing Head">
-                    </div>
-                    <div class="property-info">
-                        <h3>Asha Mohammed</h3>
-                        <p class="property-location"><i class="fas fa-briefcase"></i> Meneja wa Uuzaji</p>
-                        <p class="property-description">Anajua sekta ya nyumba Tanzania kwa kina na amesaidia maelfu ya watu kupata nyumba bora.</p>
-                        <div class="property-features">
-                            <span><i class="fas fa-envelope"></i> asha@houselink.co.tz</span>
-                        </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2021 - Development Begins</h3>
+                        <p>
+                            Partnered with I&G Technology to develop the platform architecture 
+                            and initial prototype.
+                        </p>
                     </div>
                 </div>
-                
-                <div class="property-card">
-                    <div class="property-image">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Tech Lead">
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2022 - Beta Launch</h3>
+                        <p>
+                            Launched beta version with 100 properties and 20 agents in Dar es Salaam.
+                        </p>
                     </div>
-                    <div class="property-info">
-                        <h3>Joseph Peter</h3>
-                        <p class="property-location"><i class="fas fa-briefcase"></i> Mkurugenzi wa Teknolojia</p>
-                        <p class="property-description">Mdhibiti wa teknolojia nyuma ya jukwaa letu, anahakikisha mfumo unakua salama na rahisi kutumia.</p>
-                        <div class="property-features">
-                            <span><i class="fas fa-envelope"></i> joseph@houselink.co.tz</span>
-                        </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2023 - Official Launch</h3>
+                        <p>
+                            Officially launched HouseLink Tanzania with 1,000+ properties and 
+                            50+ certified agents across major cities.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2024 - Market Leadership</h3>
+                        <p>
+                            Became Tanzania's #1 real estate platform with 10,000+ properties, 
+                            500+ agents, and expansion to 25+ cities.
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="cta">
+    <!-- Leadership Team -->
+    <section class="team-section">
         <div class="container">
-            <div class="section-title">
-                <h2>Nambari Zetu</h2>
-                <p>Ushahidi wa mafanikio yetu katika sekta ya nyumba Tanzania</p>
+            <div class="section-header">
+                <h2 class="section-title">Leadership Team</h2>
+                <p>The visionaries behind HouseLink Tanzania</p>
             </div>
-            
-            <div class="steps-grid">
-                <div class="step">
-                    <div class="step-icon">
-                        <i class="fas fa-home"></i>
+
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80" alt="Irene Mgimba">
                     </div>
-                    <h3>5,000+</h3>
-                    <p>Nyumba Zilizotangazwa</p>
+                    <h3>Irene Mgimba</h3>
+                    <p style="color: var(--primary); margin-bottom: var(--space-md);">Chief Executive Officer</p>
+                    <p>
+                        With 15+ years in real estate and technology, Irene leads HouseLink's 
+                        strategic vision and growth initiatives.
+                    </p>
                 </div>
-                
-                <div class="step">
-                    <div class="step-icon">
+
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80" alt="George William">
+                    </div>
+                    <h3>George William</h3>
+                    <p style="color: var(--primary); margin-bottom: var(--space-md);">Director</p>
+                    <p>
+                        George oversees operations and partnerships, bringing 12+ years of 
+                        business development experience to the team.
+                    </p>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80" alt="John Michael">
+                    </div>
+                    <h3>John Michael</h3>
+                    <p style="color: var(--primary); margin-bottom: var(--space-md);">Sales Director</p>
+                    <p>
+                        Leads the sales team with 10+ years experience in Tanzanian real estate 
+                        market and agent management.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Values -->
+    <section class="values-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our Core Values</h2>
+                <p>The principles that guide everything we do</p>
+            </div>
+
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Integrity</h3>
+                    <p>
+                        We operate with honesty and transparency in all our transactions 
+                        and relationships.
+                    </p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Innovation</h3>
+                    <p>
+                        Continuously improving our platform with cutting-edge technology 
+                        for better user experiences.
+                    </p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">
                         <i class="fas fa-users"></i>
                     </div>
-                    <h3>25,000+</h3>
-                    <p>Wateja Waliosajiliwa</p>
+                    <h3>Customer Focus</h3>
+                    <p>
+                        Our customers' success is our success. We prioritize their needs 
+                        in every decision we make.
+                    </p>
                 </div>
-                
-                <div class="step">
-                    <div class="step-icon">
-                        <i class="fas fa-city"></i>
+
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-trophy"></i>
                     </div>
-                    <h3>15+</h3>
-                    <p>Miji Inayohudumiwa</p>
+                    <h3>Excellence</h3>
+                    <p>
+                        We strive for excellence in every aspect of our service, from 
+                        platform features to customer support.
+                    </p>
                 </div>
-                
-                <div class="step">
-                    <div class="step-icon">
-                        <i class="fas fa-handshake"></i>
-                    </div>
-                    <h3>98%</h3>
-                    <p>Wateja Waliokuridhika</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Partner -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Technology Partner</h2>
+                <p>Powered by cutting-edge technology</p>
+            </div>
+
+            <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+                <div style="display: inline-block; background: var(--light-2); padding: var(--space-xl); border-radius: var(--radius-xl);">
+                    <h3 style="margin-bottom: var(--space-md);">Built by I&G Technology</h3>
+                    <p style="margin-bottom: var(--space-lg);">
+                        HouseLink Tanzania is proudly developed and maintained by I&G Technology, 
+                        Tanzania's leading digital solutions provider specializing in innovative 
+                        platform development.
+                    </p>
+                    <a href="https://igtechnology.co.tz" target="_blank" class="btn btn-primary">
+                        Visit I&G Technology
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="main-footer">
         <div class="container">
             <div class="footer-grid">
-                <div class="footer-col">
-                    <div class="logo">
-                        <div class="logo-icon">HL</div>
-                        <h2>HouseLink<span>Tanzania</span></h2>
-                    </div>
-                    <p>Nyumba bora Tanzania. Tupate nyumba unayotaka kwa urahisi na uhakika.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-col">
-                    <h3>Haraka Links</h3>
-                    <ul>
-                        <li><a href="index.html">Nyumbani</a></li>
-                        <li><a href="properties.html">Nyumba</a></li>
-                        <li><a href="upload.html">Weka Tangazo</a></li>
-                        <li><a href="about.html">Kuhusu Sisi</a></li>
-                        <li><a href="contact.html">Wasiliana</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-col">
-                    <h3>Miji Mikubwa</h3>
-                    <ul>
-                        <li><a href="#">Dar es Salaam</a></li>
-                        <li><a href="#">Arusha</a></li>
-                        <li><a href="#">Mwanza</a></li>
-                        <li><a href="#">Dodoma</a></li>
-                        <li><a href="#">Mbeya</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-col">
-                    <h3>Wasiliana Nasi</h3>
-                    <ul class="contact-info">
-                        <li><i class="fas fa-map-marker-alt"></i> Sokoine Drive, Dar es Salaam</li>
-                        <li><i class="fas fa-phone"></i> +255 712 345 678</li>
-                        <li><i class="fas fa-envelope"></i> info@houselink.co.tz</li>
-                    </ul>
-                </div>
+                <!-- Footer content same as other pages -->
             </div>
-            
             <div class="footer-bottom">
-                <p>&copy; 2024 HouseLink Tanzania. Haki zote zimehifadhiwa.</p>
-                <div class="footer-links">
-                    <a href="#">Masharti</a>
-                    <a href="#">Faragha</a>
-                    <a href="#">Mapendekezo</a>
+                <div>
+                    <p style="color: var(--text-light);">
+                        © 2024 HouseLink Tanzania. Built by I&G Technology.
+                    </p>
+                </div>
+                <div>
+                    <a href="privacy-policy.html" style="color: var(--text-light); margin-right: var(--space-lg);">Privacy Policy</a>
+                    <a href="terms-conditions.html" style="color: var(--text-light);">Terms & Conditions</a>
                 </div>
             </div>
         </div>
     </footer>
 
-    <script src="js/main.js"></script>
+    <script>
+        // Same JavaScript as other pages
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            themeToggle.innerHTML = document.body.classList.contains('dark-mode') 
+                ? '<i class="fas fa-moon"></i>' 
+                : '<i class="fas fa-sun"></i>';
+        });
+
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.querySelector('.main-nav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('active');
+            });
+        });
+
+        // Animated counters
+        const counters = document.querySelectorAll('.stat-counter');
+        const speed = 200;
+
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target') || 10000;
+                    const count = +counter.innerText.replace('+', '');
+                    const increment = target / speed;
+
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + increment) + '+';
+                        setTimeout(updateCount, 1);
+                    } else {
+                        counter.innerText = target + '+';
+                    }
+                };
+                updateCount();
+            });
+        };
+
+        // Start counters when section is in view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        observer.observe(document.querySelector('.stats-section'));
+    </script>
 </body>
 </html>
