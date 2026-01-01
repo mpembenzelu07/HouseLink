@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="sw" class="dark-mode">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Properties for Sale & Rent | HouseLink Tanzania</title>
+    
+    <!-- Properties Page CSS -->
+    <style>
+        /* Include all CSS from index.html, then add: */
+        
+        /* Breadcrumb */
+        .breadcrumb {
+            padding: var(--space-xl) 0;
+            background: var(--light-2);
+        }
+        
+        .dark-mode .breadcrumb {
+            background: var(--dark-2);
+        }
+        
+        .breadcrumb-links {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--text-secondary);
+        }
+        
+        .breadcrumb-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        
+        .breadcrumb-links a:hover {
+            color: var(--primary);
+        }
+        
+        /* Properties Header */
+        .properties-header {
+            padding: var(--space-3xl) 0;
+            text-align: center;
+            background: var(--gradient-light);
+        }
+        
+        .dark-mode .properties-header {
+            background: var(--gradient-dark);
+        }
+        
+        /* Filters */
+        .filters-section {
+            background: var(--light-1);
+            padding: var(--space-xl);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow);
+            margin-bottom: var(--space-3xl);
+        }
+        
+        .dark-mode .filters-section {
+            background: var(--dark-2);
+        }
+        
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: var(--space-sm);
+            font-weight: 600;
+        }
+        
+        .filter-select {
+            width: 100%;
+            padding: var(--space-md);
+            border: 2px solid var(--light-4);
+            border-radius: var(--radius);
+            background: var(--light-2);
+        }
+        
+        .dark-mode .filter-select {
+            background: var(--dark-3);
+            border-color: var(--dark-4);
+            color: var(--light-1);
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-top: var(--space-3xl);
+        }
+        
+        .page-link {
+            padding: var(--space-md) var(--space-lg);
+            background: var(--light-2);
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        
+        .page-link.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Properties Grid */
+        .properties-grid-large {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-2xl);
+        }
+        
+        .property-card-large {
+            background: var(--light-1);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .property-card-large:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .property-badge {
+            position: absolute;
+            top: var(--space-lg);
+            left: var(--space-lg);
+            background: var(--primary);
+            color: white;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .property-features {
+            display: flex;
+            gap: var(--space-xl);
+            padding: var(--space-lg) 0;
+            border-top: 1px solid var(--light-4);
+            border-bottom: 1px solid var(--light-4);
+            margin: var(--space-lg) 0;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        /* Sidebar Layout for Filters */
+        .properties-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: var(--space-2xl);
+        }
+        
+        @media (max-width: 992px) {
+            .properties-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <!-- Header (Same as index.html) -->
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">HL</div>
+                <div class="logo-text">
+                    <h1>HouseLink</h1>
+                </div>
+            </a>
+
+            <nav class="main-nav">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="properties.html" class="nav-link active">Properties</a></li>
+                    <li><a href="agents.html" class="nav-link">Agents</a></li>
+                    <li><a href="about.html" class="nav-link">About Us</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <button class="action-btn" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="login.html" class="btn btn-primary">Login</a>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-links">
+                <a href="index.html">Home</a>
+                <span>/</span>
+                <span>Properties</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Properties Header -->
+    <section class="properties-header">
+        <div class="container">
+            <h1 style="font-size: 3rem; margin-bottom: var(--space-lg);">Browse Properties</h1>
+            <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto;">
+                Discover 10,000+ properties for sale and rent across Tanzania
+            </p>
+        </div>
+    </section>
+
+    <!-- Properties Content -->
+    <section class="section">
+        <div class="container">
+            <div class="properties-layout">
+                <!-- Sidebar Filters -->
+                <aside class="filters-section">
+                    <h3 style="margin-bottom: var(--space-xl);">Filter Properties</h3>
+                    
+                    <div class="filter-grid">
+                        <div class="filter-group">
+                            <label>Property Type</label>
+                            <select class="filter-select">
+                                <option>All Types</option>
+                                <option>House</option>
+                                <option>Apartment</option>
+                                <option>Land</option>
+                                <option>Commercial</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Location</label>
+                            <select class="filter-select">
+                                <option>All Locations</option>
+                                <option>Dar es Salaam</option>
+                                <option>Arusha</option>
+                                <option>Mwanza</option>
+                                <option>Dodoma</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Price Range</label>
+                            <select class="filter-select">
+                                <option>Any Price</option>
+                                <option>Under Tsh 100M</option>
+                                <option>Tsh 100M - 500M</option>
+                                <option>Tsh 500M - 1B</option>
+                                <option>Over Tsh 1B</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Bedrooms</label>
+                            <select class="filter-select">
+                                <option>Any</option>
+                                <option>1+</option>
+                                <option>2+</option>
+                                <option>3+</option>
+                                <option>4+</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" style="width: 100%; margin-top: var(--space-xl);">
+                        Apply Filters
+                    </button>
+                </aside>
+
+                <!-- Properties Grid -->
+                <main>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xl);">
+                        <h2>120 Properties Found</h2>
+                        <select class="filter-select" style="width: auto;">
+                            <option>Sort by: Newest</option>
+                            <option>Price: Low to High</option>
+                            <option>Price: High to Low</option>
+                            <option>Most Popular</option>
+                        </select>
+                    </div>
+
+                    <div class="properties-grid-large">
+                        <!-- Property 1 -->
+                        <div class="property-card-large">
+                            <div style="position: relative;">
+                                <div class="property-badge">For Sale</div>
+                                <div class="property-image">
+                                    <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=800&q=80" alt="Property">
+                                </div>
+                            </div>
+                            <div class="property-content">
+                                <div class="property-price">Tsh 850,000,000</div>
+                                <h3>Modern Apartment Kinondoni</h3>
+                                <p style="color: var(--text-secondary); margin-bottom: var(--space-lg);">
+                                    Kinondoni, Dar es Salaam
+                                </p>
+                                
+                                <div class="property-features">
+                                    <div class="feature-item">
+                                        <i class="fas fa-bed"></i>
+                                        <span>4 Beds</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-bath"></i>
+                                        <span>3 Baths</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-expand"></i>
+                                        <span>220 m²</span>
+                                    </div>
+                                </div>
+                                
+                                <a href="property-detail.html" class="btn btn-primary" style="width: 100%;">View Details</a>
+                            </div>
+                        </div>
+
+                        <!-- Property 2 -->
+                        <div class="property-card-large">
+                            <div style="position: relative;">
+                                <div class="property-badge" style="background: var(--secondary);">For Rent</div>
+                                <div class="property-image">
+                                    <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80" alt="Property">
+                                </div>
+                            </div>
+                            <div class="property-content">
+                                <div class="property-price">Tsh 4,500,000/month</div>
+                                <h3>Office Space Oysterbay</h3>
+                                <p style="color: var(--text-secondary); margin-bottom: var(--space-lg);">
+                                    Oysterbay, Dar es Salaam
+                                </p>
+                                
+                                <div class="property-features">
+                                    <div class="feature-item">
+                                        <i class="fas fa-door-open"></i>
+                                        <span>8 Rooms</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-bath"></i>
+                                        <span>6 Baths</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-expand"></i>
+                                        <span>320 m²</span>
+                                    </div>
+                                </div>
+                                
+                                <a href="property-detail.html" class="btn btn-primary" style="width: 100%;">View Details</a>
+                            </div>
+                        </div>
+
+                        <!-- Add more properties... -->
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <a href="#" class="page-link active">1</a>
+                        <a href="#" class="page-link">2</a>
+                        <a href="#" class="page-link">3</a>
+                        <a href="#" class="page-link">4</a>
+                        <a href="#" class="page-link">5</a>
+                        <a href="#" class="page-link">Next</a>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Same as index.html) -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- Same footer content as index.html -->
+            </div>
+            <div class="footer-bottom">
+                <div>
+                    <p style="color: var(--text-light);">
+                        © 2024 HouseLink Tanzania. Built by I&G Technology.
+                    </p>
+                </div>
+                <div>
+                    <a href="privacy-policy.html" style="color: var(--text-light); margin-right: var(--space-lg);">Privacy Policy</a>
+                    <a href="terms-conditions.html" style="color: var(--text-light);">Terms & Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Same JavaScript as index.html
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            themeToggle.innerHTML = document.body.classList.contains('dark-mode') 
+                ? '<i class="fas fa-moon"></i>' 
+                : '<i class="fas fa-sun"></i>';
+        });
+
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.querySelector('.main-nav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
